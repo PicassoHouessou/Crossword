@@ -52,12 +52,6 @@ Dictionnaire *fillDictionnaire(int n)
         }
         
     }
-    
-    // dic[0].id=1;
-    // strcpy(dic[0].indiceH,"France");
-    // strcpy(dic[0].indiceV,"");
-    // strcpy(dic[0].resH,"FRA");
-    // strcpy(dic[0].indiceV,"");
     return dic;
 }
 
