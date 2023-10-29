@@ -35,7 +35,10 @@ void reprendre_partie();
 void sauvegarder_partie();
 void statistique();
 
-Cellule **generer_grille();
+Cellule **generer_grille(int,int);
+Dictionnaire *fillDictionnaire(int);
+void printGrille(Cellule **,int,int);
+void printDictionnaire(Dictionnaire*,int);
 
 
 
