@@ -18,14 +18,13 @@ void statistique()
 
 Cellule **generer_grille(int nr,int nc)
 {
-   Cellule ** grille=NULL;
-   *grille=malloc(sizeof(Cellule)*nr);
+   Cellule ** grille=grille=malloc(sizeof(Cellule)*nr);
    for (int i = 0; i < nr; i++)
    {
         grille[i]=malloc(sizeof(Cellule)*nc);
         for (int j = 0; j < nc; j++)
         {
-            grille[i][j].id=0;
+            grille[i][j].id=(i+1)*(j+1);
             grille[i][j].w='*';
         }
     
@@ -61,11 +60,12 @@ void printGrille(Cellule **cel, int nr, int nc)
     {
         for (int i = 0; i < nr; i++)
         {
+            printf("\n");
             for (int j = 0; j < nc; j++)
             {
-                printf("\n--\n");
-                printf("|%c|",cel[i][j].w);
-                printf("\n--\n");
+                // printf("\n--\n");
+                printf("|%d %c|\t",cel[i][j].id,cel[i][j].w);
+                // printf("--");
             }
             printf("\n");
         }
