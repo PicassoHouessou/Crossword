@@ -50,3 +50,36 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# Ignore build artifacts and output directories
+/build/
+/bin/
+/lib/
+*.exe
+
+# Ignore CMake generated files
+CMakeFiles/
+CMakeCache.txt
+CMakeScripts/
+CMakeScripts/cmake_install.cmake
+cmake_install.cmake
+CMakeDoxyfile.in
+
+# Ignore Makefiles and other generated project files
+Makefile
+Makefile.in
+
+# Ignore project-specific files
+compile_commands.json
+conanbuildinfo.txt
+
+# Ignore editor/IDE specific files
+.vscode/
+.idea/
+*.suo
+*.user
+*.sln
+*.suo
+*.userprefs
+*.swp
+
