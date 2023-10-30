@@ -16,20 +16,29 @@ void statistique()
 {
 }
 
-Cellule **generer_grille(int nr,int nc)
+Cellule **load_grille(int nr,int nc)
 {
-   Cellule ** grille=grille=malloc(sizeof(Cellule)*nr);
-   for (int i = 0; i < nr; i++)
-   {
+    Cellule ** grille=malloc(sizeof(Cellule)*nr);
+    int size=nr*nc;
+    Cellule *vec=(Cellule*)malloc(sizeof(Cellule)*size);
+    int k=0;
+    FILE *f=fopen("facile.txt","r");
+    while (fscanf(f,"%d %s",&vec[k].id,&vec[k].caractere)!=EOF)
+    {
+        k++;
+    }
+    k=0;
+    for (int i = 0; i < nr; i++)
+    {
         grille[i]=malloc(sizeof(Cellule)*nc);
         for (int j = 0; j < nc; j++)
         {
-            grille[i][j].id=(i+1)*(j+1);
-            grille[i][j].caractere='*';
+            grille[i][j].id=vec[k].id;
+            strcpy(grille[i][j].caractere,vec[k].caractere);
+            k++;
         }
+    }
     
-   }
-   
     return grille;
 }
 
@@ -63,7 +72,15 @@ void print_grille(Cellule **cel, int nr, int nc)
             printf("\n");
             for (int j = 0; j < nc; j++)
             {
-                printf("|%d %c|\t",cel[i][j].id,cel[i][j].caractere);
+                if (cel[i][j].id!=0)
+                {
+                    printf("|%d %s|\t",cel[i][j].id,cel[i][j].caractere);
+                }
+                else
+                {
+                    printf("|%s|\t",cel[i][j].caractere);
+                }
+                
             }
             printf("\n");
         }
@@ -83,4 +100,34 @@ void print_dictionnaire(Dictionnaire * dic,int n)
         
     }
     return;
+}
+
+
+
+void free_Memory(Crossword **cw,int nr){
+    if (cw!=NULL)
+    {
+        for (int i = 0; i < nr; i++)
+        {
+           free((*cw)->grille[i]);
+        }
+        free((*cw)->dictionnaire);
+        free(*cw);
+    }
+    return;
+}
+
+Cellule **generer_grille(Cellule **grille, int nr, int nc)
+{
+    Cellule ** g=malloc(sizeof(Cellule)*nr);
+    for (int i = 0; i < nr; i++)
+    {
+        g[i]=malloc(sizeof(Cellule)*nc);
+        for (int j = 0; j < nc; j++)
+        {
+            g[i][j].id=grille[i][j].id;
+            strcpy(g[i][j].caractere,grille[i][j].caractere[0]=='*'?grille[i][j].caractere:" ");
+        }
+    }
+    return g;
 }

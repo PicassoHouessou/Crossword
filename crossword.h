@@ -11,7 +11,7 @@
 typedef struct cellule
 {
     int id;
-    char caractere;
+    char caractere[1];
 } Cellule;
 
 typedef struct dic
@@ -35,12 +35,13 @@ void reprendre_partie();
 void sauvegarder_partie();
 void statistique();
 
-Cellule **generer_grille(int,int);
+Cellule **load_grille(int,int);
 Dictionnaire *fill_dictionnaire(int);
 void print_grille(Cellule **,int,int);
 void print_dictionnaire(Dictionnaire*,int);
+void free_Memory(Crossword **,int);
 
-
+Cellule **generer_grille(Cellule **,int,int);
 
 
 #endif // ___CROSSWORD___
