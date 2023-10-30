@@ -25,7 +25,7 @@ Cellule **generer_grille(int nr,int nc)
         for (int j = 0; j < nc; j++)
         {
             grille[i][j].id=(i+1)*(j+1);
-            grille[i][j].w='*';
+            grille[i][j].caractere='*';
         }
     
    }
@@ -33,7 +33,7 @@ Cellule **generer_grille(int nr,int nc)
     return grille;
 }
 
-Dictionnaire *fillDictionnaire(int n)
+Dictionnaire *fill_dictionnaire(int n)
 {
     FILE *f=NULL;
     Dictionnaire *dic=NULL;
@@ -45,7 +45,7 @@ Dictionnaire *fillDictionnaire(int n)
     {
         dic=malloc(sizeof(Dictionnaire)*n);
         int i=0;
-        while (fscanf(f,"%d  %s  %s  %s  %s",&dic[i].id,&dic[i].indiceH,&dic[i].indiceV,&dic[i].resH,&dic[i].resV)!=EOF && i<n)
+        while (fscanf(f,"%d  %s  %s  %s  %s",&dic[i].id,&dic[i].indice_horizontal,&dic[i].indice_vertical,&dic[i].resultat_horizontal,&dic[i].resultat_vertical)!=EOF && i<n)
         {
             i++;
         }
@@ -54,7 +54,7 @@ Dictionnaire *fillDictionnaire(int n)
     return dic;
 }
 
-void printGrille(Cellule **cel, int nr, int nc)
+void print_grille(Cellule **cel, int nr, int nc)
 {
     if (cel!=NULL)
     {
@@ -63,9 +63,7 @@ void printGrille(Cellule **cel, int nr, int nc)
             printf("\n");
             for (int j = 0; j < nc; j++)
             {
-                // printf("\n--\n");
-                printf("|%d %c|\t",cel[i][j].id,cel[i][j].w);
-                // printf("--");
+                printf("|%d %c|\t",cel[i][j].id,cel[i][j].caractere);
             }
             printf("\n");
         }
@@ -74,13 +72,13 @@ void printGrille(Cellule **cel, int nr, int nc)
     return;
 }
 
-void printDictionnaire(Dictionnaire * dic,int n)
+void print_dictionnaire(Dictionnaire * dic,int n)
 {
     if (dic!=NULL)
     {
         for (int i = 0; i < n; i++)
         {
-            printf("\nId = %d \t indiceH = %s\t indiceV = %s\t resH = %s\t resV = %s\n",dic[i].id,dic[i].indiceH,dic[i].indiceV,dic[i].resH,dic[i].resV);
+            printf("\nId = %d \t indice_horizontal = %s\t indice_vertical = %s\t resultat_horizontal = %s\t resultat_vertical = %s\n",dic[i].id,dic[i].indice_horizontal,dic[i].indice_vertical,dic[i].resultat_horizontal,dic[i].resultat_vertical);
         }
         
     }

@@ -11,23 +11,23 @@
 typedef struct cellule
 {
     int id;
-    char w;
+    char caractere;
 } Cellule;
 
 typedef struct dic
 {
     int id;
-    char indiceH[100];
-    char indiceV[100];
-    char resH[25];
-    char resV[25];
+    char indice_horizontal[100];
+    char indice_vertical[100];
+    char resultat_horizontal[25];
+    char resultat_vertical[25];
 } Dictionnaire;
 
 typedef struct crossword
 {
     char niveau[10];
-    Cellule** g;
-    Dictionnaire *dic;
+    Cellule** grille;
+    Dictionnaire *dictionnaire;
 } Crossword;
 
 void nouvelle_partie();
@@ -36,9 +36,9 @@ void sauvegarder_partie();
 void statistique();
 
 Cellule **generer_grille(int,int);
-Dictionnaire *fillDictionnaire(int);
-void printGrille(Cellule **,int,int);
-void printDictionnaire(Dictionnaire*,int);
+Dictionnaire *fill_dictionnaire(int);
+void print_grille(Cellule **,int,int);
+void print_dictionnaire(Dictionnaire*,int);
 
 
 
