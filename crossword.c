@@ -9,29 +9,29 @@ void run(Crossword **cw,int n,int nr,int nc,int niveau){
     switch (niveau)
     {
     case 1:
-        strcpy(filename_dictionnaire,"dictionnaire_facile.txt");
-        strcpy(filename_grille,"facile.txt");
+        strcpy(filename_dictionnaire,"dictionnaires/facile.txt");
+        strcpy(filename_grille,"grilles/facile.txt");
         strcpy((c)->niveau,"facile");
         strcpy((*cw)->niveau,"facile");
         nbe=3;
         break;
     case 2:
-        strcpy(filename_dictionnaire,"dictionnaire_intermediaire.txt");
-        strcpy(filename_grille,"intermediaire.txt");
+        strcpy(filename_dictionnaire,"dictionnaires/intermediaire.txt");
+        strcpy(filename_grille,"grilles/intermediaire.txt");
         strcpy((c)->niveau,"intermediaire");
         strcpy((*cw)->niveau,"intermediaire");
         nbe=2;
         break;
     case 3:
-        strcpy(filename_dictionnaire,"dictionnaire_difficile.txt");
-        strcpy(filename_grille,"difficile.txt");
+        strcpy(filename_dictionnaire,"dictionnaires/difficile.txt");
+        strcpy(filename_grille,"grilles/difficile.txt");
         strcpy((c)->niveau,"diffcile");
         strcpy((*cw)->niveau,"diffcile");
         nbe=1;
         break;
     default:
-        strcpy(filename_dictionnaire,"dictionnaire_facile.txt");
-        strcpy(filename_grille,"facile.txt");
+        strcpy(filename_dictionnaire,"dictionnaires/facile.txt");
+        strcpy(filename_grille,"grilles/facile.txt");
         strcpy((c)->niveau,"facile");
         strcpy((*cw)->niveau,"facile");
         nbe=3;
@@ -135,8 +135,41 @@ void reprendre_partie()
 {
 }
 
-void sauvegarder_partie()
+void sauvegarder_partie(Crossword *cw,int n,int nr,int nc)
 {
+    char filename_dictionnaire[50];
+    char filename_grille[50];
+    strcpy(filename_dictionnaire,"sauvegardes/dictionnaire_");
+    
+    strcpy(filename_dictionnaire,cw->niveau);
+    strcpy(filename_dictionnaire,".txt");
+    strcpy(filename_grille,"sauvegardes/grille_");
+    strcpy(filename_grille,cw->niveau);
+    strcpy(filename_grille,".txt");
+    FILE *f=NULL;
+    FILE *f1=NULL;
+    f=fopen(filename_dictionnaire,"w");
+    f1=fopen(filename_grille,"w");
+    if (f!=NULL && f1!=NULL)
+    {
+        fprintf(f,"%d\n",n);
+        for (int i = 0; i < n; i++)
+        {
+            fprintf(f,"%d\t\t%s\t\t%s\t\t%s\t\t%s",cw->dictionnaire[i].id,cw->dictionnaire[i].indice_horizontal,cw->dictionnaire[i].indice_vertical,cw->dictionnaire[i].resultat_horizontal,cw->dictionnaire[i].resultat_vertical);
+        }
+        fprintf(f1,"%d\t\t%d\n",nr,nc);
+        for (int i = 0; i < nr; i++)
+        {
+            for (int j = 0; j < nc; j++)
+            {
+                fprintf(f1,"%d\t%s\n",cw->grille[i][j].id,cw->grille[i][j].caractere);
+            }
+        }
+        fclose(f);
+        fclose(f1);
+        return; 
+    }
+    return;
 }
 
 void statistique()
@@ -165,7 +198,7 @@ Cellule **load_grille(char *filename,int nr,int nc)
             k++;
         }
     }
-    
+    fclose(f);
     return grille;
 }
 
@@ -185,7 +218,7 @@ Dictionnaire *load_dictionnaire(char *filename,int n)
         {
             i++;
         }
-        
+        fclose(f);
     }
     return dic;
 }

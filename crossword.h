@@ -33,7 +33,7 @@ typedef struct crossword
 void nouvelle_partie(Crossword **,int,int,int,int);
 void run(Crossword **,int,int,int,int);
 void reprendre_partie();
-void sauvegarder_partie();
+void sauvegarder_partie(Crossword *,int,int,int);
 void statistique();
 
 Cellule **load_grille(char *,int,int);
