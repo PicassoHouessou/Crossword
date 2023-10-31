@@ -11,36 +11,45 @@
 typedef struct cellule
 {
     int id;
-    char w;
+    char caractere[1];
 } Cellule;
 
 typedef struct dic
 {
     int id;
-    char indiceH[100];
-    char indiceV[100];
-    char resH[25];
-    char resV[25];
+    char indice_horizontal[100];
+    char indice_vertical[100];
+    char resultat_horizontal[25];
+    char resultat_vertical[25];
 } Dictionnaire;
 
 typedef struct crossword
 {
     char niveau[10];
-    Cellule** g;
-    Dictionnaire *dic;
+    Cellule** grille;
+    Dictionnaire *dictionnaire;
 } Crossword;
 
-void nouvelle_partie();
+void nouvelle_partie(Crossword **,int,int,int,int);
+void run(Crossword **,int,int,int,int);
 void reprendre_partie();
-void sauvegarder_partie();
+void sauvegarder_partie(Crossword *,int,int,int);
 void statistique();
 
-Cellule **generer_grille(int,int);
-Dictionnaire *fillDictionnaire(int);
-void printGrille(Cellule **,int,int);
-void printDictionnaire(Dictionnaire*,int);
+Cellule **load_grille(char *,int,int);
+Dictionnaire *load_dictionnaire(char *,int);
+void print_grille(Cellule **,int,int);
+void print_dictionnaire(Dictionnaire*,int);
+void free_Memory(Crossword **,int);
 
+Cellule **generer_grille(Cellule **,int,int);
 
+Dictionnaire *generer_dictionnaire(Dictionnaire *,int);
+
+Dictionnaire *remplacer_underscore_mots_dictionnaire(Dictionnaire *,int);
+
+char *replace(char *,char,char);
+int choix_niveau();
 
 
 #endif // ___CROSSWORD___
