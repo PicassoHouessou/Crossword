@@ -1,12 +1,30 @@
+#include <stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include<time.h>
+#include <math.h>
+
 #ifndef ___CROSSWORD___
 #define ___CROSSWORD___
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
-#include <string.h>
+#define FACILE_NROW 12
+#define FACILE_NCOL 16
+#define FACILE_DIC_SIZE 10
+#define INTER_DIC_SIZE 10
+#define DIFFICILE_DIC_SIZE 10
+#define INTER_NROW 12
+#define INTER_NCOL 16
+#define DIFFICILE_NROW 12
+#define DIFFICILE_NCOL 16
 
-#define nrow 5
+
+typedef struct stat
+{
+    char niveau[15];
+    float score;
+    struct tm heure_debut;
+    struct tm heure_fin;
+} Statistique;
 
 typedef struct cellule
 {
@@ -28,19 +46,21 @@ typedef struct crossword
     char niveau[10];
     Cellule** grille;
     Dictionnaire *dictionnaire;
+    Statistique *stat;
 } Crossword;
-
-void nouvelle_partie(Crossword **,int,int,int,int);
-void run(Crossword **,int,int,int,int);
-void reprendre_partie();
-void sauvegarder_partie(Crossword *,int,int,int);
+void nouvelle_partie(Crossword **);
+void run(Crossword **);
+void re_run(Crossword **);
+void reprendre_partie(Crossword **);
+void sauvegarder_partie(Crossword *);
 void statistique();
+void sauvegarder_statistique(Statistique *);
 
 Cellule **load_grille(char *,int,int);
 Dictionnaire *load_dictionnaire(char *,int);
 void print_grille(Cellule **,int,int);
 void print_dictionnaire(Dictionnaire*,int);
-void free_Memory(Crossword **,int);
+void free_Memory(Crossword **);
 
 Cellule **generer_grille(Cellule **,int,int);
 
@@ -50,7 +70,7 @@ Dictionnaire *remplacer_underscore_mots_dictionnaire(Dictionnaire *,int);
 
 char *replace(char *,char,char);
 int choix_niveau();
-
+int menu();
 
 #endif // ___CROSSWORD___
 

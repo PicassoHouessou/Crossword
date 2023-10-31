@@ -11,7 +11,7 @@
 *.ilk
 *.map
 *.exp
-
+*.pdf
 # Precompiled Headers
 *.gch
 *.pch
@@ -50,3 +50,7 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+
+#others directory
+sauvegardes/

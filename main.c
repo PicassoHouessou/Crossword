@@ -2,12 +2,34 @@
 
 
 int main(int argv,char* argc[]){
-    // printf("\n%d\n",argv);
-    // print_dictionnaire(remplacer_underscore_mots_dictionnaire(load_dictionnaire("dictionnaire_facile.txt",10),10),10);
-    // print_grille(generer_grille(load_grille("facile.txt",12,16),12,16),12,16);
     Crossword *cw=malloc(sizeof(Crossword));
-    nouvelle_partie(&cw,10,12,16,2);
-    sauvegarder_partie(cw,10,12,16);
-    free_Memory(&cw,12);
+    int r=1;
+    printf("\n\n**************************** Welcome to Crossworld ********************************\n\n");
+    while (r)
+    {
+        switch (menu())
+        {
+        case 1:
+            nouvelle_partie(&cw);
+            break;
+        case 2:
+            reprendre_partie(&cw);
+            break;
+        case 3:
+            sauvegarder_partie(cw);
+            break;
+        case 4:
+            statistique();
+            break;
+        case 5:
+            free_Memory(&cw);
+            r=0;
+            break;
+        default:
+            nouvelle_partie(&cw);
+            break;
+        }
+    }
+    printf("\n\n**************************** Good Bye ********************************\n\n");
     return EXIT_SUCCESS;
 }

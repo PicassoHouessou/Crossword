@@ -1,18 +1,22 @@
 #include "crossword.h"
 
 
-void run(Crossword **cw,int n,int nr,int nc,int niveau){
+void run(Crossword **cw){ 
     char filename_dictionnaire[25];
     char filename_grille[25];
-    int nbe;
+    int nbe,n,nr,nc;
     Crossword *c=malloc(sizeof(Crossword));
-    switch (niveau)
+    switch (choix_niveau())
     {
     case 1:
         strcpy(filename_dictionnaire,"dictionnaires/facile.txt");
         strcpy(filename_grille,"grilles/facile.txt");
         strcpy((c)->niveau,"facile");
         strcpy((*cw)->niveau,"facile");
+        nr=FACILE_NROW;
+        nc=FACILE_NCOL;
+        n=FACILE_DIC_SIZE;
+        strcpy((*cw)->stat->niveau,"facile");
         nbe=3;
         break;
     case 2:
@@ -20,6 +24,10 @@ void run(Crossword **cw,int n,int nr,int nc,int niveau){
         strcpy(filename_grille,"grilles/intermediaire.txt");
         strcpy((c)->niveau,"intermediaire");
         strcpy((*cw)->niveau,"intermediaire");
+        strcpy((*cw)->stat->niveau,"intermediaire");
+        nr=INTER_NROW;
+        nc=INTER_NCOL;
+        n=INTER_DIC_SIZE;
         nbe=2;
         break;
     case 3:
@@ -27,6 +35,10 @@ void run(Crossword **cw,int n,int nr,int nc,int niveau){
         strcpy(filename_grille,"grilles/difficile.txt");
         strcpy((c)->niveau,"diffcile");
         strcpy((*cw)->niveau,"diffcile");
+        strcpy((*cw)->stat->niveau,"diffcile");
+        nr=DIFFICILE_NROW;
+        nc=DIFFICILE_NCOL;
+        n=DIFFICILE_DIC_SIZE;
         nbe=1;
         break;
     default:
@@ -34,16 +46,17 @@ void run(Crossword **cw,int n,int nr,int nc,int niveau){
         strcpy(filename_grille,"grilles/facile.txt");
         strcpy((c)->niveau,"facile");
         strcpy((*cw)->niveau,"facile");
+        strcpy((*cw)->stat->niveau,"facile");
+        nr=FACILE_NROW;
+        nc=FACILE_NCOL;
+        n=FACILE_DIC_SIZE;
         nbe=3;
         break;
     }
-
     c->dictionnaire=load_dictionnaire(filename_dictionnaire,n);
     c->grille=load_grille(filename_grille,nr,nc);
-    
     Dictionnaire *dic=remplacer_underscore_mots_dictionnaire(c->dictionnaire,n);
     (*cw)->dictionnaire=dic; 
-    
     (*cw)->grille=generer_grille(c->grille,nr,nc);
     int k=0;
     while (k<n)
@@ -51,13 +64,19 @@ void run(Crossword **cw,int n,int nr,int nc,int niveau){
         print_grille((*cw)->grille,nr,nc);
         printf("\n\n");
         print_dictionnaire((*cw)->dictionnaire,n);
+        printf("\n0-sauvegarder la partie en cours.\n");
         int choix;
         k==0?printf("\nEntrer votre choix :\t"):printf("\nEntrer un second choix :\t");
         scanf("%d",&choix);
         char response[15];
         printf("\nEntrer votre r%cponse form%c des lettres en majuscules :\t",130,130);
-        
         scanf("%s",response);
+        if (choix==0)
+        {
+            sauvegarder_partie(*cw);
+            free_Memory(cw);
+            break;
+        }
         if (strcmp(response,(*cw)->dictionnaire[choix-1].indice_horizontal[0]!='-'?(c)->dictionnaire[choix-1].resultat_horizontal:(c)->dictionnaire[choix-1].resultat_vertical)!=0 )
         {
             int i=0;
@@ -67,12 +86,12 @@ void run(Crossword **cw,int n,int nr,int nc,int niveau){
                 printf("\nEchec. Il vous reste %d %cssais possible\n",(nbe-i),130);
                 printf("\nVeillez re-%cssayer :\t",130);
                 scanf("%s",response);
-                
             }
         }
         if (strcmp(response,(*cw)->dictionnaire[choix-1].indice_horizontal[0]!='-'?(c)->dictionnaire[choix-1].resultat_horizontal:(c)->dictionnaire[choix-1].resultat_vertical)==0)
         {
             printf("\nBravo.\n");
+            (*cw)->stat->score +=(1/n);
             if ((*cw)->dictionnaire[choix-1].indice_horizontal[0]!='-')
             {
                 strcpy((*cw)->dictionnaire[choix-1].resultat_horizontal,response);
@@ -114,46 +133,223 @@ void run(Crossword **cw,int n,int nr,int nc,int niveau){
                 {
                     (*cw)->grille[i][z].caractere[0]=response[i-t];
                 }
-            }
-            
+            } 
         }
         k++;
     }
     print_grille((*cw)->grille,nr,nc);
     printf("\n\n");
     print_dictionnaire((*cw)->dictionnaire,n);
-
 }
 
-
-void nouvelle_partie(Crossword **cw,int n,int nr,int nc,int nbe)
-{
-    run(cw,n,nr,nc,choix_niveau());
+void re_run(Crossword **cw){
+    int nbe,nr,nc,n;
+    Crossword *c=malloc(sizeof(Crossword));
+    switch (choix_niveau())
+    {
+    case 1:
+        nr=FACILE_NROW;
+        nc=FACILE_NCOL;
+        n=FACILE_DIC_SIZE;
+        (*cw)->dictionnaire=remplacer_underscore_mots_dictionnaire(load_dictionnaire("sauvegardes/dictionnaire_facile.txt",n),n);
+        (*cw)->grille=load_grille("sauvegardes/grille_facile.txt",nr,nc);
+        strcpy((*cw)->niveau,"facile");
+        strcpy((c)->niveau,"facile");
+        c->dictionnaire=remplacer_underscore_mots_dictionnaire(load_dictionnaire("dictionnaires/facile.txt",n),n);
+        c->grille=load_grille("grilles/facile.txt",nr,nc);
+        nbe=3;
+        strcpy((*cw)->stat->niveau,"facile");
+        break;
+    case 2:
+        nr=INTER_NROW;
+        nc=INTER_NCOL;
+        n=INTER_DIC_SIZE;
+        (*cw)->dictionnaire=remplacer_underscore_mots_dictionnaire(load_dictionnaire("sauvegardes/dictionnaire_intermediaire.txt",n),n);
+        (*cw)->grille=load_grille("sauvegardes/grille_intermediaire.txt",nr,nc);
+        strcpy((*cw)->niveau,"intermediaire");
+        strcpy((c)->niveau,"intermediaire");
+        c->dictionnaire=remplacer_underscore_mots_dictionnaire(load_dictionnaire("dictionnaires/intermediaire.txt",n),n);
+        c->grille=load_grille("grilles/intermediaire.txt",nr,nc);
+        nbe=2;
+        strcpy((*cw)->stat->niveau,"intermediaire");
+        break;
+    case 3:
+        nr=DIFFICILE_NROW;
+        nc=DIFFICILE_NCOL;
+        n=DIFFICILE_DIC_SIZE;
+        (*cw)->dictionnaire=remplacer_underscore_mots_dictionnaire(load_dictionnaire("sauvegardes/dictionnaire_difficile.txt",n),n);
+        (*cw)->grille=load_grille("sauvegardes/grille_difficile.txt",nr,nc);
+        strcpy((*cw)->niveau,"difficile");
+        strcpy((c)->niveau,"difficile");
+        c->dictionnaire=remplacer_underscore_mots_dictionnaire(load_dictionnaire("dictionnaires/difficile.txt",n),n);
+        c->grille=load_grille("grilles/difficile.txt",nr,nc);
+        nbe=1;
+        strcpy((*cw)->stat->niveau,"difficile");
+        break;
+    
+    default:
+        nr=FACILE_NROW;
+        nc=FACILE_NCOL;
+        n=FACILE_DIC_SIZE;
+        (*cw)->dictionnaire=remplacer_underscore_mots_dictionnaire(load_dictionnaire("sauvegardes/dictionnaire_facile.txt",n),n);
+        (*cw)->grille=load_grille("sauvegardes/grille_facile.txt",nr,nc);
+        c->dictionnaire=remplacer_underscore_mots_dictionnaire(load_dictionnaire("dictionnaires/facile.txt",n),n);
+        c->grille=load_grille("grilles/facile.txt",nr,nc);
+        strcpy((*cw)->niveau,"facile");
+        strcpy((c)->niveau,"facile");
+        strcpy((*cw)->stat->niveau,"facile");
+        nbe=3;
+        break;
+    }
+    int k=0;
+    while (k<n)
+    {
+        print_grille((*cw)->grille,nr,nc);
+        printf("\n\n");
+        print_dictionnaire((*cw)->dictionnaire,n);
+        printf("\n0-sauvegarder la partie en cours.\n");
+        int choix;
+        k==0?printf("\nEntrer votre choix :\t"):printf("\nEntrer un second choix :\t");
+        scanf("%d",&choix);
+        char response[15];
+        printf("\nEntrer votre r%cponse form%c des lettres en majuscules :\t",130,130);
+        scanf("%s",response);
+        if (choix==0)
+        {
+            sauvegarder_partie(*cw);
+            free_Memory(cw);
+            break;
+        }
+        if (strcmp(response,(*cw)->dictionnaire[choix-1].indice_horizontal[0]!='-'?(c)->dictionnaire[choix-1].resultat_horizontal:(c)->dictionnaire[choix-1].resultat_vertical)!=0 )
+        {
+            int i=0;
+            while (strcmp(response,(*cw)->dictionnaire[choix-1].indice_horizontal[0]!='-'?(c)->dictionnaire[choix-1].resultat_horizontal:(c)->dictionnaire[choix-1].resultat_vertical)!=0 && i<nbe)
+            {
+                i++;
+                printf("\nEchec. Il vous reste %d %cssais possible\n",(nbe-i),130);
+                printf("\nVeillez re-%cssayer :\t",130);
+                scanf("%s",response);
+            }
+        }
+        if (strcmp(response,(*cw)->dictionnaire[choix-1].indice_horizontal[0]!='-'?(c)->dictionnaire[choix-1].resultat_horizontal:(c)->dictionnaire[choix-1].resultat_vertical)==0)
+        {
+            printf("\nBravo.\n");
+            (*cw)->stat->score +=(1/n);
+            if ((*cw)->dictionnaire[choix-1].indice_horizontal[0]!='-')
+            {
+                strcpy((*cw)->dictionnaire[choix-1].resultat_horizontal,response);
+                int t,z;
+                for (int i = 0; i < nr; i++)
+                {
+                    for (int j = 0; j < nc; j++)
+                    {
+                        if ((*cw)->grille[i][j].id==choix)
+                        {
+                            t=i;
+                            z=j;
+                            continue;
+                        }
+                    }
+                }
+                for (int i = z; i < z+strlen(response); i++)
+                {
+                    (*cw)->grille[t][i].caractere[0]=response[i-z];
+                }
+            }
+            else
+            {
+                strcpy((*cw)->dictionnaire[choix-1].resultat_vertical,response);
+                int t,z;
+                for (int i = 0; i < nr; i++)
+                {
+                    for (int j = 0; j < nc; j++)
+                    {
+                        if ((*cw)->grille[i][j].id==choix)
+                        {
+                            t=i;
+                            z=j;
+                            continue;
+                        }
+                    }
+                }
+                for (int i = t; i < t+strlen(response); i++)
+                {
+                    (*cw)->grille[i][z].caractere[0]=response[i-t];
+                }
+            } 
+        }
+        k++;
+    }
+    print_grille((*cw)->grille,nr,nc);
+    printf("\n\n");
+    print_dictionnaire((*cw)->dictionnaire,n);
 }
 
-void reprendre_partie()
+void nouvelle_partie(Crossword **cw)
 {
+    time_t secondes;
+    time(&secondes);
+    (*cw)->stat=malloc(sizeof(Statistique));
+    (*cw)->stat->heure_debut=*localtime(&secondes);
+    (*cw)->stat->score=0.0f;
+    run(cw);
+    (*cw)->stat->heure_fin=*localtime(&secondes);
 }
 
-void sauvegarder_partie(Crossword *cw,int n,int nr,int nc)
+void sauvegarder_statistique(Statistique *stat){
+    FILE *f=NULL;
+    f=fopen("statistique/stat.txt","w");
+    if (f!=NULL)
+    {
+        fprintf(f,"%s  %.4f %d  %d  %d  %d  %d  %d",stat->niveau,stat->score,stat->heure_debut.tm_hour,stat->heure_debut.tm_min,stat->heure_debut.tm_sec,stat->heure_fin.tm_hour,stat->heure_fin.tm_min,stat->heure_fin.tm_sec);
+        fclose(f);
+    }
+    exit(EXIT_FAILURE);
+}
+
+void reprendre_partie(Crossword **cw)
 {
+    if ((cw)==NULL)
+    {
+        (cw)=malloc(sizeof(Crossword));
+    }
+    time_t secondes;
+    time(&secondes);
+    (*cw)->stat=malloc(sizeof(Statistique));
+    (*cw)->stat->heure_debut=*localtime(&secondes);
+    (*cw)->stat->score=0.0f;
+    re_run(cw);
+    (*cw)->stat->heure_fin=*localtime(&secondes);
+}
+
+void sauvegarder_partie(Crossword *cw)
+{
+    int n,nr,nc;
     char filename_dictionnaire[50];
     char filename_grille[50];
-
     if (strcmp(cw->niveau,"facile")==0)
     {
         strcpy(filename_dictionnaire,"sauvegardes/dictionnaire_facile.txt");
         strcpy(filename_grille,"sauvegardes/grille_facile.txt");
+        nr=FACILE_NROW;
+        nc=FACILE_NCOL;
+        n=FACILE_DIC_SIZE;
     }
     else if(strcmp(cw->niveau,"intermediaire")==0)
     {
         strcpy(filename_dictionnaire,"sauvegardes/dictionnaire_intermediaire.txt");
         strcpy(filename_grille,"sauvegardes/grille_intermediaire.txt");
+        nr=INTER_NROW;
+        nc=INTER_NCOL;
+        n=INTER_DIC_SIZE;
     }
     else
     {
         strcpy(filename_dictionnaire,"sauvegardes/dictionnaire_difficile.txt");
         strcpy(filename_grille,"sauvegardes/grille_difficile.txt");
+        nr=DIFFICILE_NROW;
+        nc=DIFFICILE_NCOL;
+        n=DIFFICILE_DIC_SIZE;
     }
     FILE *f=NULL;
     FILE *f1=NULL;
@@ -161,12 +357,10 @@ void sauvegarder_partie(Crossword *cw,int n,int nr,int nc)
     f1=fopen(filename_grille,"w");
     if (f!=NULL && f1!=NULL)
     {
-        fprintf(f,"%d\n",n);
         for (int i = 0; i < n; i++)
         {
             fprintf(f,"%d\t\t%s\t\t%s\t\t%s\t\t%s\n",cw->dictionnaire[i].id,cw->dictionnaire[i].indice_horizontal,cw->dictionnaire[i].indice_vertical,cw->dictionnaire[i].resultat_horizontal,cw->dictionnaire[i].resultat_vertical);
         }
-        fprintf(f1,"%d\t\t%d\n",nr,nc);
         for (int i = 0; i < nr; i++)
         {
             for (int j = 0; j < nc; j++)
@@ -179,10 +373,6 @@ void sauvegarder_partie(Crossword *cw,int n,int nr,int nc)
         return; 
     }
     return;
-}
-
-void statistique()
-{
 }
 
 Cellule **load_grille(char *filename,int nr,int nc)
@@ -283,8 +473,21 @@ void print_dictionnaire(Dictionnaire * dic,int n)
 }
 
 
-
-void free_Memory(Crossword **cw,int nr){
+void free_Memory(Crossword **cw){
+    int nr;
+    if (strcmp((*cw)->niveau,"facile")==0)
+    {
+        nr=FACILE_NROW;
+    }
+    else if (strcmp((*cw)->niveau,"intermedaire")==0)
+    {
+        nr=INTER_NROW;
+    }
+    else
+    {
+        nr=DIFFICILE_NROW;
+    }
+    
     if (cw!=NULL)
     {
         for (int i = 0; i < nr; i++)
@@ -350,6 +553,7 @@ char *replace(char *ch,char c, char r)
 
 int choix_niveau()
 {
+    printf("\n\n Choix du niveau de difficult%c.\n\n",130);
     printf("\n1-Niveau facile.\n");
     printf("\n2-Niveau interm%cdiaire.\n",130);
     printf("\n3-Niveau difficile.\n");
@@ -357,4 +561,38 @@ int choix_niveau()
     printf("\nEntrez votre choix :\t");
     scanf("%d",&choix);
     return choix;
+}
+
+int menu()
+{
+    printf("\n\n Menu du jeu.\n\n",130);
+
+    printf("\n1-Nouvelle partie.\n");
+    printf("\n2-Reprendre une partie.\n");
+    printf("\n3-sauvegarder une partie.\n");
+    printf("\n4-sauvegarder une partie.\n");
+    printf("\n5-Quitter une partie.\n");
+    int choix;
+    printf("Entrer votre choix :\t");
+    scanf("%d",&choix);
+    return choix;
+}
+
+
+
+void statistique(){
+    FILE *f=NULL;
+    f=fopen("statistique/stat.txt","r");
+    if (f!=NULL)
+    {
+        char niveau[15];
+        int h1,h2,m1,m2,s1,s2;
+        float score;
+        while (fscanf(f,"%s  %.4f  %d  %d  %d  %d  %d  %d",niveau,&score,&h1,&m1,&s1,&h2,&m2,&s2)!=EOF)
+        {
+            printf("\n%s\t\t\t\t\t\t%.2f\t\t\t\t\t\t%d:%d:%d\t\t\t\t\t\t%d:%d:%d\n",niveau,score*100,h1,m1,s1,h2,m2,s2);
+        }
+        fclose(f);
+    }
+    return;
 }

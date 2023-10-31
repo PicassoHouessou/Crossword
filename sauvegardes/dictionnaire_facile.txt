@@ -1,2 +1,10 @@
-10
-1		France		-		FRA		-2		-		Pays ayant remporte la coupe du monde 2014		-		ALLEMAGNE3		-		Pays ayant remporte la coupe du monde 2022		-		ARGENTINE4		Cameroun		-		CMR		-5		-		Pays ayant remporte la coupe du monde 2018		-		FRANCE6		Pays Africain abritant les monuments historique plein de mystere		-		EGYPTE		-7		-		Pays Africain ayant ete temoin d un genocide du 7 avril au 17 juillet 1994		-		RWANDA8		Pays riche en vibranium		-		WAKANDA		-9		Afrique en miniature		-		CAMEROUN		-10		Pays ayant remporte la derniere coupe d Afrique		-		SENEGAL		-
+1		France		-		FRA		-
+2		-		Pays ayant remporte la coupe du monde 2014		-		ALLEMAGNE
+3		-		Pays ayant remporte la coupe du monde 2022		-		ARGENTINE
+4		Cameroun		-		CMR		-
+5		-		Pays ayant remporte la coupe du monde 2018		-		FRANCE
+6		Pays Africain abritant les monuments historique plein de mystere		-		EGYPTE		-
+7		-		Pays Africain ayant ete temoin d un genocide du 7 avril au 17 juillet 1994		-		RWANDA
+8		Pays riche en vibranium		-		WAKANDA		-
+9		Afrique en miniature		-		CAMEROUN		-
+10		Pays ayant remporte la derniere coupe d Afrique		-		SENEGAL		-
