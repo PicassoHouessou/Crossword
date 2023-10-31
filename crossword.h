@@ -30,18 +30,24 @@ typedef struct crossword
     Dictionnaire *dictionnaire;
 } Crossword;
 
-void nouvelle_partie();
+void nouvelle_partie(Crossword **,int,int,int);
 void reprendre_partie();
 void sauvegarder_partie();
 void statistique();
 
-Cellule **load_grille(int,int);
-Dictionnaire *fill_dictionnaire(int);
+Cellule **load_grille(char *,int,int);
+Dictionnaire *load_dictionnaire(char *,int);
 void print_grille(Cellule **,int,int);
 void print_dictionnaire(Dictionnaire*,int);
 void free_Memory(Crossword **,int);
 
 Cellule **generer_grille(Cellule **,int,int);
+
+Dictionnaire *generer_dictionnaire(Dictionnaire *,int);
+
+Dictionnaire *remplacer_underscore_mots_dictionnaire(Dictionnaire *,int);
+
+char *replace(char *,char,char);
 
 
 #endif // ___CROSSWORD___
