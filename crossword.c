@@ -139,13 +139,22 @@ void sauvegarder_partie(Crossword *cw,int n,int nr,int nc)
 {
     char filename_dictionnaire[50];
     char filename_grille[50];
-    strcpy(filename_dictionnaire,"sauvegardes/dictionnaire_");
-    
-    strcpy(filename_dictionnaire,cw->niveau);
-    strcpy(filename_dictionnaire,".txt");
-    strcpy(filename_grille,"sauvegardes/grille_");
-    strcpy(filename_grille,cw->niveau);
-    strcpy(filename_grille,".txt");
+
+    if (strcmp(cw->niveau,"facile")==0)
+    {
+        strcpy(filename_dictionnaire,"sauvegardes/dictionnaire_facile.txt");
+        strcpy(filename_grille,"sauvegardes/grille_facile.txt");
+    }
+    else if(strcmp(cw->niveau,"intermediaire")==0)
+    {
+        strcpy(filename_dictionnaire,"sauvegardes/dictionnaire_intermediaire.txt");
+        strcpy(filename_grille,"sauvegardes/grille_intermediaire.txt");
+    }
+    else
+    {
+        strcpy(filename_dictionnaire,"sauvegardes/dictionnaire_difficile.txt");
+        strcpy(filename_grille,"sauvegardes/grille_difficile.txt");
+    }
     FILE *f=NULL;
     FILE *f1=NULL;
     f=fopen(filename_dictionnaire,"w");
@@ -155,7 +164,7 @@ void sauvegarder_partie(Crossword *cw,int n,int nr,int nc)
         fprintf(f,"%d\n",n);
         for (int i = 0; i < n; i++)
         {
-            fprintf(f,"%d\t\t%s\t\t%s\t\t%s\t\t%s",cw->dictionnaire[i].id,cw->dictionnaire[i].indice_horizontal,cw->dictionnaire[i].indice_vertical,cw->dictionnaire[i].resultat_horizontal,cw->dictionnaire[i].resultat_vertical);
+            fprintf(f,"%d\t\t%s\t\t%s\t\t%s\t\t%s\n",cw->dictionnaire[i].id,cw->dictionnaire[i].indice_horizontal,cw->dictionnaire[i].indice_vertical,cw->dictionnaire[i].resultat_horizontal,cw->dictionnaire[i].resultat_vertical);
         }
         fprintf(f1,"%d\t\t%d\n",nr,nc);
         for (int i = 0; i < nr; i++)
