@@ -17,12 +17,12 @@ int main(int argv,char* argc[]){
             break;
         case 3:
             sauvegarder_partie(cw);
+            sauvegarder_statistique((cw)->stat);
             break;
         case 4:
             statistique();
             break;
         case 5:
-            free_Memory(&cw);
             r=0;
             break;
         default:
@@ -31,5 +31,6 @@ int main(int argv,char* argc[]){
         }
     }
     printf("\n\n**************************** Good Bye ********************************\n\n");
+    free_Memory(&cw);
     return EXIT_SUCCESS;
 }

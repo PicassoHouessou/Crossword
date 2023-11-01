@@ -17,7 +17,7 @@
 #define DIFFICILE_NROW 12
 #define DIFFICILE_NCOL 16
 
-
+time_t secondes;
 typedef struct stat
 {
     char niveau[15];
@@ -49,7 +49,7 @@ typedef struct crossword
     Statistique *stat;
 } Crossword;
 void nouvelle_partie(Crossword **);
-void run(Crossword **);
+void run(Crossword **,Crossword *,int,int,int,int);
 void re_run(Crossword **);
 void reprendre_partie(Crossword **);
 void sauvegarder_partie(Crossword *);
@@ -67,6 +67,7 @@ Cellule **generer_grille(Cellule **,int,int);
 Dictionnaire *generer_dictionnaire(Dictionnaire *,int);
 
 Dictionnaire *remplacer_underscore_mots_dictionnaire(Dictionnaire *,int);
+Dictionnaire *remplacer_espace_mots_dictionnaire(Dictionnaire *,int);
 
 char *replace(char *,char,char);
 int choix_niveau();
