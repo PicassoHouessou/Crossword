@@ -19,10 +19,11 @@ void run(Crossword **cw,Crossword *c,int n,int nr,int nc,int nbe){
         if(choix==0)
         {
             (*cw)->stat->heure_fin=*localtime(&secondes);
+            (*cw)->stat->score=((float)s/(float)n);
             sauvegarder_partie(*cw);
             return;
         }
-        else if (strcmp(response,(*cw)->dictionnaire[choix-1].indice_horizontal[0]!='-'?(c)->dictionnaire[choix-1].resultat_horizontal:(c)->dictionnaire[choix-1].resultat_vertical)!=0 )
+        else // if (strcmp(response,(*cw)->dictionnaire[choix-1].indice_horizontal[0]!='-'?(c)->dictionnaire[choix-1].resultat_horizontal:(c)->dictionnaire[choix-1].resultat_vertical)!=0 )
         {
             int i=0;
             while (strcmp(response,(*cw)->dictionnaire[choix-1].indice_horizontal[0]!='-'?(c)->dictionnaire[choix-1].resultat_horizontal:(c)->dictionnaire[choix-1].resultat_vertical)!=0 && i<nbe)
@@ -82,10 +83,9 @@ void run(Crossword **cw,Crossword *c,int n,int nr,int nc,int nbe){
         }
         k++;
     }
-    (*cw)->stat->score +=(s/n);
+    printf("\nNombre de r%cussite = %d\n",s);
+    (*cw)->stat->score=(float)(s/n);
     print_grille((*cw)->grille,nr,nc);
-    printf("\n\n");
-    print_dictionnaire((*cw)->dictionnaire,n);
 }
 
 void nouvelle_partie(Crossword **cw)
@@ -275,13 +275,12 @@ void sauvegarder_partie(Crossword *cw)
             {
                 if (strcmp(cw->grille[i][j].caractere," ")==0)
                 {
-                    strcpy(cw->grille[i][j].caractere,"-");
+                    strcpy(cw->grille[i][j].caractere,"?");
                 }
                 fprintf(f1,"%d  %s\n",cw->grille[i][j].id,cw->grille[i][j].caractere);
             }
         }
-
-        fprintf(f2,"%s  %f %d  %d  %d  %d  %d  %d",cw->stat->niveau,cw->stat->score,cw->stat->heure_debut.tm_hour,cw->stat->heure_debut.tm_min,cw->stat->heure_debut.tm_sec,cw->stat->heure_fin.tm_hour,cw->stat->heure_fin.tm_min,cw->stat->heure_fin.tm_sec);
+        fprintf(f2,"%s  %f %d  %d  %d %d  %d  %d  %d  %d\n",cw->stat->niveau,cw->stat->score,cw->stat->heure_debut.tm_mday,cw->stat->heure_debut.tm_mon,cw->stat->heure_debut.tm_hour,cw->stat->heure_debut.tm_min,cw->stat->heure_debut.tm_sec,cw->stat->heure_fin.tm_hour,cw->stat->heure_fin.tm_min,cw->stat->heure_fin.tm_sec);
         fclose(f);
         fclose(f1);
         fclose(f2);
@@ -509,11 +508,11 @@ void statistique(){
     if (f!=NULL)
     {
         char niveau[15];
-        int h1,h2,m1,m2,s1,s2;
+        int h1,h2,m1,m2,s1,s2,m,d;
         float score;
-        while (fscanf(f,"%s %f %d %d %d %d %d %d",niveau,&score,&h1,&m1,&s1,&h2,&m2,&s2)!=EOF)
+        while (fscanf(f,"%s %f %d %d %d %d %d %d %d %d %d",niveau,&score,&d,&m,&h1,&m1,&s1,&h2,&m2,&s2)!=EOF)
         {
-            printf("\n%s\t\t\t\t\t\t%f\t\t\t\t\t\t%d:%d:%d\t\t\t\t\t\t%d:%d:%d\n",niveau,(score*100),h1,m1,s1,h2,m2,s2);
+            printf("\n%s\t\t\t\t\t\t%f\t\t\t\t\t\t%d/%d\t\t\t\t\t\t%d:%d:%d\t\t\t\t\t\t%d:%d:%d\n",niveau,(score*100),d,m,h1,m1,s1,h2,m2,s2);
         }
         fclose(f);
     }

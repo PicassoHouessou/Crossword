@@ -17,7 +17,6 @@ int main(int argv,char* argc[]){
             break;
         case 3:
             sauvegarder_partie(cw);
-            sauvegarder_statistique((cw)->stat);
             break;
         case 4:
             statistique();
