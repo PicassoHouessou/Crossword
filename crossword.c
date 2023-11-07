@@ -33,7 +33,7 @@ void run(Crossword **cw,Crossword *c,int n,int nr,int nc,int nbe){
             while (strcmp(response,(*cw)->dictionnaire[choix-1].indice_horizontal[0]!='-'?(c)->dictionnaire[choix-1].resultat_horizontal:(c)->dictionnaire[choix-1].resultat_vertical)!=0 && i<nbe)
             {
                 i++;
-                printf("\nEchec. Il vous reste %d %cssais possible\n",(nbe-i),130);
+                printf("\nEchec. Il vous reste %d %cssais possible\n",(nbe-i)+1,130);
                 printf("\nVeillez re-%cssayer :\t",130);
                 scanf("%s",response);
             }
