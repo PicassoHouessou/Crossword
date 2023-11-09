@@ -14,7 +14,7 @@ void run(Crossword **cw,Crossword *c,int n,int nr,int nc,int nbe){
         int choix;
         k==0?printf("\nEntrer votre choix :\t"):printf("\nEntrer un second choix :\t");
         scanf("%d",&choix);
-        char response[15];
+        char response[25];
         if(choix==0)
         {
             time(&secondes);
@@ -150,7 +150,6 @@ void nouvelle_partie(Crossword **cw)
         break;
     }
     c->dictionnaire=load_dictionnaire(filename_dictionnaire,n);
-    print_dictionnaire(c->dictionnaire,n);
     c->grille=load_grille(filename_grille,nr,nc);
     Dictionnaire *dic=remplacer_underscore_mots_dictionnaire(c->dictionnaire,n);
     (*cw)->dictionnaire=dic;
@@ -519,7 +518,7 @@ void statistique(){
         printf("------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
         printf("Niveau\t\t|\t\tScore\t\t|\t\t\tDate\t\t|\t\t\tHeure de D%cbut\t\t|\t\tHeure de Fin\n",130);
         printf("------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
-        while (fscanf(f,"%s %f %d %d %d %d %d %d %d %d %d",niveau,&score,&d,&m,&h1,&m1,&s1,&h2,&m2,&s2)!=EOF)
+        while (fscanf(f,"%s %f %d %d %d %d %d %d %d %d",niveau,&score,&d,&m,&h1,&m1,&s1,&h2,&m2,&s2)!=EOF)
         {
             printf("\n%s\t\t|\t\t%.2f\t\t|\t\t%d/%d\t\t|\t\t\t%d:%d:%d\t\t|\t\t\t%d:%d:%d\n",niveau,(score*100),d,m,h1,m1,s1,h2,m2,s2);
             printf("------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");

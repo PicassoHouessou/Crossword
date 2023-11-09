@@ -10,10 +10,10 @@
 #define FACILE_NROW 12 // nombre de ligne de la grille du niveau facile
 #define FACILE_NCOL 16 // nombre de colonne de grille du niveau facile
 #define FACILE_DIC_SIZE 10  // taille du dictionnaire du niveau facile
-#define INTER_DIC_SIZE 9 // taille du dictionnaire du niveau intermédiaire
+#define INTER_DIC_SIZE 10 // taille du dictionnaire du niveau intermédiaire
 #define DIFFICILE_DIC_SIZE 10 // taille du dictionnaire du niveau difficile
 #define INTER_NROW 12  // nombre de ligne de la grille du niveau intermédiaire
-#define INTER_NCOL 15 // nombre de colonne de grille du niveau intermédiaire
+#define INTER_NCOL 16 // nombre de colonne de grille du niveau intermédiaire
 #define DIFFICILE_NROW 12 // nombre de ligne de la grille du niveau difficile
 #define DIFFICILE_NCOL 16 // nombre de colonne de grille du niveau difficile
 
@@ -22,7 +22,7 @@ time_t secondes;
 /// @brief structure pour concerver les statstiques du joueur
 typedef struct stat
 {
-    char niveau[15];
+    char niveau[25];
     float score;
     struct tm heure_debut;
     struct tm heure_fin;
@@ -53,7 +53,7 @@ typedef struct dictionnaire
 /// @brief une matrice, du dctionnaire qui est un tableau et un champ pour conserver les statistiques
 typedef struct crossword
 {
-    char niveau[10];
+    char niveau[25];
     Cellule** grille;
     Dictionnaire *dictionnaire;
     Statistique *stat;
