@@ -12,11 +12,9 @@ void run(Crossword **cw,Crossword *c,int n,int nr,int nc,int nbe){
         print_dictionnaire((*cw)->dictionnaire,n);
         printf("\n0-sauvegarder la partie en cours.\n");
         int choix;
-        (k==0 && t==1)?printf("\nEntrer votre choix :\t"):printf("\nEntrer un second choix :\t");
-        t==1 && scanf("%d",&choix);
+        k==0?printf("\nEntrer votre choix :\t"):printf("\nEntrer un second choix :\t");
+        scanf("%d",&choix);
         char response[15];
-        t!=0 && printf("\nEntrer votre r%cponse form%c des lettres en majuscules :\t",130,130);
-        t!=0 &&scanf("%s",response);
         if(choix==0)
         {
             time(&secondes);
@@ -29,6 +27,8 @@ void run(Crossword **cw,Crossword *c,int n,int nr,int nc,int nbe){
         }
         else
         {
+            printf("\nEntrer votre r%cponse form%c des lettres en majuscules :\t",130,130);
+            scanf("%s",response);
             int i=0;
             while (strcmp(response,(*cw)->dictionnaire[choix-1].indice_horizontal[0]!='-'?(c)->dictionnaire[choix-1].resultat_horizontal:(c)->dictionnaire[choix-1].resultat_vertical)!=0 && i<nbe)
             {
@@ -98,8 +98,8 @@ void nouvelle_partie(Crossword **cw)
     (*cw)->stat=malloc(sizeof(Statistique));
     (*cw)->stat->heure_debut=*localtime(&secondes);
     (*cw)->stat->score=0.0f;
-    char filename_dictionnaire[25];
-    char filename_grille[25];
+    char filename_dictionnaire[30];
+    char filename_grille[30];
     int nbe,n,nr,nc;
     Crossword *c=malloc(sizeof(Crossword));
     switch (choix_niveau())
@@ -116,8 +116,8 @@ void nouvelle_partie(Crossword **cw)
         nbe=3;
         break;
     case 2:
-        strcpy(filename_dictionnaire,"dictionnaires/intermediaire.txt");//dictionnaires/intermediaire.txt
-        strcpy(filename_grille,"grilles/intermediaire.txt");//grilles/intermediaire.txt
+        strcpy(filename_dictionnaire,"dictionnaires/facile.txt");//dictionnaires/intermediaire.txt
+        strcpy(filename_grille,"grilles/facile.txt");//grilles/intermediaire.txt
         strcpy((c)->niveau,"intermediaire");
         strcpy((*cw)->niveau,"intermediaire");
         strcpy((*cw)->stat->niveau,"intermediaire");
@@ -150,9 +150,10 @@ void nouvelle_partie(Crossword **cw)
         break;
     }
     c->dictionnaire=load_dictionnaire(filename_dictionnaire,n);
+    print_dictionnaire(c->dictionnaire,n);
     c->grille=load_grille(filename_grille,nr,nc);
     Dictionnaire *dic=remplacer_underscore_mots_dictionnaire(c->dictionnaire,n);
-    (*cw)->dictionnaire=dic; 
+    (*cw)->dictionnaire=dic;
     (*cw)->grille=generer_grille(c->grille,nr,nc);
     (*cw)->stat->heure_fin=*localtime(&secondes);
     run(cw,c,n,nr,nc,nbe);
@@ -323,10 +324,12 @@ Cellule **load_grille(char *filename,int nr,int nc)
 
 Dictionnaire *load_dictionnaire(char *filename,int n)
 {
+    printf("\n filename = %s\n",filename);
     FILE *f=NULL;
     Dictionnaire *dic=NULL;
     f=fopen(filename,"r");
     if(f==NULL){
+        printf("\nOuverture impossible\n");
         return NULL;
     }
     else
