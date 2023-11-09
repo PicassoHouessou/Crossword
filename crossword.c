@@ -116,8 +116,8 @@ void nouvelle_partie(Crossword **cw)
         nbe=3;
         break;
     case 2:
-        strcpy(filename_dictionnaire,"dictionnaires/facile.txt");//dictionnaires/intermediaire.txt
-        strcpy(filename_grille,"grilles/facile.txt");//grilles/intermediaire.txt
+        strcpy(filename_dictionnaire,"dictionnaires/intermediaire.txt");//dictionnaires/intermediaire.txt
+        strcpy(filename_grille,"grilles/intermediaire.txt");//grilles/intermediaire.txt
         strcpy((c)->niveau,"intermediaire");
         strcpy((*cw)->niveau,"intermediaire");
         strcpy((*cw)->stat->niveau,"intermediaire");
@@ -370,12 +370,12 @@ void print_dictionnaire(Dictionnaire * dic,int n)
 {
     if (dic!=NULL)
     {
-        printf("\nHorizontal\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tVertical\n");
+        printf("\n\tHorizontal\t\t\t\t\t\t\t\t\t\t\t\t\tVertical\n");
         for (int i = 0; i < n; i++)
         {
             if (dic[i].indice_horizontal[0]=='-' && dic[i].indice_vertical[0]!='-')
             {
-                printf("\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t%d-%s.\n",dic[i].id,dic[i].indice_vertical);
+                printf("\t\t\t\t\t\t\t\t\t\t\t%d-%s.\n",dic[i].id,dic[i].indice_vertical);
             }
             else if (dic[i].indice_horizontal[0]!='-' && dic[i].indice_vertical[0]=='-')
             {
@@ -383,7 +383,7 @@ void print_dictionnaire(Dictionnaire * dic,int n)
             }
             else
             {
-                printf("%d-%s.\t\t\t\t\t\t\t\t\\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t%d-%s.\n",dic[i].id,dic[i].indice_horizontal,dic[i].id,dic[i].indice_vertical);
+                printf("%d-%s.\t\t\t\t\t\t\t\t\t\t%d-%s.\n",dic[i].id,dic[i].indice_horizontal,dic[i].id,dic[i].indice_vertical);
             }
         }
     }
@@ -513,9 +513,13 @@ void statistique(){
         char niveau[15];
         int h1,h2,m1,m2,s1,s2,m,d;
         float score;
+        printf("------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+        printf("Niveau\t\t|\t\tScore\t\t|\t\t\tDate\t\t|\t\t\tHeure de D%cbut\t\t|\t\tHeure de Fin\n",130);
+        printf("------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
         while (fscanf(f,"%s %f %d %d %d %d %d %d %d %d %d",niveau,&score,&d,&m,&h1,&m1,&s1,&h2,&m2,&s2)!=EOF)
         {
-            printf("\n%s\t\t\t%f\t\t\t\t%d/%d\t\t\t\t\t%d:%d:%d\t\t\t\t\t%d:%d:%d\n",niveau,(score*100),d,m,h1,m1,s1,h2,m2,s2);
+            printf("\n%s\t\t|\t\t%.2f\t\t|\t\t%d/%d\t\t|\t\t\t%d:%d:%d\t\t|\t\t\t%d:%d:%d\n",niveau,(score*100),d,m,h1,m1,s1,h2,m2,s2);
+            printf("------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
         }
         fclose(f);
     }
