@@ -17,12 +17,12 @@
 #define DIFFICILE_NROW 12 // nombre de ligne de la grille du niveau difficile
 #define DIFFICILE_NCOL 16 // nombre de colonne de grille du niveau difficile
 
-time_t secondes;
+
 
 /// @brief structure pour concerver les statstiques du joueur
 typedef struct stat
 {
-    char niveau[25];
+    char niveau[20];
     float score;
     struct tm heure_debut;
     struct tm heure_fin;
@@ -33,7 +33,7 @@ typedef struct stat
 typedef struct cellule
 {
     int id;
-    char caractere[1];
+    char caractere;
 } Cellule;
 
 
@@ -42,22 +42,32 @@ typedef struct cellule
 typedef struct dictionnaire
 {
     int id;
-    char indice_horizontal[100];
-    char indice_vertical[100];
-    char resultat_horizontal[25];
-    char resultat_vertical[25];
+    char indice_horizontal[255];
+    char indice_vertical[255];
+    char resultat_horizontal[50];
+    char resultat_vertical[50];
+    int dim;
 } Dictionnaire;
 
 
 /// @brief structure pour généraliser une partie qui est constitué du niveau, la grille qui est 
 /// @brief une matrice, du dctionnaire qui est un tableau et un champ pour conserver les statistiques
+typedef struct gril
+{
+    char niveau[20];
+    Cellule** grille;
+    int nombre_ligne;
+    int nombre_colonne;
+} Grille;
 typedef struct crossword
 {
-    char niveau[25];
-    Cellule** grille;
+    Grille* g;
     Dictionnaire *dictionnaire;
     Statistique *stat;
 } Crossword;
+
+int isIn(int T[],int n,int ch);
+
 
 
 
@@ -78,7 +88,7 @@ void nouvelle_partie(Crossword **);
 /// @param  int nombre de ligne de la grille de la partie encours
 /// @param  int nombre de colonne de la grille de la partie encours
 /// @param  int nombre d'éssais possible pour trouver une réponse durant la partie encours
-void run(Crossword **,Crossword *,int,int,int,int);
+void run(Crossword **,Crossword *,int);
 
 
 /// @brief déclaration de la fonction qui va nous permettre de lancer une partie 
@@ -99,24 +109,24 @@ void statistique();
 /// @param  int nombre de ligne de la grille
 /// @param  int nombre de colonne de la grille
 /// @return une matrice à deux dimensions représentant notre grille
-Cellule **load_grille(char *,int,int);
+Grille* load_grille(char *);
 
 /// @brief fonction qui permet de charger le contenu d'un dictionnaire enregistrer dans un fichier
 /// @param  char * adresse relative du fichier contenant les informations du dictionnaire
 /// @param  int la taille du dictionnaire 
 /// @return un tableau représentant le dictionnaire de notre partie
-Dictionnaire *load_dictionnaire(char *,int);
+Dictionnaire *load_dictionnaire(char *);
 
 /// @brief fonction pour afficher notre grille sur la console
 /// @param  Cellule ** représente notre grille
 /// @param  int nombre de ligne de la grille
 /// @param  int nombre de colonne de la grille
-void print_grille(Cellule **,int,int);
+void print_grille(Grille *);
 
 /// @brief fonction pour afficher le contenu de notre dictionnaire sur la console
 /// @param  Dictionnaire* tableau qui contient les informations de notre dictionnaire
 /// @param  int la taille du tableau
-void print_dictionnaire(Dictionnaire*,int);
+void print_dictionnaire(Dictionnaire*);
 
 /// @brief fonction pour libérer la mémoire occupée par notre partie
 /// @param  Crossword ** contient l'adresse de notre partie encours
@@ -128,26 +138,26 @@ void free_Memory(Crossword **);
 /// @param  int nombre de ligne de la grille 
 /// @param  int nombre de colonne de la grille
 /// @return  une copie non remplie de la grille prise en paramèttre
-Cellule **generer_grille(Cellule **,int,int);
+Grille *generer_grille(Grille *);
 
 /// @brief fonction qui permet de générer un dictionnaire à partir d'un autre dictionnaire
 /// @param  Dictionnaire * dictionnare dont on veut créer le clone
 /// @param  int taille du dictionnaire
 /// @return une copie  du dictionnaire pris en paramèttre
-Dictionnaire *generer_dictionnaire(Dictionnaire *,int);
+// Dictionnaire *generer_dictionnaire(Dictionnaire *,int);
 
 /// @brief fonction qui permet de remplacer les underscores qui séparant les différents mots des indices horizontaux et verticaux du dictionnaire
 /// @param  Dictionnaire * tableau dont on veut remplacer les underscores qui separent les différents mots des indices horizontaux et verticaux
 /// @param  int taille du tableau
 /// @return un dictionnaire dont les underscores séparants les différents mots des indices horizontaux et verticaux ont été remplacés par un espace
-Dictionnaire *remplacer_underscore_mots_dictionnaire(Dictionnaire *,int);
+Dictionnaire *remplacer_underscore_mots_dictionnaire(Dictionnaire *);
 
 
 /// @brief fonction qui permet de remplacer les underscores qui séparant les différents mots des indices horizontaux et verticaux du dictionnaire
 /// @param  Dictionnaire * tableau dont on veut remplacer les espaces qui separent les différents mots des indices horizontaux et verticaux
 /// @param  int taille du tableau
 /// @return un dictionnaire dont les espaces séparants les différents mots des indices horizontaux et verticaux ont été remplacés par un underscores
-Dictionnaire *remplacer_espace_mots_dictionnaire(Dictionnaire *,int);
+Dictionnaire *remplacer_espace_mots_dictionnaire(Dictionnaire *);
 
 /// @brief fonction qui permet de remplacer dans une chaine de caractère un caratère par un autre
 /// @param  char * chaine de caractère dont ont veut modifier certains de ses caractères

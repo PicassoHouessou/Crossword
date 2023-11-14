@@ -1,17 +1,32 @@
 #include "crossword.h"
 
+time_t secondes;
 
-void run(Crossword **cw,Crossword *c,int n,int nr,int nc,int nbe){ 
+int isIn(int T[],int n,int ch){
+    for (int i = 0; i < n; i++)
+    {
+        if (T[i]==ch)
+        {
+            return 1;
+        }
+        
+    }
+    return 0;
+}
+
+void run(Crossword **cw,Crossword *c,int nbe){
     int s=0;
     int k=0;
-    int t=1;
-    while (k<n)
+    int current[(*cw)->dictionnaire->dim];
+
+    while (k<(*cw)->dictionnaire->dim)
     {
-        print_grille((*cw)->grille,nr,nc);
+        print_grille((*cw)->g);
         printf("\n\n");
-        print_dictionnaire((*cw)->dictionnaire,n);
+        print_dictionnaire((*cw)->dictionnaire);
         printf("\n0-sauvegarder la partie en cours.\n");
         int choix;
+        
         k==0?printf("\nEntrer votre choix :\t"):printf("\nEntrer un second choix :\t");
         scanf("%d",&choix);
         char response[25];
@@ -19,11 +34,21 @@ void run(Crossword **cw,Crossword *c,int n,int nr,int nc,int nbe){
         {
             time(&secondes);
             (*cw)->stat->heure_fin=*localtime(&secondes);
-            (*cw)->stat->score=((float)s/(float)n);
+            (*cw)->stat->score=((float)s/(float)(*cw)->dictionnaire->dim);
             sauvegarder_partie(*cw);
-            k=n;
-            t=0;
+            k=(*cw)->dictionnaire->dim;
             return;
+        }
+        else if (isIn(current,(*cw)->dictionnaire->dim,choix)==1)
+        {
+            printf("\nVous avez d%cja fait ce choix %d.\n",130,choix);
+            while (isIn(current,(*cw)->dictionnaire->dim,choix)==1)
+            {
+                printf("\nVeillez re-%cssayer :\t",130);
+                scanf("%d",&choix);
+            }
+            printf("\nEntrer votre r%cponse form%c des lettres en majuscules :\t",130,130);
+            scanf("%s",response);
         }
         else
         {
@@ -33,7 +58,7 @@ void run(Crossword **cw,Crossword *c,int n,int nr,int nc,int nbe){
             while (strcmp(response,(*cw)->dictionnaire[choix-1].indice_horizontal[0]!='-'?(c)->dictionnaire[choix-1].resultat_horizontal:(c)->dictionnaire[choix-1].resultat_vertical)!=0 && i<nbe)
             {
                 i++;
-                printf("\nEchec. Il vous reste %d %cssais possible\n",(nbe-i)+1,130);
+                printf("\nR%cponse fausse, votre r%cponse doit contenir uniquement des caract%cres entre A et Z. Il vous reste %d %cssais possible\n",130,130,138,(nbe-i)+1,130);
                 printf("\nVeillez re-%cssayer :\t",130);
                 scanf("%s",response);
             }
@@ -46,11 +71,11 @@ void run(Crossword **cw,Crossword *c,int n,int nr,int nc,int nbe){
             {
                 strcpy((*cw)->dictionnaire[choix-1].resultat_horizontal,response);
                 int t,z;
-                for (int i = 0; i < nr; i++)
+                for (int i = 0; i < (*cw)->g->nombre_ligne; i++)
                 {
-                    for (int j = 0; j < nc; j++)
+                    for (int j = 0; j < (*cw)->g->nombre_colonne; j++)
                     {
-                        if ((*cw)->grille[i][j].id==choix)
+                        if ((*cw)->g->grille[i][j].id==choix)
                         {
                             t=i;
                             z=j;
@@ -60,18 +85,20 @@ void run(Crossword **cw,Crossword *c,int n,int nr,int nc,int nbe){
                 }
                 for (int i = z; i < z+strlen(response); i++)
                 {
-                    (*cw)->grille[t][i].caractere[0]=response[i-z];
+                    
+                    (*cw)->g->grille[t][i].caractere=response[i-z];
+
                 }
             }
             else
             {
                 strcpy((*cw)->dictionnaire[choix-1].resultat_vertical,response);
                 int t,z;
-                for (int i = 0; i < nr; i++)
+                for (int i = 0; i < (*cw)->g->nombre_ligne; i++)
                 {
-                    for (int j = 0; j < nc; j++)
+                    for (int j = 0; j < (*cw)->g->nombre_colonne; j++)
                     {
-                        if ((*cw)->grille[i][j].id==choix)
+                        if ((*cw)->g->grille[i][j].id==choix)
                         {
                             t=i;
                             z=j;
@@ -81,81 +108,65 @@ void run(Crossword **cw,Crossword *c,int n,int nr,int nc,int nbe){
                 }
                 for (int i = t; i < t+strlen(response); i++)
                 {
-                    (*cw)->grille[i][z].caractere[0]=response[i-t];
+                    
+                    (*cw)->g->grille[i][z].caractere=response[i-t];
                 }
             } 
         }
+        current[k]=choix;
         k++;
     }
-    (*cw)->stat->score=(float)(s/n);
-    print_grille((*cw)->grille,nr,nc);
+    (*cw)->stat->score=((float)s/(float)(*cw)->dictionnaire->dim);
+    print_grille((*cw)->g);
 }
+
 
 void nouvelle_partie(Crossword **cw)
 {
-    time_t secondes;
     time(&secondes);
-    (*cw)->stat=malloc(sizeof(Statistique));
+    (*cw)->stat=(Statistique*)malloc(sizeof(Statistique));
     (*cw)->stat->heure_debut=*localtime(&secondes);
     (*cw)->stat->score=0.0f;
     char filename_dictionnaire[30];
     char filename_grille[30];
-    int nbe,n,nr,nc;
-    Crossword *c=malloc(sizeof(Crossword));
+    int nbe;
+    Crossword *c=(Crossword*)malloc(sizeof(Crossword));
     switch (choix_niveau())
     {
     case 1:
         strcpy(filename_dictionnaire,"dictionnaires/facile.txt");
         strcpy(filename_grille,"grilles/facile.txt");
-        strcpy((c)->niveau,"facile");
-        strcpy((*cw)->niveau,"facile");
-        nr=FACILE_NROW;
-        nc=FACILE_NCOL;
-        n=FACILE_DIC_SIZE;
         strcpy((*cw)->stat->niveau,"facile");
         nbe=3;
         break;
     case 2:
-        strcpy(filename_dictionnaire,"dictionnaires/facile.txt");//dictionnaires/intermediaire.txt
-        strcpy(filename_grille,"grilles/facile.txt");//grilles/intermediaire.txt
-        strcpy((c)->niveau,"intermediaire");
-        strcpy((*cw)->niveau,"intermediaire");
+        strcpy(filename_dictionnaire,"dictionnaires/facile.txt");
+        strcpy(filename_grille,"grilles/facile.txt");
         strcpy((*cw)->stat->niveau,"intermediaire");
-        nr=INTER_NROW;
-        nc=INTER_NCOL;
-        n=INTER_DIC_SIZE;
         nbe=2;
         break;
     case 3:
-        strcpy(filename_dictionnaire,"dictionnaires/facile.txt");//dictionnaires/difficile.txt
-        strcpy(filename_grille,"grilles/facile.txt");//grilles/difficile.txt
-        strcpy((c)->niveau,"diffcile");
-        strcpy((*cw)->niveau,"diffcile");
+        strcpy(filename_dictionnaire,"dictionnaires/facile.txt");
+        strcpy(filename_grille,"grilles/facile.txt");
         strcpy((*cw)->stat->niveau,"diffcile");
-        nr=DIFFICILE_NROW;
-        nc=DIFFICILE_NCOL;
-        n=DIFFICILE_DIC_SIZE;
         nbe=1;
         break;
     default:
         strcpy(filename_dictionnaire,"dictionnaires/facile.txt");
         strcpy(filename_grille,"grilles/facile.txt");
-        strcpy((c)->niveau,"facile");
-        strcpy((*cw)->niveau,"facile");
         strcpy((*cw)->stat->niveau,"facile");
-        nr=FACILE_NROW;
-        nc=FACILE_NCOL;
-        n=FACILE_DIC_SIZE;
         nbe=3;
         break;
     }
-    c->dictionnaire=load_dictionnaire(filename_dictionnaire,n);
-    c->grille=load_grille(filename_grille,nr,nc);
-    Dictionnaire *dic=remplacer_underscore_mots_dictionnaire(c->dictionnaire,n);
+    c->dictionnaire=load_dictionnaire(filename_dictionnaire);
+    c->g=load_grille(filename_grille);
+    print_grille(c->g);
+    Dictionnaire *dic=remplacer_underscore_mots_dictionnaire(c->dictionnaire);
     (*cw)->dictionnaire=dic;
-    (*cw)->grille=generer_grille(c->grille,nr,nc);
+    (*cw)->g=generer_grille(c->g);
+    print_grille((*cw)->g);
     (*cw)->stat->heure_fin=*localtime(&secondes);
-    run(cw,c,n,nr,nc,nbe);
+    run(cw,c,nbe);
     (*cw)->stat->heure_fin=*localtime(&secondes);
 }
 
@@ -168,7 +179,7 @@ void reprendre_partie(Crossword **cw)
     char filename_dictionnaire[50];
     char filename_grille[50];
     char filename[50];
-    int nbe,n,nr,nc;
+    int nbe;
     Crossword *c=malloc(sizeof(Crossword));
     switch (choix_niveau())
     {
@@ -176,11 +187,6 @@ void reprendre_partie(Crossword **cw)
         strcpy(filename_dictionnaire,"sauvegardes/dictionnaire_facile.txt");
         strcpy(filename_grille,"sauvegardes/grille_facile.txt");
         strcpy(filename,"grilles/facile.txt");
-        strcpy((c)->niveau,"facile");
-        strcpy((*cw)->niveau,"facile");
-        nr=FACILE_NROW;
-        nc=FACILE_NCOL;
-        n=FACILE_DIC_SIZE;
         strcpy((*cw)->stat->niveau,"facile");
         nbe=3;
         break;
@@ -188,99 +194,77 @@ void reprendre_partie(Crossword **cw)
         strcpy(filename_dictionnaire,"sauvegardes/dictionnaire_intermediaire.txt");
         strcpy(filename_grille,"sauvegardes/grille_intermediaire.txt");
         strcpy(filename,"grilles/intermediaire.txt");
-        strcpy((c)->niveau,"intermediaire");
-        strcpy((*cw)->niveau,"intermediaire");
         strcpy((*cw)->stat->niveau,"intermediaire");
-        nr=INTER_NROW;
-        nc=INTER_NCOL;
-        n=INTER_DIC_SIZE;
         nbe=2;
         break;
     case 3:
         strcpy(filename_dictionnaire,"sauvegardes/dictionnaire_difficile.txt");
         strcpy(filename_grille,"sauvegardes/grille_difficile.txt");
         strcpy(filename,"grilles/difficile.txt");
-        strcpy((c)->niveau,"difficile");
-        strcpy((*cw)->niveau,"difficile");
         strcpy((*cw)->stat->niveau,"difficile");
-        nr=DIFFICILE_NROW;
-        nc=DIFFICILE_NCOL;
-        n=DIFFICILE_DIC_SIZE;
         nbe=1;
         break;
     default:
         strcpy(filename_dictionnaire,"sauvegardes/dictionnaire_facile.txt");
         strcpy(filename_grille,"sauvegardes/grille_facile.txt");
         strcpy(filename,"grilles/facile.txt");
-        strcpy((c)->niveau,"facile");
-        strcpy((*cw)->niveau,"facile");
         strcpy((*cw)->stat->niveau,"facile");
-        nr=FACILE_NROW;
-        nc=FACILE_NCOL;
-        n=FACILE_DIC_SIZE;
         nbe=3;
         break;
     }
-    c->dictionnaire=load_dictionnaire(filename_dictionnaire,n);
-    c->grille=load_grille(filename,nr,nc);
-    Dictionnaire *dic=remplacer_underscore_mots_dictionnaire(c->dictionnaire,n);
+    c->dictionnaire=load_dictionnaire(filename_dictionnaire);
+    c->g=load_grille(filename);
+    Dictionnaire *dic=remplacer_underscore_mots_dictionnaire(c->dictionnaire);
     (*cw)->dictionnaire=dic; 
-    (*cw)->grille=load_grille(filename_grille,nr,nc);
-    run(cw,c,n,nr,nc,nbe);
+    (*cw)->g=load_grille(filename_grille);
+    run(cw,c,nbe);
     (*cw)->stat->heure_fin=*localtime(&secondes);
 }
 
 void sauvegarder_partie(Crossword *cw)
 {
-    int n,nr,nc;
     char filename_dictionnaire[50];
     char filename_grille[50];
-    if (strcmp(cw->niveau,"facile")==0)
+    if (strcmp(cw->g->niveau,"facile")==0)
     {
         strcpy(filename_dictionnaire,"sauvegardes/dictionnaire_facile.txt");
         strcpy(filename_grille,"sauvegardes/grille_facile.txt");
-        nr=FACILE_NROW;
-        nc=FACILE_NCOL;
-        n=FACILE_DIC_SIZE;
     }
-    else if(strcmp(cw->niveau,"intermediaire")==0)
+    else if(strcmp(cw->g->niveau,"intermediaire")==0)
     {
         strcpy(filename_dictionnaire,"sauvegardes/dictionnaire_intermediaire.txt");
         strcpy(filename_grille,"sauvegardes/grille_intermediaire.txt");
-        nr=INTER_NROW;
-        nc=INTER_NCOL;
-        n=INTER_DIC_SIZE;
     }
     else
     {
         strcpy(filename_dictionnaire,"sauvegardes/dictionnaire_difficile.txt");
         strcpy(filename_grille,"sauvegardes/grille_difficile.txt");
-        nr=DIFFICILE_NROW;
-        nc=DIFFICILE_NCOL;
-        n=DIFFICILE_DIC_SIZE;
     }
     FILE *f=NULL;
     FILE *f1=NULL;
     FILE *f2=NULL;
-    cw->dictionnaire=remplacer_espace_mots_dictionnaire(cw->dictionnaire,n);
+    cw->dictionnaire=remplacer_espace_mots_dictionnaire(cw->dictionnaire);
     f=fopen(filename_dictionnaire,"w");
     f1=fopen(filename_grille,"w");
     f2=fopen("statistique/stat.txt","a+");
     if (f!=NULL && f1!=NULL&& f2!=NULL)
     {
-        for (int i = 0; i < n; i++)
+        fprintf(f,"%d\n",cw->dictionnaire->dim);
+        for (int i = 0; i < cw->dictionnaire->dim; i++)
         {
             fprintf(f,"%d\t\t%s\t\t%s\t\t%s\t\t%s\n",cw->dictionnaire[i].id,cw->dictionnaire[i].indice_horizontal,cw->dictionnaire[i].indice_vertical,cw->dictionnaire[i].resultat_horizontal,cw->dictionnaire[i].resultat_vertical);
         }
-        for (int i = 0; i < nr; i++)
+        fprintf(f1,"%d %d %s\n",cw->g->nombre_ligne,cw->g->nombre_colonne,cw->g->niveau);
+        for (int i = 0; i < cw->g->nombre_ligne; i++)
         {
-            for (int j = 0; j < nc; j++)
+            for (int j = 0; j < cw->g->nombre_colonne; j++)
             {
-                if (strcmp(cw->grille[i][j].caractere," ")==0)
+                if (cw->g->grille[i][j].caractere==' ')
                 {
-                    strcpy(cw->grille[i][j].caractere,"?");
+                   
+                    cw->g->grille[i][j].caractere='?';
                 }
-                fprintf(f1,"%d  %s\n",cw->grille[i][j].id,cw->grille[i][j].caractere);
+                fprintf(f1,"%d  %c\n",cw->g->grille[i][j].id,cw->g->grille[i][j].caractere);
             }
         }
         fprintf(f2,"%s  %f %d  %d  %d %d  %d  %d  %d  %d\n",cw->stat->niveau,cw->stat->score,cw->stat->heure_debut.tm_mday,cw->stat->heure_debut.tm_mon,cw->stat->heure_debut.tm_hour,cw->stat->heure_debut.tm_min,cw->stat->heure_debut.tm_sec,cw->stat->heure_fin.tm_hour,cw->stat->heure_fin.tm_min,cw->stat->heure_fin.tm_sec);
@@ -294,36 +278,44 @@ void sauvegarder_partie(Crossword *cw)
     }
 }
 
-Cellule **load_grille(char *filename,int nr,int nc)
+
+Grille *load_grille(char *filename)
 {
-    Cellule ** grille=grille=malloc(sizeof(Cellule)*nr);
+    printf("%s",filename);
+    Grille *g=(Grille*)malloc(sizeof(Grille));
     FILE *f=fopen(filename,"r");
 
-    int size=nr*nc;
+    fscanf(f,"%d %d %s",&g->nombre_ligne,&g->nombre_colonne,g->niveau);
+    int size=g->nombre_ligne*g->nombre_colonne+1;
+    printf("%d ,%d",g->nombre_ligne,g->nombre_colonne);
     Cellule *vec=(Cellule*)malloc(sizeof(Cellule)*size);
     int k=0;
-    while (fscanf(f,"%d %s",&vec[k].id,&vec[k].caractere)!=EOF)
+    while (fscanf(f,"%d %c",&vec[k].id,&vec[k].caractere)!=EOF)
     {
         k++;
     }
     k=0;
-    for (int i = 0; i < nr; i++)
+    Cellule** grille=malloc(sizeof(Cellule)*g->nombre_ligne);
+    for (int i = 0; i < g->nombre_ligne; i++)
     {
-        grille[i]=malloc(sizeof(Cellule)*nc);
-        for (int j = 0; j < nc; j++)
+        grille[i]=malloc(sizeof(Cellule)*g->nombre_colonne);
+        for (int j = 0; j < g->nombre_colonne; j++)
         {
             grille[i][j].id=vec[k].id;
-            strcpy(grille[i][j].caractere,vec[k].caractere);
+            
+            grille[i][j].caractere=vec[k].caractere;
             k++;
         }
     }
+    g->grille=grille;
     fclose(f);
-    return grille;
+    return g;
 }
 
-Dictionnaire *load_dictionnaire(char *filename,int n)
+
+Dictionnaire *load_dictionnaire(char *filename)
 {
-    printf("\n filename = %s\n",filename);
+    
     FILE *f=NULL;
     Dictionnaire *dic=NULL;
     f=fopen(filename,"r");
@@ -333,9 +325,12 @@ Dictionnaire *load_dictionnaire(char *filename,int n)
     }
     else
     {
-        dic=malloc(sizeof(Dictionnaire)*n);
+        int dim;
+        fscanf(f,"%d\n",&dim);
+        dic=(Dictionnaire *)malloc(sizeof(Dictionnaire)*dim);
+        dic->dim=dim;
         int i=0;
-        while (fscanf(f,"%d  %s  %s  %s  %s",&dic[i].id,&dic[i].indice_horizontal,&dic[i].indice_vertical,&dic[i].resultat_horizontal,&dic[i].resultat_vertical)!=EOF && i<n)
+        while (fscanf(f,"%d  %s  %s  %s  %s",&dic[i].id,dic[i].indice_horizontal,dic[i].indice_vertical,dic[i].resultat_horizontal,dic[i].resultat_vertical)!=EOF && i<dim)
         {
             i++;
         }
@@ -344,22 +339,23 @@ Dictionnaire *load_dictionnaire(char *filename,int n)
     return dic;
 }
 
-void print_grille(Cellule **cel, int nr, int nc)
+
+void print_grille(Grille *g)
 {
-    if (cel!=NULL)
+    if (g->grille!=NULL)
     {
-        for (int i = 0; i < nr; i++)
+        for (int i = 0; i < g->nombre_ligne; i++)
         {
             printf("\n");
-            for (int j = 0; j < nc; j++)
+            for (int j = 0; j <  g->nombre_colonne; j++)
             {
-                if (cel[i][j].id!=0)
+                if (g->grille[i][j].id!=0)
                 {
-                    printf("|%d %s|\t",cel[i][j].id,cel[i][j].caractere);
+                    printf("|%d %c|\t",g->grille[i][j].id,g->grille[i][j].caractere);
                 }
                 else
                 {
-                    printf("  |%s|\t",cel[i][j].caractere);
+                    printf("  |%c|\t",g->grille[i][j].caractere);
                 }
             }
             printf("\n");
@@ -368,12 +364,13 @@ void print_grille(Cellule **cel, int nr, int nc)
     return;
 }
 
-void print_dictionnaire(Dictionnaire * dic,int n)
+
+void print_dictionnaire(Dictionnaire * dic)
 {
     if (dic!=NULL)
     {
         printf("\n\tHorizontal\t\t\t\t\t\t\t\t\t\t\t\t\tVertical\n");
-        for (int i = 0; i < n; i++)
+        for (int i = 0; i < dic->dim; i++)
         {
             if (dic[i].indice_horizontal[0]=='-' && dic[i].indice_vertical[0]!='-')
             {
@@ -393,65 +390,49 @@ void print_dictionnaire(Dictionnaire * dic,int n)
 }
 
 
+
 void free_Memory(Crossword **cw){
-    int nr;
-    if (strcmp((*cw)->niveau,"facile")==0)
-    {
-        nr=FACILE_NROW;
-    }
-    else if (strcmp((*cw)->niveau,"intermedaire")==0)
-    {
-        nr=INTER_NROW;
-    }
-    else
-    {
-        nr=DIFFICILE_NROW;
-    }
     
-    if (cw!=NULL)
+    if ((*cw)!=NULL)
     {
-        for (int i = 0; i < nr; i++)
+        for (int i = 0; i < (*cw)->g->nombre_ligne; i++)
         {
-           free((*cw)->grille[i]);
+           free((*cw)->g->grille[i]);
         }
         free((*cw)->dictionnaire);
+        free((*cw)->stat);
+        free((*cw)->g);
         free(*cw);
     }
     return;
 }
 
-Cellule **generer_grille(Cellule **grille, int nr, int nc)
+Grille *generer_grille(Grille *g)
 {
-    Cellule ** g=malloc(sizeof(Cellule)*nr);
-    for (int i = 0; i < nr; i++)
+    Grille * gril=malloc(sizeof(Grille));
+    Cellule** cel=malloc(sizeof(Cellule)*g->nombre_ligne);
+    for (int i = 0; i < g->nombre_ligne; i++)
     {
-        g[i]=malloc(sizeof(Cellule)*nc);
-        for (int j = 0; j < nc; j++)
+        cel[i]=malloc(sizeof(Cellule)*g->nombre_colonne);
+        for (int j = 0; j < g->nombre_colonne; j++)
         {
-            g[i][j].id=grille[i][j].id;
-            strcpy(g[i][j].caractere,grille[i][j].caractere[0]=='*'?grille[i][j].caractere:" ");
+            cel[i][j].id=g->grille[i][j].id;
+            
+            cel[i][j].caractere=g->grille[i][j].caractere=='*'?g->grille[i][j].caractere:' ';
+
         }
     }
-    return g;
+    gril->grille=cel;
+    gril->nombre_ligne=g->nombre_ligne;
+    gril->nombre_colonne=g->nombre_colonne;
+    strcpy(gril->niveau,g->niveau);
+    return gril;
 }
 
-Dictionnaire *generer_dictionnaire(Dictionnaire *dic, int n)
-{
-    Dictionnaire *d=malloc(sizeof(Dictionnaire));
-    for (int i = 0; i < n; i++)
-    {
-        d[i].id=dic[i].id;
-        strcpy(d[i].indice_horizontal,dic[i].indice_horizontal);
-        strcpy(d[i].indice_vertical,dic[i].indice_vertical);
-        strcpy(d[i].resultat_horizontal,"");
-        strcpy(d[i].resultat_vertical,"");
-    }
-    return d;
-}
 
-Dictionnaire * remplacer_underscore_mots_dictionnaire(Dictionnaire *dic, int n)
+Dictionnaire * remplacer_underscore_mots_dictionnaire(Dictionnaire *dic)
 {
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < dic->dim; i++)
     {
         strcpy(dic[i].indice_horizontal,replace(dic[i].indice_horizontal,'_',' '));
         strcpy(dic[i].indice_vertical,replace(dic[i].indice_vertical,'_',' '));
@@ -459,9 +440,9 @@ Dictionnaire * remplacer_underscore_mots_dictionnaire(Dictionnaire *dic, int n)
     return dic;
 }
 
-Dictionnaire *remplacer_espace_mots_dictionnaire(Dictionnaire *dic, int n)
+Dictionnaire *remplacer_espace_mots_dictionnaire(Dictionnaire *dic)
 {
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < dic->dim; i++)
     {
         strcpy(dic[i].indice_horizontal,replace(dic[i].indice_horizontal,' ','_'));
         strcpy(dic[i].indice_vertical,replace(dic[i].indice_vertical,' ','_'));
@@ -490,20 +471,23 @@ int choix_niveau()
     int choix;
     printf("\nEntrez votre choix :\t");
     scanf("%d",&choix);
+    printf("\n\n");
     return choix;
 }
 
 int menu()
 {
-    printf("\n\n Menu du jeu.\n\n",130);
+    printf("\n\n Menu du jeu.\n\n");
     printf("\n1-Nouvelle partie.\n");
     printf("\n2-Reprendre une partie.\n");
     printf("\n3-Sauvegarder une partie.\n");
     printf("\n4-Statistique.\n");
     printf("\n5-Quitter une partie.\n");
     int choix;
-    printf("Entrer votre choix :\t");
+    printf("\nEntrer votre choix :\t");
     scanf("%d",&choix);
+    printf("\n\n");
+
     return choix;
 }
 

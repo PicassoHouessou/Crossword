@@ -31,5 +31,8 @@ int main(int argv,char* argc[]){
     }
     printf("\n\n**************************** Good Bye ********************************\n\n");
     free_Memory(&cw);
+    
+    // print_dictionnaire_c(load_dictionnaire_c("dictionnaires/facile.txt"));
+    // print_grille_c(load_grille_c("grilles/facile.txt"));
     return EXIT_SUCCESS;
 }
