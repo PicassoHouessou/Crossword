@@ -1,7 +1,7 @@
 # Crossword
 
 
-## Prérequis
+## Prérequis:
     - gcc
     - make
 
