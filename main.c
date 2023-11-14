@@ -4,7 +4,7 @@
 int main(int argv,char* argc[]){
     Crossword *cw=malloc(sizeof(Crossword));
     int r=1;
-    printf("\n\n**************************** Welcome to Crossworld ********************************\n\n");
+    printf("\n\n************************************************************ Welcome to Crossworld ****************************************************************\n\n");
     while (r)
     {
         switch (menu())
@@ -29,10 +29,7 @@ int main(int argv,char* argc[]){
             break;
         }
     }
-    printf("\n\n**************************** Good Bye ********************************\n\n");
+    printf("\n\n********************************************************************** Good Bye **********************************************************************\n\n");
     free_Memory(&cw);
-    
-    // print_dictionnaire_c(load_dictionnaire_c("dictionnaires/facile.txt"));
-    // print_grille_c(load_grille_c("grilles/facile.txt"));
     return EXIT_SUCCESS;
 }

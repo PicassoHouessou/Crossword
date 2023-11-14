@@ -160,7 +160,6 @@ void nouvelle_partie(Crossword **cw)
     }
     c->dictionnaire=load_dictionnaire(filename_dictionnaire);
     c->g=load_grille(filename_grille);
-    print_grille(c->g);
     Dictionnaire *dic=remplacer_underscore_mots_dictionnaire(c->dictionnaire);
     (*cw)->dictionnaire=dic;
     (*cw)->g=generer_grille(c->g);
