@@ -39,13 +39,13 @@ void run(Crossword **cw,Crossword *c,int nbe){
             k=(*cw)->dictionnaire->dim;
             return;
         }
-        else if (isIn(current,(*cw)->dictionnaire->dim,choix)==1)
+        else if ((0<=choix && choix<=(*cw)->dictionnaire->dim) && isIn(current,(*cw)->dictionnaire->dim,choix)==1)
         {
             printf("\nVous avez d%cja fait ce choix %d.\n",130,choix);
             while (isIn(current,(*cw)->dictionnaire->dim,choix)==1)
             {
                 printf("\nVeillez re-%cssayer :\t",130);
-                scanf("%d",&choix);
+                scanf("%d",&choix); 
             }
             printf("\nEntrer votre r%cponse form%c des lettres en majuscules :\t",130,130);
             scanf("%s",response);
@@ -158,6 +158,10 @@ void nouvelle_partie(Crossword **cw)
         nbe=3;
         break;
     }
+
+    printf("\nEntrer votre nom :\t");
+    (*cw)->u=malloc(sizeof(User));
+    scanf("%s",(*cw)->u->username);
     c->dictionnaire=load_dictionnaire(filename_dictionnaire);
     c->g=load_grille(filename_grille);
     Dictionnaire *dic=remplacer_underscore_mots_dictionnaire(c->dictionnaire);
@@ -266,7 +270,7 @@ void sauvegarder_partie(Crossword *cw)
                 fprintf(f1,"%d  %c\n",cw->g->grille[i][j].id,cw->g->grille[i][j].caractere);
             }
         }
-        fprintf(f2,"%s  %f %d  %d  %d %d  %d  %d  %d  %d\n",cw->stat->niveau,cw->stat->score,cw->stat->heure_debut.tm_mday,cw->stat->heure_debut.tm_mon,cw->stat->heure_debut.tm_hour,cw->stat->heure_debut.tm_min,cw->stat->heure_debut.tm_sec,cw->stat->heure_fin.tm_hour,cw->stat->heure_fin.tm_min,cw->stat->heure_fin.tm_sec);
+        fprintf(f2,"%s  %s  %f %d  %d  %d %d  %d  %d  %d  %d\n",cw->u->username,cw->stat->niveau,cw->stat->score,cw->stat->heure_debut.tm_mday,cw->stat->heure_debut.tm_mon,cw->stat->heure_debut.tm_hour,cw->stat->heure_debut.tm_min,cw->stat->heure_debut.tm_sec,cw->stat->heure_fin.tm_hour,cw->stat->heure_fin.tm_min,cw->stat->heure_fin.tm_sec);
         fclose(f);
         fclose(f1);
         fclose(f2);
@@ -497,14 +501,22 @@ void statistique(){
     {
         char niveau[15];
         int h1,h2,m1,m2,s1,s2,m,d;
+        char name[25];
+        char username[25];
+        printf("\nEntrer votre nom d'utilisateur:\t");
+        scanf("%s",name);
         float score;
         printf("------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
         printf("Niveau\t\t|\t\tScore\t\t|\t\t\tDate\t\t|\t\t\tHeure de D%cbut\t\t|\t\tHeure de Fin\n",130);
         printf("------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
-        while (fscanf(f,"%s %f %d %d %d %d %d %d %d %d",niveau,&score,&d,&m,&h1,&m1,&s1,&h2,&m2,&s2)!=EOF)
+        while (fscanf(f,"%s %s %f %d %d %d %d %d %d %d %d",username,niveau,&score,&d,&m,&h1,&m1,&s1,&h2,&m2,&s2)!=EOF)
         {
-            printf("\n%s\t\t|\t\t%.2f\t\t|\t\t%d/%d\t\t|\t\t\t%d:%d:%d\t\t|\t\t\t%d:%d:%d\n",niveau,(score*100),d,m,h1,m1,s1,h2,m2,s2);
-            printf("------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+            if (strcmp(username,name)==0)
+            {
+                printf("\n%s\t\t|\t\t%.2f\t\t|\t\t%d/%d\t\t|\t\t\t%d:%d:%d\t\t|\t\t\t%d:%d:%d\n",niveau,(score*100),d,m,h1,m1,s1,h2,m2,s2);
+                printf("------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+            }
+            
         }
         fclose(f);
     }

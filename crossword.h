@@ -19,6 +19,13 @@
 
 
 
+typedef struct user
+{
+    char username[25];
+} User;
+
+
+
 /// @brief structure pour concerver les statstiques du joueur
 typedef struct stat
 {
@@ -61,6 +68,7 @@ typedef struct gril
 } Grille;
 typedef struct crossword
 {
+    User* u;
     Grille* g;
     Dictionnaire *dictionnaire;
     Statistique *stat;
