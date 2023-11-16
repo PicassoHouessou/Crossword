@@ -27,7 +27,7 @@ void run(Crossword **cw,Crossword *c,int nbe){
         printf("\n0-sauvegarder la partie en cours.\n");
         int choix;
         
-        k==0?printf("\nEntrer votre choix :\t"):printf("\nEntrer un second choix :\t");
+        k==0?printf("\nEntrer votre choix le nombre doit etre compris entre [0-%d]:\t",(*cw)->dictionnaire->dim):printf("\nEntrer un second choix le nombre doit etre compris entre [0-%d]:\t",(*cw)->dictionnaire->dim);
         scanf("%d",&choix);
         char response[25];
         if(choix==0)
@@ -39,13 +39,14 @@ void run(Crossword **cw,Crossword *c,int nbe){
             k=(*cw)->dictionnaire->dim;
             return;
         }
-        else if ((0<=choix && choix<=(*cw)->dictionnaire->dim) && isIn(current,(*cw)->dictionnaire->dim,choix)==1)
+        else if (((int)choix>(*cw)->dictionnaire->dim) || isIn(current,(*cw)->dictionnaire->dim,choix)==1)
         {
-            printf("\nVous avez d%cja fait ce choix %d.\n",130,choix);
+            printf("\nVous avez d%cja fait ce choix ou votre choix est indisponible %d.\n",130,choix);
             while (isIn(current,(*cw)->dictionnaire->dim,choix)==1)
             {
-                printf("\nVeillez re-%cssayer :\t",130);
-                scanf("%d",&choix); 
+                printf("\nVeillez re-%cssayer le nombre doit etre compris entre [0-%d] :\t",130,(*cw)->dictionnaire->dim);
+                scanf("%d",&choix);
+                 
             }
             printf("\nEntrer votre r%cponse form%c des lettres en majuscules :\t",130,130);
             scanf("%s",response);
@@ -58,8 +59,8 @@ void run(Crossword **cw,Crossword *c,int nbe){
             while (strcmp(response,(*cw)->dictionnaire[choix-1].indice_horizontal[0]!='-'?(c)->dictionnaire[choix-1].resultat_horizontal:(c)->dictionnaire[choix-1].resultat_vertical)!=0 && i<nbe)
             {
                 i++;
-                printf("\nR%cponse fausse, votre r%cponse doit contenir uniquement des caract%cres entre A et Z. Il vous reste %d %cssais possible\n",130,130,138,(nbe-i)+1,130);
-                printf("\nVeillez re-%cssayer :\t",130);
+                printf("\nR%cponse incorrecte, votre r%cponse doit contenir uniquement des caract%cres entre A et Z. Il vous reste %d %cssais possible\n",130,130,138,(nbe-i)+1,130);
+                printf("\nVeillez re-%cssayer une nouvelle r%cponse:\t",130,130);
                 scanf("%s",response);
             }
         }
