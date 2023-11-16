@@ -1,0 +1,10 @@
+9
+1  -  Designe_l_enseignement_des_informations_faits_idee_ou_competences_qu_une personne_a_acquises  -  CONNAISSANCE
+2  Designe_generalement_une_unite_d_enseignement_sur_une_matiere_specifique  -  COURS  -
+3  Refere_a_la_periode_pendant_laquelle_une_personne_frequente_une_ecole  -  SCOLARITE 
+4  C_est_un_processus_par_lequel_une_personne_acquiert_des_connaissances  -  APPRENDRE  -
+5  C_est_l_ensemble_englobe_d_action_d_instruire  -  ENSEIGNEMENT  -
+6  -  IL_elle_est_responsible_d_enseigner_des_matieres_specifiques_a_des_etudiants  -  PROFESSEUR
+7  C_est_l_ensemble_des_objectifs_contenus_et_methodes_d_enseignement_definis_pour_une_matiere  -  PROGRAMME  -
+8  -  C_est_souvent_associee_a_la_regularite,au_controle_et_a_l_ordre_dans_les_comportements  -  DISCIPLINE
+9  C_est_un_adjectif_qui_se_rapporte_a_tout_ce_qui_concerne_l_ecole  -  SCOLAIRE  -

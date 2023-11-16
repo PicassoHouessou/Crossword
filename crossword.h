@@ -182,5 +182,9 @@ int choix_niveau();
 /// @return un nombre compris entre 1 et 5 representant les différentes fonctionnalitions offertes par notre jeu
 int menu();
 
+int demande_aide();
+
+int sujet();
+
 #endif // ___CROSSWORD___
 
