@@ -188,7 +188,6 @@ void nouvelle_partie(Crossword **cw)
     Dictionnaire *dic=remplacer_underscore_mots_dictionnaire(c->dictionnaire);
     (*cw)->dictionnaire=dic;
     (*cw)->g=generer_grille(c->g);
-    print_grille((*cw)->g);
     (*cw)->stat->heure_fin=*localtime(&secondes);
     run(cw,c,nbe);
     (*cw)->stat->heure_fin=*localtime(&secondes);
@@ -380,7 +379,7 @@ Grille *load_grille(char *filename)
     Grille *g=(Grille*)malloc(sizeof(Grille));
     FILE *f=fopen(filename,"r");
 
-    fscanf(f,"%d %d %s",&g->nombre_ligne,&g->nombre_colonne,g->niveau);
+    fscanf(f,"%d %d",&g->nombre_ligne,&g->nombre_colonne);
     int size=g->nombre_ligne*g->nombre_colonne+1;
     printf("%d ,%d",g->nombre_ligne,g->nombre_colonne);
     Cellule *vec=(Cellule*)malloc(sizeof(Cellule)*size);
