@@ -72,6 +72,7 @@ typedef struct crossword
     Grille* g;
     Dictionnaire *dictionnaire;
     Statistique *stat;
+    char sujet[50];
 } Crossword;
 
 int isIn(int T[],int n,int ch);
