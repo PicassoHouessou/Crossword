@@ -155,6 +155,10 @@ void nouvelle_partie(Crossword **cw)
         strcpy(filename_dictionnaire,"dictionnaires/education.txt");
         strcpy(filename_grille,"grilles/education.txt");
         break;
+    case 3:
+        strcpy(filename_dictionnaire,"dictionnaires/medecine.txt");
+        strcpy(filename_grille,"grilles/medecine.txt");
+        break;
     default:
         strcpy(filename_dictionnaire,"dictionnaires/divers.txt");
         strcpy(filename_grille,"grilles/divers.txt");
@@ -604,10 +608,11 @@ int sujet()
     printf("\nChoix du sujet.\n");
     printf("\n1-Divers.\n");
     printf("\n2-Education.\n");
+    printf("\n3-Medecine.\n");
     int choix;
     printf("\nEntrer votre choix:\t");
     scanf("%d",&choix);
-    if (choix>=1 || choix<=2)
+    if (choix>=1 || choix<=3)
     {
         return choix;
     }

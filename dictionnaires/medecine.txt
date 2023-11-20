@@ -1,0 +1,16 @@
+15
+1  Maladie_humaine_a_qui_l_on_donne_parfois_des_noms_d_oiseaux  -  GRIPPE  -
+2  -  Une_base_alimentaire_que_tout_medecin_doit_conseiller  -  CEREALES
+3  -  Ca_n_est_pas_une_depression_passagere  -  MELANCOLIE
+4  Stupefait  -  EBERLUE  -
+5  -  Mousse  -  DEMI
+6  Alcool  -  GIN  -
+7  -  Illegal_pour_le_medecin_marron  -  EXERCICE
+8  Ces_produits_sont_ils_bons_pour_la_sante  -  OGM  -
+9  Elle_stridule_dans_tout_le_bassin_mediterraneen  -  CIGALE  -
+10  Versee_depuis_peu_au_medecin_qui_exerce_en_zone_sous_medicalisee  -  PRIME  -
+11  Attendri  -  EMU  -
+12  Derembourse_a_tout_va_par_les_temps_qui_courent  -  MEDICAMENT  -
+13  Un_lieu_d_exercice_pour_medecins_haut_grades  -  ARMEES  -
+14  Un_autre_nom_pour_le_medecin  -  THERAPEUTE  -
+15  Essentiel_pour_un_bon_diagnostic  -  EXAMEN  -
