@@ -66,6 +66,8 @@ typedef struct gril
     int nombre_ligne;
     int nombre_colonne;
 } Grille;
+
+/// @brief structure de donnée pour contenir les informations d'une partie
 typedef struct crossword
 {
     User* u;
@@ -75,6 +77,12 @@ typedef struct crossword
     char sujet[50];
 } Crossword;
 
+
+/// @brief fonction pour vérifier si un choix a déjà été fait ou pas
+/// @param T tableaux qui contient tous les choix précedent
+/// @param n taille du tableaux T
+/// @param ch nouveau choix
+/// @return une valeur 1 si le choix a déjà été fait et 0 sinon
 int isIn(int T[],int n,int ch);
 
 
@@ -82,16 +90,16 @@ int isIn(int T[],int n,int ch);
 
 
 /// @brief déclaration de la fonction qui va nous permettre de lancer une partie 
-/// @param Crossword** 
+/// @param Crossword** paramètre qui va contenir les informations sur la partie encours
 /// @brief qui est un pointeur sur un pointeur de la partie du jeu encours. cette déclaration 
 /// @brief nous permet d'éviter de retourner la structure qui représente une partie à la fin de la partie  
 void nouvelle_partie(Crossword **);
 
 /// @brief fonction qui contient toute l'implémentation du déroulement d'une partie
-/// @param  Crossword **
+/// @param  Crossword ** paramètre qui va contenir les informations sur la partie encours
 /// @brief qui est un pointeur sur un pointeur de la partie du jeu encours. cette déclaration 
 /// @brief nous permet d'éviter de retourner la structure qui représente une partie à la fin de la partie
-/// @param  Crossword *
+/// @param  Crossword * parametre pour contenir les informations complete sur la partie encours
 /// @brief qui est un pointeur sur les resultats de la partie du jeu encours.
 /// @param  int taille du dictionnaire de la partie encours
 /// @param  int nombre de ligne de la grille de la partie encours
@@ -183,8 +191,13 @@ int choix_niveau();
 /// @return un nombre compris entre 1 et 5 representant les différentes fonctionnalitions offertes par notre jeu
 int menu();
 
+
+/// @brief fonction qui permet a un joueur de demander de l'aide sur le résultat d'un indice pendant une partie
+/// @return un entier indiquant l'action a éxécuté
 int demande_aide();
 
+/// @brief fonction qui permet a un joueur de choisir le sujet sur lequel va porter la partie encours
+/// @return un entier indiquant l'action a éxécuté
 int sujet();
 
 #endif // ___CROSSWORD___

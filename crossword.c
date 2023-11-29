@@ -17,7 +17,7 @@ void run(Crossword **cw,Crossword *c,int nbe){
     int s=0;
     int k=0;
     int current[(*cw)->dictionnaire->dim];
-    float manus=0.0;
+    float manus=0.0f;
     while (k<(*cw)->dictionnaire->dim)
     {
         print_grille((*cw)->g);
@@ -33,7 +33,7 @@ void run(Crossword **cw,Crossword *c,int nbe){
         {
             time(&secondes);
             (*cw)->stat->heure_fin=*localtime(&secondes);
-            (*cw)->stat->score=((float)s/(float)(*cw)->dictionnaire->dim);
+            (*cw)->stat->score += ((float)s/(float)(*cw)->dictionnaire->dim)-manus;
             sauvegarder_partie(*cw);
             k=(*cw)->dictionnaire->dim;
             return;
@@ -68,7 +68,7 @@ void run(Crossword **cw,Crossword *c,int nbe){
                     {
                         printf("\nLa r%cponse commence par %c et se termine par %c et contient %ld caract%cres en majuscule.\n",130,(c)->dictionnaire[choix-1].resultat_vertical[0],(c)->dictionnaire[choix-1].resultat_vertical[strlen((c)->dictionnaire[choix-1].resultat_vertical)-1],strlen((c)->dictionnaire[choix-1].resultat_vertical),138);
                     }
-                    manus += 0.25;
+                    manus += (float)1/(float)((*cw)->dictionnaire->dim*6);
                 }
                 
                 printf("\nR%cponse incorrecte, votre r%cponse doit contenir uniquement des caract%cres entre A et Z. Il vous reste %d %cssais possible\n",130,130,138,(nbe-i)+1,130);
@@ -129,8 +129,8 @@ void run(Crossword **cw,Crossword *c,int nbe){
         current[k]=choix;
         k++;
     }
-    printf("%.2f\n",manus);
-    (*cw)->stat->score=((float)s/(float)(*cw)->dictionnaire->dim)-manus;
+    printf("\nmanus=%.2f\n",manus);
+    (*cw)->stat->score += (float)(((float)s/(float)(*cw)->dictionnaire->dim)-manus);
     print_grille((*cw)->g);
 }
 
@@ -428,7 +428,7 @@ void sauvegarder_partie(Crossword *cw)
         {
             fprintf(f,"%d\t\t%s\t\t%s\t\t%s\t\t%s\n",cw->dictionnaire[i].id,cw->dictionnaire[i].indice_horizontal,cw->dictionnaire[i].indice_vertical,cw->dictionnaire[i].resultat_horizontal,cw->dictionnaire[i].resultat_vertical);
         }
-        fprintf(f1,"%d %d %s\n",cw->g->nombre_ligne,cw->g->nombre_colonne,cw->g->niveau);
+        fprintf(f1,"%d %d\n",cw->g->nombre_ligne,cw->g->nombre_colonne);
         for (int i = 0; i < cw->g->nombre_ligne; i++)
         {
             for (int j = 0; j < cw->g->nombre_colonne; j++)
@@ -667,7 +667,7 @@ int menu()
 
 int demande_aide()
 {
-    printf("\nToute aide est %cquivalent a un manu de 0.25 de votre score avant la demande d'aide.\n",130);
+    printf("\nToute aide est %cquivalent a un manu de 1/6 de votre r%ccompense avant la demande d'aide.\n",130,130);
     printf("\n1-Avoir de l'aide.\n");
     printf("\nEntrer votre choix:\t");
     int choix;
