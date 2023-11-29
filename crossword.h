@@ -7,16 +7,6 @@
 #ifndef ___CROSSWORD___
 #define ___CROSSWORD___
 
-#define FACILE_NROW 12 // nombre de ligne de la grille du niveau facile
-#define FACILE_NCOL 16 // nombre de colonne de grille du niveau facile
-#define FACILE_DIC_SIZE 10  // taille du dictionnaire du niveau facile
-#define INTER_DIC_SIZE 10 // taille du dictionnaire du niveau intermédiaire
-#define DIFFICILE_DIC_SIZE 10 // taille du dictionnaire du niveau difficile
-#define INTER_NROW 12  // nombre de ligne de la grille du niveau intermédiaire
-#define INTER_NCOL 16 // nombre de colonne de grille du niveau intermédiaire
-#define DIFFICILE_NROW 12 // nombre de ligne de la grille du niveau difficile
-#define DIFFICILE_NCOL 16 // nombre de colonne de grille du niveau difficile
-
 
 
 typedef struct user
@@ -100,10 +90,6 @@ void nouvelle_partie(Crossword **);
 /// @brief qui est un pointeur sur un pointeur de la partie du jeu encours. cette déclaration 
 /// @brief nous permet d'éviter de retourner la structure qui représente une partie à la fin de la partie
 /// @param  Crossword * parametre pour contenir les informations complete sur la partie encours
-/// @brief qui est un pointeur sur les resultats de la partie du jeu encours.
-/// @param  int taille du dictionnaire de la partie encours
-/// @param  int nombre de ligne de la grille de la partie encours
-/// @param  int nombre de colonne de la grille de la partie encours
 /// @param  int nombre d'éssais possible pour trouver une réponse durant la partie encours
 void run(Crossword **,Crossword *,int);
 
@@ -156,12 +142,6 @@ void free_Memory(Crossword **);
 /// @param  int nombre de colonne de la grille
 /// @return  une copie non remplie de la grille prise en paramèttre
 Grille *generer_grille(Grille *);
-
-/// @brief fonction qui permet de générer un dictionnaire à partir d'un autre dictionnaire
-/// @param  Dictionnaire * dictionnare dont on veut créer le clone
-/// @param  int taille du dictionnaire
-/// @return une copie  du dictionnaire pris en paramèttre
-// Dictionnaire *generer_dictionnaire(Dictionnaire *,int);
 
 /// @brief fonction qui permet de remplacer les underscores qui séparant les différents mots des indices horizontaux et verticaux du dictionnaire
 /// @param  Dictionnaire * tableau dont on veut remplacer les underscores qui separent les différents mots des indices horizontaux et verticaux

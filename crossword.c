@@ -2,6 +2,10 @@
 
 time_t secondes;
 
+
+/*
+    fonction qui permet de vérifier si un entier est contenu dans un tableau d'entiers
+*/
 int isIn(int T[],int n,int ch){
     for (int i = 0; i < n; i++)
     {
@@ -13,6 +17,10 @@ int isIn(int T[],int n,int ch){
     return 0;
 }
 
+
+/*
+    fonction qui contient le déroulement du jeu
+*/
 void run(Crossword **cw,Crossword *c,int nbe){
     int s=0;
     int k=0;
@@ -78,7 +86,6 @@ void run(Crossword **cw,Crossword *c,int nbe){
         }
         if (strcmp(response,(*cw)->dictionnaire[choix-1].indice_horizontal[0]!='-'?(c)->dictionnaire[choix-1].resultat_horizontal:(c)->dictionnaire[choix-1].resultat_vertical)==0)
         {
-            printf("\nBravo.\n");
             s++;
             if ((*cw)->dictionnaire[choix-1].indice_horizontal[0]!='-')
             {
@@ -129,12 +136,15 @@ void run(Crossword **cw,Crossword *c,int nbe){
         current[k]=choix;
         k++;
     }
-    printf("\nmanus=%.2f\n",manus);
     (*cw)->stat->score += (float)(((float)s/(float)(*cw)->dictionnaire->dim)-manus);
     print_grille((*cw)->g);
 }
 
 
+
+/*
+   fonction pour lancer une nouvelle partie
+*/
 void nouvelle_partie(Crossword **cw)
 {
     time(&secondes);
@@ -201,6 +211,10 @@ void nouvelle_partie(Crossword **cw)
     (*cw)->stat->heure_fin=*localtime(&secondes);
 }
 
+
+/*
+    fonction pour continuer une partie sauvegarder précédemment
+*/
 void reprendre_partie(Crossword **cw)
 {
     time(&secondes);
@@ -360,6 +374,10 @@ void reprendre_partie(Crossword **cw)
     (*cw)->stat->heure_fin=*localtime(&secondes);
 }
 
+
+/* 
+    fonction pour sauvegarder la progression d'une partie dans les fichiers
+*/
 void sauvegarder_partie(Crossword *cw)
 {
     char filename_dictionnaire[100];
@@ -381,8 +399,6 @@ void sauvegarder_partie(Crossword *cw)
     }
     else if(strcmp(cw->g->niveau,"intermediaire")==0)
     {
-        // strcpy(filename_dictionnaire,"sauvegardes/dictionnaire/intermediaire.txt");
-        // strcpy(filename_grille,"sauvegardes/grille/intermediaire.txt");
         if (strcmp(cw->sujet,"divers")==0){
             strcpy(filename_dictionnaire,"sauvegardes/divers/dictionnaires/difficile.txt");
             strcpy(filename_grille,"sauvegardes/divers/grilles/difficile.txt");
@@ -398,9 +414,6 @@ void sauvegarder_partie(Crossword *cw)
     }
     else
     {
-        // strcpy(filename_dictionnaire,"sauvegardes/dictionnaire/difficile.txt");
-        // strcpy(filename_grille,"sauvegardes/grilles/difficile.txt");
-
         if (strcmp(cw->sujet,"divers")==0){
             strcpy(filename_dictionnaire,"sauvegardes/divers/dictionnaires/facile.txt");
             strcpy(filename_grille,"sauvegardes/divers/grilles/facile.txt");
@@ -453,6 +466,9 @@ void sauvegarder_partie(Crossword *cw)
 }
 
 
+/*
+    fonction pour charger une grille enregistrer dans un fichier
+*/
 Grille *load_grille(char *filename)
 {
     printf("%s",filename);
@@ -487,6 +503,10 @@ Grille *load_grille(char *filename)
 }
 
 
+
+/*
+    fonction qui permet de charger un dictionnaire enregistrer dans un fichier
+*/
 Dictionnaire *load_dictionnaire(char *filename)
 {
     
@@ -514,6 +534,9 @@ Dictionnaire *load_dictionnaire(char *filename)
 }
 
 
+/*
+    fonction pour affiche une grille
+*/
 void print_grille(Grille *g)
 {
     if (g->grille!=NULL)
@@ -539,6 +562,10 @@ void print_grille(Grille *g)
 }
 
 
+
+/*
+    fonction pour affiche un dictionnaire
+*/
 void print_dictionnaire(Dictionnaire * dic)
 {
     if (dic!=NULL)
@@ -564,7 +591,9 @@ void print_dictionnaire(Dictionnaire * dic)
 }
 
 
-
+/*
+    fonction qui permet de liberer la mémoire allouée pour une partie du jeu
+*/
 void free_Memory(Crossword **cw){
     
     if ((*cw)!=NULL)
@@ -581,6 +610,9 @@ void free_Memory(Crossword **cw){
     return;
 }
 
+/*
+    fonction qui permet de générer une grille non remplie à partir d'une grille déjà remplie
+*/
 Grille *generer_grille(Grille *g)
 {
     Grille * gril=malloc(sizeof(Grille));
@@ -604,6 +636,9 @@ Grille *generer_grille(Grille *g)
 }
 
 
+/*
+    fonction qui permet de remplacer les underscores dans les mots du dictionnaire
+*/
 Dictionnaire * remplacer_underscore_mots_dictionnaire(Dictionnaire *dic)
 {
     for (int i = 0; i < dic->dim; i++)
@@ -614,6 +649,9 @@ Dictionnaire * remplacer_underscore_mots_dictionnaire(Dictionnaire *dic)
     return dic;
 }
 
+/*
+    fonction qui permet de remplacer les espace par les underscore dans les mots du dictionnaire
+*/
 Dictionnaire *remplacer_espace_mots_dictionnaire(Dictionnaire *dic)
 {
     for (int i = 0; i < dic->dim; i++)
@@ -624,6 +662,9 @@ Dictionnaire *remplacer_espace_mots_dictionnaire(Dictionnaire *dic)
     return dic;
 }
 
+/*
+    fonction qui permet de remplacer un caractère par un autre dans une chaine de caractère
+*/
 char *replace(char *ch,char c, char r)
 {
     for (int i = 0; i < strlen(ch); i++)
@@ -636,6 +677,10 @@ char *replace(char *ch,char c, char r)
     return ch;
 }
 
+
+/*
+    fonction qui permet de choisir le niveau de difficulté
+*/
 int choix_niveau()
 {
     printf("\n\n Choix du niveau de difficult%c.\n\n",130);
@@ -649,6 +694,10 @@ int choix_niveau()
     return choix;
 }
 
+
+/*
+    fonction qui permet d'afficher le menu du jeu
+*/
 int menu()
 {
     printf("\n\n Menu du jeu.\n\n");
@@ -665,6 +714,10 @@ int menu()
     return choix;
 }
 
+
+/*
+    fonction qui permet d'afficher le menu de démande d'aide
+*/
 int demande_aide()
 {
     printf("\nToute aide est %cquivalent a un manu de 1/6 de votre r%ccompense avant la demande d'aide.\n",130,130);
@@ -679,6 +732,10 @@ int demande_aide()
     return 0;
 }
 
+
+/*
+    fonction qui permet d'afficher le menu pour choisir le sujet de la partie encours
+*/
 int sujet()
 {
     printf("\nChoix du sujet.\n");
@@ -695,6 +752,10 @@ int sujet()
     return 0;
 }
 
+
+/*
+    fonction qui permet d'afficher les statistiques d'un joueur
+*/
 void statistique(){
     FILE *f=NULL;
     f=fopen("statistique/stat.txt","r");
