@@ -9,6 +9,9 @@
 
 
 
+/*
+    structure pour conserver le nom du joueur
+*/
 typedef struct user
 {
     char username[25];
