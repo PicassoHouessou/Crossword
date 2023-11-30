@@ -710,8 +710,11 @@ int menu()
     printf("\nEntrer votre choix :\t");
     scanf("%d",&choix);
     printf("\n\n");
-
-    return choix;
+    if (choix>=1 && choix<=5)
+    {
+        return choix;
+    }
+    return -1;
 }
 
 
