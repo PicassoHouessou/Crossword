@@ -191,4 +191,3 @@ void sauvegarder_choix(int T[],int n);
 int * load_choix(int);
 
 #endif // ___CROSSWORD___
-
