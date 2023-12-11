@@ -899,7 +899,7 @@ void statistique(){
         {
             if (strcmp(username,name)==0)
             {
-                printf("\n%s\t\t|\t\t%s\t\t|\t\t%.4f\t\t|\t%d/%d\t\t|\t%d:%d:%d\t\t\t|\t%d:%d:%d\n",sub,niveau,(score*100),d,m,h1,m1,s1,h2,m2,s2);
+                printf("\n%s\t\t|%s\t|\t\t%.4f\t\t|\t%d/%d\t\t|\t%d:%d:%d\t\t\t|\t%d:%d:%d\n",sub,niveau,(score*100),d,m,h1,m1,s1,h2,m2,s2);
                 printf("------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
             }
             
