@@ -64,12 +64,12 @@ void run(Crossword **cw,Crossword *c,int nbe){
                 }
                  
             }
-            printf("\nEntrer votre reponse forme des lettres en majuscules :\t",130,130);
+            printf("\nEntrer votre reponse forme des lettres en majuscules :\t");
             scanf("%s",response);
         }
         else
         {
-            printf("\nEntrer votre reponse forme des lettres en majuscules :\t",130,130);
+            printf("\nEntrer votre reponse forme des lettres en majuscules :\t");
             scanf("%s",response);
             int i=0;
             while (strcmp(response,(*cw)->dictionnaire[choix-1].indice_horizontal[0]!='-'?(c)->dictionnaire[choix-1].resultat_horizontal:(c)->dictionnaire[choix-1].resultat_vertical)!=0 && i<nbe)
@@ -654,6 +654,7 @@ void free_Memory(Crossword **cw){
         free((*cw)->g);
         free(*cw);
     }
+    free(cw);
     return;
 }
 
