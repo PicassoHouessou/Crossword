@@ -24,7 +24,7 @@ int isIn(int T[],int n,int ch){
 void run(Crossword **cw,Crossword *c,int nbe){
     int s=0;
     int k=0;
-    int current[(*cw)->dictionnaire->dim];
+    int* current=load_choix((*cw)->dictionnaire->dim);
     float manus=0.0f;
     while (k<(*cw)->dictionnaire->dim)
     {
@@ -42,7 +42,7 @@ void run(Crossword **cw,Crossword *c,int nbe){
             time(&secondes);
             (*cw)->stat->heure_fin=*localtime(&secondes);
             (*cw)->stat->score += ((float)s/(float)(*cw)->dictionnaire->dim)-manus;
-            sauvegarder_partie(*cw);
+            sauvegarder_partie(*cw,current,(*cw)->dictionnaire->dim);
             k=(*cw)->dictionnaire->dim;
             return;
         }
@@ -53,6 +53,15 @@ void run(Crossword **cw,Crossword *c,int nbe){
             {
                 printf("\nVeillez re-%cssayer le nombre doit etre compris entre [0-%d] :\t",130,(*cw)->dictionnaire->dim);
                 scanf("%d",&choix);
+                if(choix==0)
+                {
+                    time(&secondes);
+                    (*cw)->stat->heure_fin=*localtime(&secondes);
+                    (*cw)->stat->score += ((float)s/(float)(*cw)->dictionnaire->dim)-manus;
+                    sauvegarder_partie(*cw,current,(*cw)->dictionnaire->dim);
+                    k=(*cw)->dictionnaire->dim;
+                    return;
+                }
                  
             }
             printf("\nEntrer votre r%cponse form%c des lettres en majuscules :\t",130,130);
@@ -218,12 +227,15 @@ void nouvelle_partie(Crossword **cw)
 void reprendre_partie(Crossword **cw)
 {
     time(&secondes);
-    (*cw)->stat=(Statistique*)malloc(sizeof(Statistique));
-    (*cw)->stat->heure_debut=*localtime(&secondes);
-    (*cw)->stat->score=0.0f;
+    (*cw)->stat=NULL; //(Statistique*)malloc(sizeof(Statistique))
+    // (*cw)->stat->heure_debut=*localtime(&secondes);
+    // (*cw)->stat->score=0.0f;
     char filename_dictionnaire[100];
     char filename_grille[100];
     char filename[50];
+    char name[15];
+    printf("\nEntrer votre nom :\t");
+    scanf("%s",name);
     int nbe;
     Crossword *c=malloc(sizeof(Crossword));
     switch (sujet())
@@ -232,13 +244,19 @@ void reprendre_partie(Crossword **cw)
         switch (choix_niveau())
         {
         case 1:
+            (*cw)->stat=load_statistique("divers",name,"facile");
             strcpy(filename_dictionnaire,"sauvegardes/divers/dictionnaires/facile.txt");
             strcpy(filename_grille,"sauvegardes/divers/grilles/facile.txt");
             strcpy(filename,"grilles/divers.txt");
+            (*cw)->stat->heure_debut=*localtime(&secondes);
+
             strcpy((*cw)->stat->niveau,"facile");
             nbe=3;
             break;
         case 2:
+
+            (*cw)->stat=load_statistique("divers",name,"intermediaire");
+            (*cw)->stat->heure_debut=*localtime(&secondes);
             strcpy(filename_dictionnaire,"sauvegardes/divers/dictionnaires/intermediaire.txt");
             strcpy(filename_grille,"sauvegardes/divers/grilles/intermediaire.txt");
             strcpy(filename,"grilles/divers.txt");
@@ -246,6 +264,9 @@ void reprendre_partie(Crossword **cw)
             nbe=2;
             break;
         case 3:
+
+            (*cw)->stat=load_statistique("divers",name,"difficile");
+            (*cw)->stat->heure_debut=*localtime(&secondes);
             strcpy(filename_dictionnaire,"sauvegardes/divers/dictionnaires/difficile.txt");
             strcpy(filename_grille,"sauvegardes/divers/grilles/difficile.txt");
             strcpy(filename,"grilles/divers.txt");
@@ -253,6 +274,8 @@ void reprendre_partie(Crossword **cw)
             nbe=1;
             break;
         default:
+            (*cw)->stat=load_statistique("divers",name,"facile");
+            (*cw)->stat->heure_debut=*localtime(&secondes);
             strcpy(filename_dictionnaire,"sauvegardes/divers/dictionnaires/facile.txt");
             strcpy(filename_grille,"sauvegardes/divers/grilles/facile.txt");
             strcpy(filename,"grilles/divers.txt");
@@ -266,6 +289,8 @@ void reprendre_partie(Crossword **cw)
         switch (choix_niveau())
         {
         case 1:
+            (*cw)->stat=load_statistique("education",name,"facile");
+            (*cw)->stat->heure_debut=*localtime(&secondes);
             strcpy(filename_dictionnaire,"sauvegardes/education/dictionnaires/facile.txt");
             strcpy(filename_grille,"sauvegardes/education/grilles/facile.txt");
             strcpy(filename,"grilles/education.txt");
@@ -273,6 +298,8 @@ void reprendre_partie(Crossword **cw)
             nbe=3;
             break;
         case 2:
+            (*cw)->stat=load_statistique("education",name,"intermediaire");
+            (*cw)->stat->heure_debut=*localtime(&secondes);
             strcpy(filename_dictionnaire,"sauvegardes/education/dictionnaires/intermediaire.txt");
             strcpy(filename_grille,"sauvegardes/education/grilles/intermediaire.txt");
             strcpy(filename,"grilles/education.txt");
@@ -280,6 +307,8 @@ void reprendre_partie(Crossword **cw)
             nbe=2;
             break;
         case 3:
+            (*cw)->stat=load_statistique("education",name,"difficile");
+            (*cw)->stat->heure_debut=*localtime(&secondes);
             strcpy(filename_dictionnaire,"sauvegardes/education/dictionnaires/difficile.txt");
             strcpy(filename_grille,"sauvegardes/education/grilles/difficile.txt");
             strcpy(filename,"grilles/divers.txt");
@@ -287,6 +316,8 @@ void reprendre_partie(Crossword **cw)
             nbe=1;
             break;
         default:
+            (*cw)->stat=load_statistique("education",name,"facile");
+            (*cw)->stat->heure_debut=*localtime(&secondes);
             strcpy(filename_dictionnaire,"sauvegardes/education/dictionnaires/facile.txt");
             strcpy(filename_grille,"sauvegardes/education/grilles/facile.txt");
             strcpy(filename,"grilles/education.txt");
@@ -300,6 +331,8 @@ void reprendre_partie(Crossword **cw)
         switch (choix_niveau())
         {
         case 1:
+            (*cw)->stat=load_statistique("medecine",name,"facile");
+            (*cw)->stat->heure_debut=*localtime(&secondes);
             strcpy(filename_dictionnaire,"sauvegardes/medecine/dictionnaires/facile.txt");
             strcpy(filename_grille,"sauvegardes/medecine/grilles/facile.txt");
             strcpy(filename,"grilles/medecine.txt");
@@ -307,6 +340,8 @@ void reprendre_partie(Crossword **cw)
             nbe=3;
             break;
         case 2:
+            (*cw)->stat=load_statistique("medecine",name,"intermediaire");
+            (*cw)->stat->heure_debut=*localtime(&secondes);
             strcpy(filename_dictionnaire,"sauvegardes/medecine/dictionnaires/intermediaire.txt");
             strcpy(filename_grille,"sauvegardes/medecine/grilles/intermediaire.txt");
             strcpy(filename,"grilles/medecine.txt");
@@ -314,6 +349,8 @@ void reprendre_partie(Crossword **cw)
             nbe=2;
             break;
         case 3:
+            (*cw)->stat=load_statistique("medecine",name,"difficile");
+            (*cw)->stat->heure_debut=*localtime(&secondes);
             strcpy(filename_dictionnaire,"sauvegardes/medecine/dictionnaires/difficile.txt");
             strcpy(filename_grille,"sauvegardes/medecine/grilles/difficile.txt");
             strcpy(filename,"grilles/medecine.txt");
@@ -321,6 +358,8 @@ void reprendre_partie(Crossword **cw)
             nbe=1;
             break;
         default:
+            (*cw)->stat=load_statistique("medecine",name,"facile");
+            (*cw)->stat->heure_debut=*localtime(&secondes);
             strcpy(filename_dictionnaire,"sauvegardes/medecine/dictionnaires/facile.txt");
             strcpy(filename_grille,"sauvegardes/medecine/grilles/facile.txt");
             strcpy(filename,"grilles/medecine.txt");
@@ -334,6 +373,9 @@ void reprendre_partie(Crossword **cw)
         switch (choix_niveau())
         {
         case 1:
+        
+            (*cw)->stat=load_statistique("divers",name,"facile");
+            (*cw)->stat->heure_debut=*localtime(&secondes);
             strcpy(filename_dictionnaire,"sauvegardes/divers/dictionnaires/facile.txt");
             strcpy(filename_grille,"sauvegardes/divers/grilles/facile.txt");
             strcpy(filename,"grilles/divers.txt");
@@ -341,6 +383,8 @@ void reprendre_partie(Crossword **cw)
             nbe=3;
             break;
         case 2:
+            (*cw)->stat=load_statistique("divers",name,"intermediaire");
+            (*cw)->stat->heure_debut=*localtime(&secondes);
             strcpy(filename_dictionnaire,"sauvegardes/divers/dictionnaires/intermediaire.txt");
             strcpy(filename_grille,"sauvegardes/divers/grilles/intermediaire.txt");
             strcpy(filename,"grilles/divers.txt");
@@ -348,6 +392,8 @@ void reprendre_partie(Crossword **cw)
             nbe=2;
             break;
         case 3:
+            (*cw)->stat=load_statistique("divers",name,"difficile");
+            (*cw)->stat->heure_debut=*localtime(&secondes);
             strcpy(filename_dictionnaire,"sauvegardes/divers/dictionnaires/difficile.txt");
             strcpy(filename_grille,"sauvegardes/divers/grilles/difficile.txt");
             strcpy(filename,"grilles/divers.txt");
@@ -355,6 +401,8 @@ void reprendre_partie(Crossword **cw)
             nbe=1;
             break;
         default:
+            (*cw)->stat=load_statistique("divers",name,"facile");
+            (*cw)->stat->heure_debut=*localtime(&secondes);
             strcpy(filename_dictionnaire,"sauvegardes/divers/dictionnaires/facile.txt");
             strcpy(filename_grille,"sauvegardes/divers/grilles/facile.txt");
             strcpy(filename,"grilles/divers.txt");
@@ -378,10 +426,11 @@ void reprendre_partie(Crossword **cw)
 /* 
     fonction pour sauvegarder la progression d'une partie dans les fichiers
 */
-void sauvegarder_partie(Crossword *cw)
+void sauvegarder_partie(Crossword *cw, int T[],int n)
 {
     char filename_dictionnaire[100];
     char filename_grille[100];
+    sauvegarder_choix(T,n);
     if (strcmp(cw->g->niveau,"facile")==0)
     {
         if (strcmp(cw->sujet,"divers")==0){
@@ -471,13 +520,11 @@ void sauvegarder_partie(Crossword *cw)
 */
 Grille *load_grille(char *filename)
 {
-    printf("%s",filename);
     Grille *g=(Grille*)malloc(sizeof(Grille));
     FILE *f=fopen(filename,"r");
 
     fscanf(f,"%d %d",&g->nombre_ligne,&g->nombre_colonne);
     int size=g->nombre_ligne*g->nombre_colonne+1;
-    printf("%d ,%d",g->nombre_ligne,g->nombre_colonne);
     Cellule *vec=(Cellule*)malloc(sizeof(Cellule)*size);
     int k=0;
     while (fscanf(f,"%d %c",&vec[k].id,&vec[k].caractere)!=EOF)
@@ -493,7 +540,7 @@ Grille *load_grille(char *filename)
         {
             grille[i][j].id=vec[k].id;
             
-            grille[i][j].caractere=vec[k].caractere;
+            grille[i][j].caractere=vec[k].caractere=='?'?' ':vec[k].caractere;
             k++;
         }
     }
@@ -703,9 +750,8 @@ int menu()
     printf("\n\n Menu du jeu.\n\n");
     printf("\n1-Nouvelle partie.\n");
     printf("\n2-Reprendre une partie.\n");
-    printf("\n3-Sauvegarder une partie.\n");
-    printf("\n4-Statistique.\n");
-    printf("\n5-Quitter une partie.\n");
+    printf("\n3-Statistique.\n");
+    printf("\n4-Quitter une partie.\n");
     int choix;
     printf("\nEntrer votre choix :\t");
     scanf("%d",&choix);
@@ -755,6 +801,67 @@ int sujet()
     return 0;
 }
 
+Statistique *load_statistique(char * s, char *n, char * dif)
+{
+    FILE *f=NULL;
+    f=fopen("statistique/stat.txt","r");
+    if (f!=NULL)
+    {
+        char niveau[15];
+        int h1,h2,m1,m2,s1,s2,m,d;
+        char username[25];
+        char sub[50];
+        float score;
+        while (fscanf(f,"%s %s %s %f %d %d %d %d %d %d %d %d",sub,username,niveau,&score,&d,&m,&h1,&m1,&s1,&h2,&m2,&s2)!=EOF)
+        {
+            if (strcmp(username,n)==0 && strcmp(sub,s)==0 && strcmp(niveau,dif)==0)
+            {
+                Statistique *stat=malloc(sizeof(Statistique));
+                stat->score=score;
+                return stat;
+            }
+            
+        }
+        fclose(f);
+    }
+    return NULL;
+}
+
+void sauvegarder_choix(int T[], int n)
+{
+    FILE *f=NULL;
+    f=fopen("statistique/choix.txt","w");
+    if (f!=NULL)
+    {
+        for (int i = 0; i < n; i++)
+        {
+            fprintf(f,"%d\n",T[i]);
+        }
+        fclose(f);
+    }
+}
+
+int *load_choix(int n)
+{
+    FILE *f=NULL;
+    int *T=malloc(sizeof(int)*n);
+    f=fopen("statistique/choix.txt","r");
+    if (f!=NULL)
+    {
+        int i=0;
+        while (fscanf(f,"%d",&T[i])!=EOF)
+        {
+            i++;
+        }
+        fclose(f);
+        return T;
+    }
+    for (int i = 0; i < n; i++)
+    {
+        T[i] =0;
+    }
+    return T;
+}
 
 /*
     fonction qui permet d'afficher les statistiques d'un joueur

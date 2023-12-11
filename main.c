@@ -18,16 +18,13 @@ int main(int argv,char* argc[]){
             reprendre_partie(&cw);
             break;
         case 3:
-            sauvegarder_partie(cw);
-            break;
-        case 4:
             statistique();
             break;
-        case 5:
+        case 4:
             r=0;
             break;
         default:
-            nouvelle_partie(&cw);
+            // nouvelle_partie(&cw);
             break;
         }
     }
