@@ -1,0 +1,3 @@
+C:/Users/PC/workspace/Crossword/build/CMakeFiles/crossword.dir
+C:/Users/PC/workspace/Crossword/build/CMakeFiles/edit_cache.dir
+C:/Users/PC/workspace/Crossword/build/CMakeFiles/rebuild_cache.dir

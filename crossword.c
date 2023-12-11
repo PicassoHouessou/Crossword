@@ -48,10 +48,10 @@ void run(Crossword **cw,Crossword *c,int nbe){
         }
         else if (isIn(current,(*cw)->dictionnaire->dim,choix)==1)
         {
-            printf("\nVous avez d%cja fait ce choix ou votre choix est indisponible %d.\n",130,choix);
+            printf("\nVous avez deja fait ce choix ou votre choix est indisponible %d.\n",choix);
             while (isIn(current,(*cw)->dictionnaire->dim,choix)==1)
             {
-                printf("\nVeillez re-%cssayer le nombre doit etre compris entre [0-%d] :\t",130,(*cw)->dictionnaire->dim);
+                printf("\nVeillez re-essayer le nombre doit etre compris entre [0-%d] :\t",(*cw)->dictionnaire->dim);
                 scanf("%d",&choix);
                 if(choix==0)
                 {
@@ -64,12 +64,12 @@ void run(Crossword **cw,Crossword *c,int nbe){
                 }
                  
             }
-            printf("\nEntrer votre r%cponse form%c des lettres en majuscules :\t",130,130);
+            printf("\nEntrer votre reponse forme des lettres en majuscules :\t",130,130);
             scanf("%s",response);
         }
         else
         {
-            printf("\nEntrer votre r%cponse form%c des lettres en majuscules :\t",130,130);
+            printf("\nEntrer votre reponse forme des lettres en majuscules :\t",130,130);
             scanf("%s",response);
             int i=0;
             while (strcmp(response,(*cw)->dictionnaire[choix-1].indice_horizontal[0]!='-'?(c)->dictionnaire[choix-1].resultat_horizontal:(c)->dictionnaire[choix-1].resultat_vertical)!=0 && i<nbe)
@@ -79,17 +79,17 @@ void run(Crossword **cw,Crossword *c,int nbe){
                 {
                     if ((*cw)->dictionnaire[choix-1].indice_horizontal[0]!='-')
                     {
-                        printf("\nLa r%cponse commence par %c et se termine par %c et contient %ld caract%cres en majuscule.\n",130,(c)->dictionnaire[choix-1].resultat_horizontal[0],(c)->dictionnaire[choix-1].resultat_horizontal[strlen((c)->dictionnaire[choix-1].resultat_horizontal)-1],strlen((c)->dictionnaire[choix-1].resultat_horizontal),138);
+                        printf("\nLa reponse commence par %c et se termine par %c et contient %ld caracteres en majuscule.\n",(c)->dictionnaire[choix-1].resultat_horizontal[0],(c)->dictionnaire[choix-1].resultat_horizontal[strlen((c)->dictionnaire[choix-1].resultat_horizontal)-1],strlen((c)->dictionnaire[choix-1].resultat_horizontal));
                     }
                     else
                     {
-                        printf("\nLa r%cponse commence par %c et se termine par %c et contient %ld caract%cres en majuscule.\n",130,(c)->dictionnaire[choix-1].resultat_vertical[0],(c)->dictionnaire[choix-1].resultat_vertical[strlen((c)->dictionnaire[choix-1].resultat_vertical)-1],strlen((c)->dictionnaire[choix-1].resultat_vertical),138);
+                        printf("\nLa reponse commence par %c et se termine par %c et contient %ld caracteres en majuscule.\n",(c)->dictionnaire[choix-1].resultat_vertical[0],(c)->dictionnaire[choix-1].resultat_vertical[strlen((c)->dictionnaire[choix-1].resultat_vertical)-1],strlen((c)->dictionnaire[choix-1].resultat_vertical));
                     }
                     manus += (float)1/(float)((*cw)->dictionnaire->dim*6);
                 }
                 
-                printf("\nR%cponse incorrecte, votre r%cponse doit contenir uniquement des caract%cres entre A et Z. Il vous reste %d %cssais possible\n",130,130,138,(nbe-i)+1,130);
-                printf("\nVeillez re-%cssayer une nouvelle r%cponse:\t",130,130);
+                printf("\nReponse incorrecte, votre reponse doit contenir uniquement des caracteres entre A et Z. Il vous reste %d essais possible\n",(nbe-i)+1);
+                printf("\nVeillez re-essayer une nouvelle reponse:\t");
                 scanf("%s",response);
             }
         }
@@ -142,7 +142,7 @@ void run(Crossword **cw,Crossword *c,int nbe){
                 }
             } 
         }
-        current[k]=choix;
+        current[k]=current[k]==0?choix:current[k];
         k++;
     }
     (*cw)->stat->score += (float)(((float)s/(float)(*cw)->dictionnaire->dim)-manus);
@@ -730,9 +730,9 @@ char *replace(char *ch,char c, char r)
 */
 int choix_niveau()
 {
-    printf("\n\n Choix du niveau de difficult%c.\n\n",130);
+    printf("\n\n Choix du niveau de difficulte.\n\n");
     printf("\n1-Niveau facile.\n");
-    printf("\n2-Niveau interm%cdiaire.\n",130);
+    printf("\n2-Niveau intermediaire.\n");
     printf("\n3-Niveau difficile.\n");
     int choix;
     printf("\nEntrez votre choix :\t");
@@ -769,7 +769,7 @@ int menu()
 */
 int demande_aide()
 {
-    printf("\nToute aide est %cquivalent a un manu de 1/6 de votre r%ccompense avant la demande d'aide.\n",130,130);
+    printf("\nToute aide est equivalent a un manu de 1/6 de votre reccompense avant la demande d'aide.\n");
     printf("\n1-Avoir de l'aide.\n");
     printf("\nEntrer votre choix:\t");
     int choix;
@@ -801,6 +801,10 @@ int sujet()
     return 0;
 }
 
+
+/*
+    fonction pour charger les statistiques d'une partie précedemment sauvegardée
+*/
 Statistique *load_statistique(char * s, char *n, char * dif)
 {
     FILE *f=NULL;
@@ -827,6 +831,10 @@ Statistique *load_statistique(char * s, char *n, char * dif)
     return NULL;
 }
 
+
+/* 
+    fonction pour enregistrer les choix d'une partie dans un fichier
+*/
 void sauvegarder_choix(int T[], int n)
 {
     FILE *f=NULL;
@@ -841,6 +849,10 @@ void sauvegarder_choix(int T[], int n)
     }
 }
 
+
+/*
+    fonction pour charger les choix précedemments sauvegardée
+*/
 int *load_choix(int n)
 {
     FILE *f=NULL;
