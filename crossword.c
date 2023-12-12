@@ -33,7 +33,7 @@ void run(Crossword **cw,Crossword *c,int nbe,char *filename){
         print_dictionnaire((*cw)->dictionnaire);
         printf("\n0-sauvegarder la partie en cours.\n");
         int choix;
-        char c1[1];
+        
         k==0?printf("\nEntrer votre choix le nombre doit etre compris entre [0-%d]:\t",(*cw)->dictionnaire->dim):printf("\nEntrer un second choix le nombre doit etre compris entre [0-%d]:\t",(*cw)->dictionnaire->dim);
         scanf("%d",&choix);
         char response[25];
@@ -42,7 +42,8 @@ void run(Crossword **cw,Crossword *c,int nbe,char *filename){
             time(&secondes);
             (*cw)->stat->heure_fin=*localtime(&secondes);
             (*cw)->stat->score += ((float)s/(float)(*cw)->dictionnaire->dim)-manus;
-            sauvegarder_partie(*cw,current,(*cw)->dictionnaire->dim,filename);
+            sauvegarder_partie((*cw));
+            sauvegarder_choix(current,(*cw)->dictionnaire->dim,filename);
             k=(*cw)->dictionnaire->dim;
             return;
         }
@@ -51,7 +52,7 @@ void run(Crossword **cw,Crossword *c,int nbe,char *filename){
             printf("\nVous avez deja fait ce choix ou votre choix est indisponible %d.\n",choix);
             while (isIn(current,(*cw)->dictionnaire->dim,choix)==1)
             {
-                char ch[1];
+                
                 printf("\nVeillez re-essayer le nombre doit etre compris entre [0-%d] :\t",(*cw)->dictionnaire->dim);
                 scanf("%d",&choix);
                
@@ -60,7 +61,8 @@ void run(Crossword **cw,Crossword *c,int nbe,char *filename){
                     time(&secondes);
                     (*cw)->stat->heure_fin=*localtime(&secondes);
                     (*cw)->stat->score += ((float)s/(float)(*cw)->dictionnaire->dim)-manus;
-                    sauvegarder_partie(*cw,current,(*cw)->dictionnaire->dim,filename);
+                    sauvegarder_partie((*cw));
+                    sauvegarder_choix(current,(*cw)->dictionnaire->dim,filename);
                     k=(*cw)->dictionnaire->dim;
                     return;
                 }
@@ -166,51 +168,143 @@ void nouvelle_partie(Crossword **cw)
     char filename_dictionnaire[50];
     char filename_grille[50];
 
-    char filename[2]=" ";
+    char filename[60];
     int nbe;
     Crossword *c=(Crossword*)malloc(sizeof(Crossword));
     switch (sujet())
     {
     case 1:
+        switch (choix_niveau())
+        {
+        case 1:
+            strcpy((*cw)->stat->niveau,"facile");
+            strcpy(filename,"sauvegardes/divers/grilles/facile_choix.txt");
+            nbe=3;
+            break;
+        case 2:
+            strcpy((*cw)->stat->niveau,"intermediaire");
+            strcpy(filename,"sauvegardes/divers/grilles/intermediaire_choix.txt");
+            nbe=2;
+            break;
+        case 3:
+            strcpy((*cw)->stat->niveau,"diffcile");
+            strcpy(filename,"sauvegardes/divers/grilles/difficile_choix.txt");
+            nbe=1;
+            break;
+        default:
+            strcpy((*cw)->stat->niveau,"facile");
+            strcpy(filename,"sauvegardes/divers/grilles/facile_choix.txt");
+            nbe=3;
+            break;
+        }
         strcpy(filename_dictionnaire,"dictionnaires/divers.txt");
         strcpy(filename_grille,"grilles/divers.txt");
         strcpy((*cw)->sujet,"divers");
         break;
     case 2:
+        switch (choix_niveau())
+        {
+        case 1:
+            strcpy((*cw)->stat->niveau,"facile");
+            strcpy(filename,"sauvegardes/education/grilles/facile_choix.txt");
+            nbe=3;
+            break;
+        case 2:
+            strcpy((*cw)->stat->niveau,"intermediaire");
+            strcpy(filename,"sauvegardes/education/grilles/intermediaire_choix.txt");
+            nbe=2;
+            break;
+        case 3:
+            strcpy((*cw)->stat->niveau,"diffcile");
+            strcpy(filename,"sauvegardes/education/grilles/difficile_choix.txt");
+            nbe=1;
+            break;
+        default:
+            strcpy((*cw)->stat->niveau,"facile");
+            strcpy(filename,"sauvegardes/education/grilles/facile_choix.txt");
+            nbe=3;
+            break;
+        }
         strcpy(filename_dictionnaire,"dictionnaires/education.txt");
         strcpy(filename_grille,"grilles/education.txt");
         strcpy((*cw)->sujet,"education");
         break;
     case 3:
+        switch (choix_niveau())
+        {
+        case 1:
+            strcpy((*cw)->stat->niveau,"facile");
+                        strcpy(filename,"sauvegardes/medecine/grilles/facile_choix.txt");
+            nbe=3;
+            break;
+        case 2:
+            strcpy((*cw)->stat->niveau,"intermediaire");
+                        strcpy(filename,"sauvegardes/medecine/grilles/intermediaire_choix.txt");
+            nbe=2;
+            break;
+        case 3:
+            strcpy((*cw)->stat->niveau,"diffcile");
+                        strcpy(filename,"sauvegardes/medecine/grilles/difficile_choix.txt");
+            nbe=1;
+            break;
+        default:
+            strcpy((*cw)->stat->niveau,"facile");
+                        strcpy(filename,"sauvegardes/medecine/grilles/facile_choix.txt");
+            nbe=3;
+            break;
+        }
         strcpy(filename_dictionnaire,"dictionnaires/medecine.txt");
         strcpy(filename_grille,"grilles/medecine.txt");
         strcpy((*cw)->sujet,"medecine");
         break;
     default:
+        switch (choix_niveau())
+        {
+        case 1:
+            strcpy((*cw)->stat->niveau,"facile");
+            strcpy(filename,"sauvegardes/divers/grilles/facile_choix.txt");
+            nbe=3;
+            break;
+        case 2:
+            strcpy((*cw)->stat->niveau,"intermediaire");
+            strcpy(filename,"sauvegardes/divers/grilles/intermediaire_choix.txt");
+            nbe=2;
+            break;
+        case 3:
+            strcpy((*cw)->stat->niveau,"diffcile");
+            strcpy(filename,"sauvegardes/divers/grilles/difficile_choix.txt");
+            nbe=1;
+            break;
+        default:
+            strcpy((*cw)->stat->niveau,"facile");
+            strcpy(filename,"sauvegardes/divers/grilles/facile_choix.txt");
+            nbe=3;
+            break;
+        }
         strcpy(filename_dictionnaire,"dictionnaires/divers.txt");
         strcpy(filename_grille,"grilles/divers.txt");
         strcpy((*cw)->sujet,"divers");
         break;
     }
-    switch (choix_niveau())
-    {
-    case 1:
-        strcpy((*cw)->stat->niveau,"facile");
-        nbe=3;
-        break;
-    case 2:
-        strcpy((*cw)->stat->niveau,"intermediaire");
-        nbe=2;
-        break;
-    case 3:
-        strcpy((*cw)->stat->niveau,"diffcile");
-        nbe=1;
-        break;
-    default:
-        strcpy((*cw)->stat->niveau,"facile");
-        nbe=3;
-        break;
-    }
+    // switch (choix_niveau())
+    // {
+    // case 1:
+    //     strcpy((*cw)->stat->niveau,"facile");
+    //     nbe=3;
+    //     break;
+    // case 2:
+    //     strcpy((*cw)->stat->niveau,"intermediaire");
+    //     nbe=2;
+    //     break;
+    // case 3:
+    //     strcpy((*cw)->stat->niveau,"diffcile");
+    //     nbe=1;
+    //     break;
+    // default:
+    //     strcpy((*cw)->stat->niveau,"facile");
+    //     nbe=3;
+    //     break;
+    // }
 
     printf("\nEntrer votre nom :\t");
     (*cw)->u=malloc(sizeof(User));
@@ -233,9 +327,7 @@ void reprendre_partie(Crossword **cw)
 {
     char filename[60];
     time(&secondes);
-    (*cw)->stat=NULL; //(Statistique*)malloc(sizeof(Statistique))
-    // (*cw)->stat->heure_debut=*localtime(&secondes);
-    // (*cw)->stat->score=0.0f;
+    (*cw)->stat=NULL; 
     char filename_dictionnaire[100];
     char filename_grille[100];
     char file[50];
@@ -448,11 +540,10 @@ void reprendre_partie(Crossword **cw)
 /* 
     fonction pour sauvegarder la progression d'une partie dans les fichiers
 */
-void sauvegarder_partie(Crossword *cw, int T[],int n,char *filename)
+void sauvegarder_partie(Crossword *cw)
 {
     char filename_dictionnaire[100];
     char filename_grille[100];
-    sauvegarder_choix(T,n,filename);
     if (strcmp(cw->g->niveau,"facile")==0)
     {
         if (strcmp(cw->sujet,"divers")==0){
@@ -858,9 +949,10 @@ Statistique *load_statistique(char * s, char *n, char * dif)
 /* 
     fonction pour enregistrer les choix d'une partie dans un fichier
 */
-void sauvegarder_choix(int T[], int n,char *filename)
+void sauvegarder_choix(int *T, int n,char *filename)
 {
     FILE *f=NULL;
+    printf("\nfilename=%s\n",filename);
     f=fopen(filename,"w");
     if (f!=NULL)
     {
@@ -870,6 +962,11 @@ void sauvegarder_choix(int T[], int n,char *filename)
         }
         fclose(f);
     }
+    else
+    {
+        return;
+    }
+    
 }
 
 

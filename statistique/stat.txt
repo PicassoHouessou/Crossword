@@ -1,1 +1,4 @@
 
+education  remi  intermediaire  0.166667 12  11  13 48  45  13  49  23
+divers  rems  facile  0.200000 12  11  13 57  17  13  58  8
+education  remi  intermediaire  0.250000 12  11  14 6  4  14  6  59
