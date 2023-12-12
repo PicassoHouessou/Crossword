@@ -11,6 +11,7 @@
 # Linker output
 *.ilk
 *.map
+*.exe
 *.exp
 *.pdf
 # Precompiled Headers
