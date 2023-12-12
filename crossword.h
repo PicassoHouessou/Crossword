@@ -94,7 +94,7 @@ void nouvelle_partie(Crossword **);
 /// @brief nous permet d'éviter de retourner la structure qui représente une partie à la fin de la partie
 /// @param  Crossword * parametre pour contenir les informations complete sur la partie encours
 /// @param  int nombre d'éssais possible pour trouver une réponse durant la partie encours
-void run(Crossword **,Crossword *,int,char *);
+void run(Crossword **,Crossword *,int,char *,char *);
 
 
 /// @brief déclaration de la fonction qui va nous permettre de lancer une partie 

@@ -21,10 +21,10 @@ int isIn(int T[],int n,int ch){
 /*
     fonction qui contient le déroulement du jeu
 */
-void run(Crossword **cw,Crossword *c,int nbe,char *filename){
+void run(Crossword **cw,Crossword *c,int nbe,char *filename,char *str){
     int s=0;
     int k=0;
-    int* current=strcmp(filename," ")==0?malloc(sizeof(int)*(*cw)->dictionnaire->dim):load_choix((*cw)->dictionnaire->dim,filename);
+    int* current=strcmp(str," ")==0?malloc(sizeof(int)*(*cw)->dictionnaire->dim):load_choix((*cw)->dictionnaire->dim,filename);
     float manus=0.0f;
     while (k<(*cw)->dictionnaire->dim)
     {
@@ -33,7 +33,6 @@ void run(Crossword **cw,Crossword *c,int nbe,char *filename){
         print_dictionnaire((*cw)->dictionnaire);
         printf("\n0-sauvegarder la partie en cours.\n");
         int choix;
-        
         k==0?printf("\nEntrer votre choix le nombre doit etre compris entre [0-%d]:\t",(*cw)->dictionnaire->dim):printf("\nEntrer un second choix le nombre doit etre compris entre [0-%d]:\t",(*cw)->dictionnaire->dim);
         scanf("%d",&choix);
         char response[25];
@@ -51,11 +50,9 @@ void run(Crossword **cw,Crossword *c,int nbe,char *filename){
         {
             printf("\nVous avez deja fait ce choix ou votre choix est indisponible %d.\n",choix);
             while (isIn(current,(*cw)->dictionnaire->dim,choix)==1)
-            {
-                
+            { 
                 printf("\nVeillez re-essayer le nombre doit etre compris entre [0-%d] :\t",(*cw)->dictionnaire->dim);
                 scanf("%d",&choix);
-               
                 if(choix==0)
                 {
                     time(&secondes);
@@ -65,8 +62,7 @@ void run(Crossword **cw,Crossword *c,int nbe,char *filename){
                     sauvegarder_choix(current,(*cw)->dictionnaire->dim,filename);
                     k=(*cw)->dictionnaire->dim;
                     return;
-                }
-                 
+                } 
             }
             printf("\nEntrer votre reponse forme des lettres en majuscules :\t");
             scanf("%s",response);
@@ -92,7 +88,6 @@ void run(Crossword **cw,Crossword *c,int nbe,char *filename){
                     }
                     manus += (float)1/(float)((*cw)->dictionnaire->dim*6);
                 }
-                
                 printf("\nReponse incorrecte, votre reponse doit contenir uniquement des caracteres entre A et Z. Il vous reste %d essais possible\n",(nbe-i)+1);
                 printf("\nVeillez re-essayer une nouvelle reponse:\t");
                 scanf("%s",response);
@@ -119,9 +114,7 @@ void run(Crossword **cw,Crossword *c,int nbe,char *filename){
                 }
                 for (int i = z; i < z+strlen(response); i++)
                 {
-                    
                     (*cw)->g->grille[t][i].caractere=response[i-z];
-
                 }
             }
             else
@@ -167,8 +160,8 @@ void nouvelle_partie(Crossword **cw)
     (*cw)->stat->score=0.0f;
     char filename_dictionnaire[50];
     char filename_grille[50];
-
     char filename[60];
+    char str[2]=" ";
     int nbe;
     Crossword *c=(Crossword*)malloc(sizeof(Crossword));
     switch (sujet())
@@ -234,22 +227,22 @@ void nouvelle_partie(Crossword **cw)
         {
         case 1:
             strcpy((*cw)->stat->niveau,"facile");
-                        strcpy(filename,"sauvegardes/medecine/grilles/facile_choix.txt");
+            strcpy(filename,"sauvegardes/medecine/grilles/facile_choix.txt");
             nbe=3;
             break;
         case 2:
             strcpy((*cw)->stat->niveau,"intermediaire");
-                        strcpy(filename,"sauvegardes/medecine/grilles/intermediaire_choix.txt");
+            strcpy(filename,"sauvegardes/medecine/grilles/intermediaire_choix.txt");
             nbe=2;
             break;
         case 3:
             strcpy((*cw)->stat->niveau,"diffcile");
-                        strcpy(filename,"sauvegardes/medecine/grilles/difficile_choix.txt");
+            strcpy(filename,"sauvegardes/medecine/grilles/difficile_choix.txt");
             nbe=1;
             break;
         default:
             strcpy((*cw)->stat->niveau,"facile");
-                        strcpy(filename,"sauvegardes/medecine/grilles/facile_choix.txt");
+            strcpy(filename,"sauvegardes/medecine/grilles/facile_choix.txt");
             nbe=3;
             break;
         }
@@ -286,26 +279,6 @@ void nouvelle_partie(Crossword **cw)
         strcpy((*cw)->sujet,"divers");
         break;
     }
-    // switch (choix_niveau())
-    // {
-    // case 1:
-    //     strcpy((*cw)->stat->niveau,"facile");
-    //     nbe=3;
-    //     break;
-    // case 2:
-    //     strcpy((*cw)->stat->niveau,"intermediaire");
-    //     nbe=2;
-    //     break;
-    // case 3:
-    //     strcpy((*cw)->stat->niveau,"diffcile");
-    //     nbe=1;
-    //     break;
-    // default:
-    //     strcpy((*cw)->stat->niveau,"facile");
-    //     nbe=3;
-    //     break;
-    // }
-
     printf("\nEntrer votre nom :\t");
     (*cw)->u=malloc(sizeof(User));
     scanf("%s",(*cw)->u->username);
@@ -315,7 +288,7 @@ void nouvelle_partie(Crossword **cw)
     (*cw)->dictionnaire=dic;
     (*cw)->g=generer_grille(c->g);
     (*cw)->stat->heure_fin=*localtime(&secondes);
-    run(cw,c,nbe,filename);
+    run(cw,c,nbe,filename,str);
     (*cw)->stat->heure_fin=*localtime(&secondes);
 }
 
@@ -332,6 +305,8 @@ void reprendre_partie(Crossword **cw)
     char filename_grille[100];
     char file[50];
     char name[15];
+    char str[10];
+    strcpy(str, "rerun");
     printf("\nEntrer votre nom :\t");
     scanf("%s",name);
     int nbe;
@@ -532,7 +507,7 @@ void reprendre_partie(Crossword **cw)
     Dictionnaire *dic=remplacer_underscore_mots_dictionnaire(c->dictionnaire);
     (*cw)->dictionnaire=dic; 
     (*cw)->g=load_grille(filename_grille);
-    run(cw,c,nbe,filename);
+    run(cw,c,nbe,filename,str);
     (*cw)->stat->heure_fin=*localtime(&secondes);
 }
 
