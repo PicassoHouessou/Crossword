@@ -94,7 +94,7 @@ void nouvelle_partie(Crossword **);
 /// @brief nous permet d'éviter de retourner la structure qui représente une partie à la fin de la partie
 /// @param  Crossword * parametre pour contenir les informations complete sur la partie encours
 /// @param  int nombre d'éssais possible pour trouver une réponse durant la partie encours
-void run(Crossword **,Crossword *,int);
+void run(Crossword **,Crossword *,int,char *);
 
 
 /// @brief déclaration de la fonction qui va nous permettre de lancer une partie 
@@ -105,7 +105,7 @@ void reprendre_partie(Crossword **);
 
 /// @brief fonction qui permet d'enregistrer la progression d'un joueur dans un fichier
 /// @param  Crossword * contient la copie de la partie encours
-void sauvegarder_partie(Crossword *, int T[],int n);
+void sauvegarder_partie(Crossword *, int T[],int n,char *filename);
 
 /// @brief fonction pour afficher les statistique du joueur
 void statistique();
@@ -186,8 +186,8 @@ int sujet();
 
 Statistique * load_statistique(char*,char*,char*);
 
-void sauvegarder_choix(int T[],int n);
+void sauvegarder_choix(int T[],int n,char *filename);
 
-int * load_choix(int);
+int * load_choix(int,char*);
 
 #endif // ___CROSSWORD___
