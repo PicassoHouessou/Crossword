@@ -24,7 +24,7 @@ int isIn(int T[],int n,int ch){
 void run(Crossword **cw,Crossword *c,int nbe,char *filename,char *str){
     int s=0;
     int k=0;
-    int* current=strcmp(str," ")==0?malloc(sizeof(int)*(*cw)->dictionnaire->dim):load_choix((*cw)->dictionnaire->dim,filename);
+    int* current=load_choix((*cw)->dictionnaire->dim,filename);
     float manus=0.0f;
     while (k<(*cw)->dictionnaire->dim)
     {

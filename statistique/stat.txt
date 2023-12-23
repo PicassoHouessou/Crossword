@@ -2,3 +2,5 @@
 education  remi  intermediaire  0.166667 12  11  13 48  45  13  49  23
 divers  rems  facile  0.200000 12  11  13 57  17  13  58  8
 education  remi  intermediaire  0.250000 12  11  14 6  4  14  6  59
+education  rems  facile  0.166667 23  11  20 31  50  20  32  30
+education  (null)  facile  0.250000 23  11  20 32  55  20  35  22
