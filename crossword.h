@@ -22,7 +22,7 @@ typedef struct user
 /// @brief structure pour concerver les statstiques du joueur
 typedef struct stat
 {
-    char niveau[20];
+    char niveau[30];
     float score;
     struct tm heure_debut;
     struct tm heure_fin;

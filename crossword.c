@@ -303,7 +303,7 @@ void reprendre_partie(Crossword **cw)
     (*cw)->stat=NULL; 
     char filename_dictionnaire[100];
     char filename_grille[100];
-    char file[50];
+    char file[60];
     char name[15];
     char str[10];
     strcpy(str, "rerun");
@@ -519,7 +519,7 @@ void sauvegarder_partie(Crossword *cw)
 {
     char filename_dictionnaire[100];
     char filename_grille[100];
-    if (strcmp(cw->g->niveau,"facile")==0)
+    if (strcmp(cw->stat->niveau,"facile")==0)
     {
         if (strcmp(cw->sujet,"divers")==0){
             strcpy(filename_dictionnaire,"sauvegardes/divers/dictionnaires/facile.txt");
@@ -534,7 +534,7 @@ void sauvegarder_partie(Crossword *cw)
             strcpy(filename_grille,"sauvegardes/medecine/grilles/facile.txt");
         }
     }
-    else if(strcmp(cw->g->niveau,"intermediaire")==0)
+    else if(strcmp(cw->stat->niveau,"intermediaire")==0)
     {
         if (strcmp(cw->sujet,"divers")==0){
             strcpy(filename_dictionnaire,"sauvegardes/divers/dictionnaires/difficile.txt");
@@ -643,7 +643,7 @@ Grille *load_grille(char *filename)
     fonction qui permet de charger un dictionnaire enregistrer dans un fichier
 */
 Dictionnaire *load_dictionnaire(char *filename)
-{
+{   
     
     FILE *f=NULL;
     Dictionnaire *dic=NULL;
