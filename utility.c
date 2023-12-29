@@ -1,6 +1,6 @@
 #include "utility.h"
 
-void viderBuffer()
+void vider_buffer()
 {
     int c = 0;
     while (c != '\n' && c != EOF)
@@ -22,18 +22,18 @@ int lire(char *chaine, int longueur)
         }
         else
         {
-            viderBuffer();
+            vider_buffer();
         }
         return 1;
     }
     else
     {
-        viderBuffer();
+        vider_buffer();
         return 0;
     }
 }
 
-long lireLong()
+long lire_long()
 {
     char nombreTexte[100] = {0}; // 100 cases devraient suffire
 
@@ -49,7 +49,7 @@ long lireLong()
     }
 }
 
-int lireInt()
+int lire_int()
 {
     char nombreTexte[100] = {0}; // 100 cases should be enough
 

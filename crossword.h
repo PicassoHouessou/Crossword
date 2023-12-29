@@ -9,7 +9,6 @@
 #include <math.h>
 #include "utility.h"
 
-// Define constants for array sizes
 #define USERNAME_SIZE 25
 #define LEVEL_SIZE 30
 #define GRID_LEVEL_SIZE 20
@@ -190,29 +189,29 @@ int *load_choix(int, char *);
 /// @brief   Retourne le domaine (ou le sujet)
 /// @param subjectCode
 /// @return char* le sujet
-char *getSubject(int subjectCode);
+char *get_subject(int subjectCode);
 
 /// @brief Helper function to get difficulty level
 /// @return char* la difficulté entre {facile,intermediare,difficile}
-char *getDifficulty(int levelCode);
+char *get_difficulty(int levelCode);
 
 /// @brief Helper function to determine the number of attempts based on difficulty
 /// @return int
-int getNumberOfAttempts(char *difficulty);
+int get_number_of_attempts(char *difficulty);
 
 /// @brief Lire le choix de l'utilisateur qui est un nombre compris entre 0 et 9
 /// @param turn
 /// @param maxChoices
 /// @param currentChoices
 /// @return le choix de l'utilisateur
-int getChoice(int turn, int maxChoices, int *currentChoices);
+int get_choice(int turn, int maxChoices, int *currentChoices);
 
 /// @brief Verifie si la réponse donnée est correcte
 /// @param char response
 /// @param Dictionnaire entry
 /// @param Crossword c
 /// @return true si la réponse est correcte et false sinon
-bool isCorrectAnswer(char *response, Dictionnaire entry, Crossword *c);
+bool is_correct_answer(char *response, Dictionnaire entry, Crossword *c);
 
 /// @brief Sauvegarde l'état du jeu
 /// @param Crossword cw
@@ -220,14 +219,14 @@ bool isCorrectAnswer(char *response, Dictionnaire entry, Crossword *c);
 /// @param int float manus
 /// @param currentChoices
 /// @param filename
-void saveAndExit(Crossword **cw, int score, float manus, int *currentChoices, char *filename);
+void save_and_exit(Crossword **cw, int score, float manus, int *currentChoices, char *filename);
 
-float displayHintAndGetManus(Dictionnaire *entry, Crossword *c);
+float display_hint_and_get_manus(Dictionnaire *entry, Crossword *c);
 
 /// @brief Mets à jour la grille avec la réponse
 /// @param grid
 /// @param response
 /// @param choice
-void updateGridWithAnswer(Grille *grid, char *response, int choice);
+void update_grid_with_answer(Grille *grid, char *response, int choice);
 
 #endif // ___CROSSWORD___

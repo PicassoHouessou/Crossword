@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-void viderBuffer();
+void vider_buffer();
 
 /**
  * Lecture sécurisée d'une chaine de caractère
@@ -15,13 +15,13 @@ int lire(char *chaine, int longueur);
 /**
  * Lecture sécurisée d'un grand nombre
  */
-long lireLong();
+long lire_long();
 
 /**
  * Lecture sécurisée d'un  nombre
  * @return int
  */
-int lireInt();
+int lire_int();
 
 /**
     Function to check if an integer is contained in an integer array.

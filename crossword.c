@@ -19,10 +19,10 @@ void run(Crossword **cw, Crossword *c, int nbe, char *filename, char *str)
         print_dictionnaire((*cw)->dictionnaire);
         printf("\n0-sauvegarder la partie en cours.\n");
 
-        int choix = getChoice(k, (*cw)->dictionnaire->dim, current);
+        int choix = get_choice(k, (*cw)->dictionnaire->dim, current);
         if (choix == 0)
         {
-            saveAndExit(cw, s, manus, current, filename);
+            save_and_exit(cw, s, manus, current, filename);
             return;
         }
 
@@ -31,19 +31,19 @@ void run(Crossword **cw, Crossword *c, int nbe, char *filename, char *str)
         lire(response, USERNAME_SIZE);
 
         int i = 0;
-        while (!isCorrectAnswer(response, (*cw)->dictionnaire[choix - 1], c) && i < nbe)
+        while (!is_correct_answer(response, (*cw)->dictionnaire[choix - 1], c) && i < nbe)
         {
             i++;
-            manus += displayHintAndGetManus(&(*cw)->dictionnaire[choix - 1], c);
+            manus += display_hint_and_get_manus(&(*cw)->dictionnaire[choix - 1], c);
             printf("\nReponse incorrecte, votre reponse doit contenir uniquement des caracteres entre A et Z. Il vous reste %d essais possible\n", nbe - i);
             printf("\nVeillez re-essayer une nouvelle reponse:\t");
             lire(response, USERNAME_SIZE);
         }
 
-        if (isCorrectAnswer(response, (*cw)->dictionnaire[choix - 1], c))
+        if (is_correct_answer(response, (*cw)->dictionnaire[choix - 1], c))
         {
             s++;
-            updateGridWithAnswer((*cw)->g, response, choix);
+            update_grid_with_answer((*cw)->g, response, choix);
         }
 
         current[k] = current[k] == 0 ? choix : current[k];
@@ -53,13 +53,13 @@ void run(Crossword **cw, Crossword *c, int nbe, char *filename, char *str)
     print_grille((*cw)->g);
 }
 
-int getChoice(int turn, int maxChoices, int *currentChoices)
+int get_choice(int turn, int maxChoices, int *currentChoices)
 {
     int choice;
     do
     {
         printf("\nEntrez votre choix (le numéro doit être compris entre [0-%d]):\t", maxChoices);
-        choice = lireInt();
+        choice = lire_int();
 
         if (choice == 0 || !isIn(currentChoices, maxChoices, choice))
         {
@@ -72,7 +72,7 @@ int getChoice(int turn, int maxChoices, int *currentChoices)
     return choice;
 }
 
-void saveAndExit(Crossword **cw, int score, float manus, int *currentChoices, char *filename)
+void save_and_exit(Crossword **cw, int score, float manus, int *currentChoices, char *filename)
 {
     time_t secondes;
     time(&secondes);
@@ -82,7 +82,7 @@ void saveAndExit(Crossword **cw, int score, float manus, int *currentChoices, ch
     sauvegarder_choix(currentChoices, (*cw)->dictionnaire->dim, filename);
 }
 
-bool isCorrectAnswer(char *response, Dictionnaire entry, Crossword *c)
+bool is_correct_answer(char *response, Dictionnaire entry, Crossword *c)
 {
     return strcmp(response, entry.indice_horizontal[0] != '-' ? c->dictionnaire[entry.id - 1].resultat_horizontal : c->dictionnaire[entry.id - 1].resultat_vertical) == 0;
 }
@@ -91,7 +91,7 @@ bool isCorrectAnswer(char *response, Dictionnaire entry, Crossword *c)
 /// @param entry
 /// @param c
 /// @return
-float displayHintAndGetManus(Dictionnaire *entry, Crossword *c)
+float display_hint_and_get_manus(Dictionnaire *entry, Crossword *c)
 {
     if (demande_aide() == 1)
     {
@@ -109,7 +109,7 @@ float displayHintAndGetManus(Dictionnaire *entry, Crossword *c)
 /// @param grid
 /// @param response
 /// @param choice
-void updateGridWithAnswer(Grille *grid, char *response, int choice)
+void update_grid_with_answer(Grille *grid, char *response, int choice)
 {
     int t, z;
     for (int i = 0; i < grid->nombre_ligne; i++)
@@ -200,8 +200,8 @@ void reprendre_partie(Crossword **cw)
     Crossword *c = malloc(sizeof(Crossword));
 
     // Get subject and difficulty level
-    char *subject = getSubject(sujet());
-    char *difficulty = getDifficulty(choix_niveau());
+    char *subject = get_subject(sujet());
+    char *difficulty = get_difficulty(choix_niveau());
 
     // Load statistics
     (*cw)->stat = load_statistique(subject, name, difficulty);
@@ -216,7 +216,7 @@ void reprendre_partie(Crossword **cw)
 
     // Set subject and number of attempts
     strcpy((*cw)->sujet, subject);
-    nbe = getNumberOfAttempts(difficulty);
+    nbe = get_number_of_attempts(difficulty);
 
     // Load game components
     c->dictionnaire = load_dictionnaire(filename_dictionnaire);
@@ -231,7 +231,7 @@ void reprendre_partie(Crossword **cw)
 }
 
 // Helper function to get subject
-char *getSubject(int subjectCode)
+char *get_subject(int subjectCode)
 {
     switch (subjectCode)
     {
@@ -246,7 +246,7 @@ char *getSubject(int subjectCode)
     }
 }
 
-char *getDifficulty(int levelCode)
+char *get_difficulty(int levelCode)
 {
     switch (levelCode)
     {
@@ -261,7 +261,7 @@ char *getDifficulty(int levelCode)
     }
 }
 
-int getNumberOfAttempts(char *difficulty)
+int get_number_of_attempts(char *difficulty)
 {
     if (strcmp(difficulty, "facile") == 0)
     {
@@ -546,7 +546,7 @@ int choix_niveau()
     printf("\n3-Niveau difficile.\n");
     int choix;
     printf("\nEntrez votre choix :\t");
-    choix = lireInt();
+    choix = lire_int();
     printf("\n\n");
     return choix;
 }
@@ -563,7 +563,7 @@ int menu()
     printf("\n4-Quitter une partie.\n");
     int choix;
     printf("\nEntrer votre choix :\t");
-    choix = lireInt();
+    choix = lire_int();
     printf("\n\n");
     if (choix >= 1 && choix <= 5)
     {
@@ -581,7 +581,7 @@ int demande_aide()
     printf("\n1-Avoir de l'aide.\n");
     printf("\nEntrer votre choix:\t");
     int choix;
-    choix = lireInt();
+    choix = lire_int();
     if (choix == 1)
     {
         return 1;
@@ -600,7 +600,7 @@ int sujet()
     printf("\n3-Medecine.\n");
     int choix;
     printf("\nEntrer votre choix:\t");
-    choix = lireInt();
+    choix = lire_int();
     if (choix >= 1 || choix <= 3)
     {
         return choix;
