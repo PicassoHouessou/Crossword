@@ -141,8 +141,8 @@ void nouvelle_partie(Crossword **cw)
     (*cw)->stat->heure_debut = *localtime(&secondes);
     (*cw)->stat->score = 0.0f;
 
-    char filename_dictionnaire[50];
-    char filename_grille[50];
+    char filename_dictionnaire[FILE_PATH_SIZE];
+    char filename_grille[FILE_PATH_SIZE];
     char filename[60];
     char str[2] = " ";
     int nbe;

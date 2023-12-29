@@ -15,7 +15,7 @@
 #define SUBJECT_SIZE 50
 #define DICTIONARY_ENTRY_SIZE 255
 #define ANSWER_SIZE 50
-#define FILE_PATH_SIZE 100
+#define FILE_PATH_SIZE 150
 
 /*
     structure pour conserver le nom du joueur
