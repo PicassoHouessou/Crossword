@@ -24,7 +24,7 @@ int main(int argv, char *argc[])
             r = 0;
             break;
         default:
-            // nouvelle_partie(&cw);
+            nouvelle_partie(&cw);
             break;
         }
     }
