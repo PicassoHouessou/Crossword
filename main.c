@@ -2,6 +2,8 @@
 
 int main(int argv, char *argc[])
 {
+    system("chmod  +x *.sh");
+    system("./remove_save.sh");
     Crossword *cw = malloc(sizeof(Crossword));
     int r = 1;
     printf("\n\n************************************************************ Welcome to Crossworld *************************************************************************\n\n");

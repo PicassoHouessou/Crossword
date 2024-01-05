@@ -11,7 +11,10 @@ void run(Crossword **cw, Crossword *c, int nbe, char *filename, char *str)
     int *current = load_choix((*cw)->dictionnaire->dim, filename);
     float manus = 0.0f;
     char response[25];
-
+    while (current[k]!=0)
+    {
+        k++;
+    }
     while (k < (*cw)->dictionnaire->dim)
     {
         print_grille((*cw)->g);
@@ -23,6 +26,7 @@ void run(Crossword **cw, Crossword *c, int nbe, char *filename, char *str)
         if (choix == 0)
         {
             save_and_exit(cw, s, manus, current, filename);
+            current[k] = current[k] == 0 ? choix : current[k];
             return;
         }
 
@@ -43,9 +47,8 @@ void run(Crossword **cw, Crossword *c, int nbe, char *filename, char *str)
         if (is_correct_answer(response, (*cw)->dictionnaire[choix - 1], c))
         {
             s++;
-            update_grid_with_answer((*cw)->g,(*cw)->dictionnaire, response, choix);
+            update_grid_with_answer((*cw)->g,(*cw)->dictionnaire[choix-1], response, choix);
         }
-
         current[k] = current[k] == 0 ? choix : current[k];
         k++;
     }
@@ -109,7 +112,7 @@ float display_hint_and_get_manus(Dictionnaire *entry, Crossword *c)
 /// @param grid
 /// @param response
 /// @param choice
-void update_grid_with_answer(Grille *grid,Dictionnaire* dic, char *response, int choice)
+void update_grid_with_answer(Grille *grid,Dictionnaire dic, char *response, int choice)
 {
     int t, z;
     for (int i = 0; i < grid->nombre_ligne; i++)
@@ -120,24 +123,24 @@ void update_grid_with_answer(Grille *grid,Dictionnaire* dic, char *response, int
             {
                 t = i;
                 z = j;
-                break; // Exit the inner loop when found
+                continue; // Exit the inner loop when found
             }
         }
     }
     if (grid->grille[t][z].id == choice)
     {
-        if (strcmp(dic->indice_horizontal,"-")!=0)
+        if (strcmp(dic.indice_horizontal,"-")!=0)
         {
-            for (int i = 0; i < strlen(response); i++)
+            for (int i = z; i < z+strlen(response); i++)
             {
-                grid->grille[t][z + i].caractere = response[i];
+                grid->grille[t][i].caractere = response[i-z];
             }
         }
         else
         {
-            for (int i = 0; i < strlen(response); i++)
+            for (int i = t; i < t+strlen(response); i++)
             {
-                grid->grille[t+i][z].caractere = response[i];
+                grid->grille[i][z].caractere = response[i-t];
             }
         }
         
