@@ -43,7 +43,7 @@ void run(Crossword **cw, Crossword *c, int nbe, char *filename, char *str)
         if (is_correct_answer(response, (*cw)->dictionnaire[choix - 1], c))
         {
             s++;
-            update_grid_with_answer((*cw)->g, response, choix);
+            update_grid_with_answer((*cw)->g,(*cw)->dictionnaire, response, choix);
         }
 
         current[k] = current[k] == 0 ? choix : current[k];
@@ -78,8 +78,8 @@ void save_and_exit(Crossword **cw, int score, float manus, int *currentChoices, 
     time(&secondes);
     (*cw)->stat->heure_fin = *localtime(&secondes);
     (*cw)->stat->score += ((float)score / (float)(*cw)->dictionnaire->dim) - manus;
-    sauvegarder_partie(*cw);
     sauvegarder_choix(currentChoices, (*cw)->dictionnaire->dim, filename);
+    sauvegarder_partie(*cw);
 }
 
 bool is_correct_answer(char *response, Dictionnaire entry, Crossword *c)
@@ -109,7 +109,7 @@ float display_hint_and_get_manus(Dictionnaire *entry, Crossword *c)
 /// @param grid
 /// @param response
 /// @param choice
-void update_grid_with_answer(Grille *grid, char *response, int choice)
+void update_grid_with_answer(Grille *grid,Dictionnaire* dic, char *response, int choice)
 {
     int t, z;
     for (int i = 0; i < grid->nombre_ligne; i++)
@@ -126,10 +126,21 @@ void update_grid_with_answer(Grille *grid, char *response, int choice)
     }
     if (grid->grille[t][z].id == choice)
     {
-        for (int i = 0; i < strlen(response); i++)
+        if (strcmp(dic->indice_horizontal,"-")!=0)
         {
-            grid->grille[t][z + i].caractere = response[i];
+            for (int i = 0; i < strlen(response); i++)
+            {
+                grid->grille[t][z + i].caractere = response[i];
+            }
         }
+        else
+        {
+            for (int i = 0; i < strlen(response); i++)
+            {
+                grid->grille[t+i][z].caractere = response[i];
+            }
+        }
+        
     }
 }
 
@@ -158,8 +169,7 @@ void nouvelle_partie(Crossword **cw)
         sujetChoisi = 1;
     if (niveauChoisi < 1 || niveauChoisi > 3)
         niveauChoisi = 1;
-
-    sprintf(filename, "sauvegardes/%s/grilles/%s_choix.txt", sujets[sujetChoisi - 1], niveaux[niveauChoisi - 1]);
+    sprintf(filename, "tmp/sauvegardes/%s/choix/%s.txt", sujets[sujetChoisi - 1], niveaux[niveauChoisi - 1]);
     sprintf(filename_dictionnaire, "dictionnaires/%s.txt", sujets[sujetChoisi - 1]);
     sprintf(filename_grille, "grilles/%s.txt", sujets[sujetChoisi - 1]);
 
@@ -189,7 +199,7 @@ void nouvelle_partie(Crossword **cw)
 */
 void reprendre_partie(Crossword **cw)
 {
-    char filename[60], filename_dictionnaire[FILE_PATH_SIZE], filename_grille[FILE_PATH_SIZE], file[60];
+    char filename[100], filename_dictionnaire[FILE_PATH_SIZE], filename_grille[FILE_PATH_SIZE], file[60];
     time_t secondes;
     time(&secondes);
     (*cw)->stat = NULL;
@@ -209,10 +219,10 @@ void reprendre_partie(Crossword **cw)
     strcpy((*cw)->stat->niveau, difficulty);
 
     // Setup file paths
-    sprintf(filename_dictionnaire, "sauvegardes/%s/dictionnaires/%s.txt", subject, difficulty);
-    sprintf(filename_grille, "sauvegardes/%s/grilles/%s.txt", subject, difficulty);
+    sprintf(filename_dictionnaire, "users/%s/sauvegardes/%s/dictionnaires/%s.txt",name, subject, difficulty);
+    sprintf(filename_grille, "users/%s/sauvegardes/%s/grilles/%s.txt",name, subject, difficulty);
     sprintf(file, "grilles/%s.txt", subject);
-    sprintf(filename, "sauvegardes/%s/grilles/%s_choix.txt", subject, difficulty);
+    sprintf(filename, "users/%s/sauvegardes/%s/choix/%s.txt",name, subject, difficulty);
 
     // Set subject and number of attempts
     strcpy((*cw)->sujet, subject);
@@ -284,14 +294,18 @@ void sauvegarder_partie(Crossword *cw)
 {
     char filename_dictionnaire[FILE_PATH_SIZE], filename_grille[FILE_PATH_SIZE], stat_file[] = "statistique/stat.txt";
 
+    char str[100];
+
+    sprintf(str,"%s\t%s","./script.sh",cw->u->username);
     // Construct file paths based on 'sujet' and 'niveau'
-    sprintf(filename_dictionnaire, "sauvegardes/%s/dictionnaires/%s.txt", cw->sujet, cw->stat->niveau);
-    sprintf(filename_grille, "sauvegardes/%s/grilles/%s.txt", cw->sujet, cw->stat->niveau);
+    sprintf(filename_dictionnaire, "tmp/sauvegardes/%s/dictionnaires/%s.txt", cw->sujet, cw->stat->niveau);
+    sprintf(filename_grille, "tmp/sauvegardes/%s/grilles/%s.txt", cw->sujet, cw->stat->niveau);
 
     FILE *f = fopen(filename_dictionnaire, "w");
     FILE *f1 = fopen(filename_grille, "w");
     FILE *f2 = fopen(stat_file, "a+");
 
+    cw->dictionnaire=remplacer_espace_mots_dictionnaire(cw->dictionnaire);
     if (f && f1 && f2)
     {
         // Save Dictionary
@@ -328,6 +342,7 @@ void sauvegarder_partie(Crossword *cw)
         fclose(f);
         fclose(f1);
         fclose(f2);
+        system(str);
     }
 }
 
@@ -639,7 +654,6 @@ Statistique *load_statistique(char *s, char *n, char *dif)
 void sauvegarder_choix(int *T, int n, char *filename)
 {
     FILE *f = NULL;
-    printf("\nfilename=%s\n", filename);
     f = fopen(filename, "w");
     if (f != NULL)
     {

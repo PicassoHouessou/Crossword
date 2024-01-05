@@ -227,6 +227,6 @@ float display_hint_and_get_manus(Dictionnaire *entry, Crossword *c);
 /// @param grid
 /// @param response
 /// @param choice
-void update_grid_with_answer(Grille *grid, char *response, int choice);
+void update_grid_with_answer(Grille *grid,Dictionnaire* dic, char *response, int choice);
 
 #endif // ___CROSSWORD___

@@ -1,1 +1,2 @@
-divers  rems  intermediaire  0.100000 4  0  22 52  3  22  52  44
+divers  remi  facile  0.200000 5  0  2 30  33  2  31  4
+divers  remi  facile  0.200000 5  0  2 31  10  2  31  43
