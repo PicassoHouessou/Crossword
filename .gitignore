@@ -8,6 +8,7 @@
 *.elf
 .vscode
 
+
 # Linker output
 *.ilk
 *.map
@@ -55,3 +56,4 @@ dkms.conf
 
 
 #others directory
+users/
