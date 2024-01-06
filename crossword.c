@@ -346,6 +346,7 @@ void sauvegarder_partie(Crossword *cw)
         fclose(f1);
         fclose(f2);
         system(str);
+        system("./remove_save.sh");
     }
 }
 
