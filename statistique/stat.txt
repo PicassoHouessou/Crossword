@@ -1,3 +1,4 @@
 divers  remi  facile  0.300000 5  0  15 23  54  15  24  46
 divers  remi  facile  0.200000 5  0  15 47  35  15  48  16
 divers  remi  facile  0.400000 5  0  15 48  23  15  49  19
+education  remi  intermediaire  -inf 6  0  11 51  58  11  55  27
