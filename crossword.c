@@ -30,24 +30,24 @@ void run(Crossword **cw, Crossword *c, int nbe, char *filename, char *str)
             return;
         }
 
-        printf("\nEntrer votre reponse forme des lettres en majuscules :\t");
+        printf("\nEntrer votre reponse :\t");
         // Taille de la réponse est la même que la taille de l'utilisateur
         lire(response, USERNAME_SIZE);
 
         int i = 0;
-        while (!is_correct_answer(response, (*cw)->dictionnaire[choix - 1], c) && i < nbe)
+        while (!is_correct_answer(upper_case(response), (*cw)->dictionnaire[choix - 1], c) && i < nbe)
         {
             i++;
             manus += display_hint_and_get_manus(&(*cw)->dictionnaire[choix - 1], c);
-            printf("\nReponse incorrecte, votre reponse doit contenir uniquement des caracteres entre A et Z. Il vous reste %d essais possible\n", nbe - i);
+            printf("\nIl vous reste %d essais possible\n", (nbe - i)+1);
             printf("\nVeillez re-essayer une nouvelle reponse:\t");
             lire(response, USERNAME_SIZE);
         }
 
-        if (is_correct_answer(response, (*cw)->dictionnaire[choix - 1], c))
+        if (is_correct_answer(upper_case(response), (*cw)->dictionnaire[choix - 1], c))
         {
             s++;
-            update_grid_with_answer((*cw)->g,(*cw)->dictionnaire[choix-1], response, choix);
+            update_grid_with_answer((*cw)->g,(*cw)->dictionnaire[choix-1], upper_case(response), choix);
         }
         current[k] = current[k] == 0 ? choix : current[k];
         k++;
@@ -59,19 +59,21 @@ void run(Crossword **cw, Crossword *c, int nbe, char *filename, char *str)
 int get_choice(int turn, int maxChoices, int *currentChoices)
 {
     int choice;
-    do
+
+    printf("\nEntrez votre choix (le numéro doit être compris entre [0-%d]):\t", maxChoices);
+    choice = lire_int();
+
+    int r=1;
+    while (r)
     {
-        printf("\nEntrez votre choix (le numéro doit être compris entre [0-%d]):\t", maxChoices);
-        choice = lire_int();
-
-        if (choice == 0 || !isIn(currentChoices, maxChoices, choice))
+        if (choice<=maxChoices && !isIn(currentChoices, maxChoices, choice) || choice==0)
         {
-            return choice;
+           r=0;
+           return choice;
         }
-
-        printf("\nVous avez déjà fait ce choix ou votre choix n'est pas disponible %d.\n", choice);
-    } while (isIn(currentChoices, maxChoices, choice));
-
+        printf("\nChoix non disponible ou choix deja fait veuillez reessayer:\t");
+        choice = lire_int();
+    }
     return choice;
 }
 
@@ -101,8 +103,7 @@ float display_hint_and_get_manus(Dictionnaire *entry, Crossword *c)
         char firstLetter = entry->indice_horizontal[0] != '-' ? c->dictionnaire[entry->id - 1].resultat_horizontal[0] : c->dictionnaire[entry->id - 1].resultat_vertical[0];
         char lastLetter = entry->indice_horizontal[0] != '-' ? c->dictionnaire[entry->id - 1].resultat_horizontal[strlen(c->dictionnaire[entry->id - 1].resultat_horizontal) - 1] : c->dictionnaire[entry->id - 1].resultat_vertical[strlen(c->dictionnaire[entry->id - 1].resultat_vertical) - 1];
         size_t length = entry->indice_horizontal[0] != '-' ? strlen(c->dictionnaire[entry->id - 1].resultat_horizontal) : strlen(c->dictionnaire[entry->id - 1].resultat_vertical);
-
-        printf("\nLa réponse commence par %c et se termine par %c et contient %ld caractères majuscules.\n", firstLetter, lastLetter, length);
+        printf("\nLa réponse commence par %c et se termine par %c et contient %ld caractères.\n", firstLetter, lastLetter, length);
         return 1.0f / ((float)(*entry).dim * 6);
     }
     return 0.0f;
@@ -255,7 +256,8 @@ char *get_subject(int subjectCode)
     case 3:
         return "medecine";
     default:
-        return "divers";
+        printf("\nVotre choix n'est pas disponible.\n");
+        // return "divers";
     }
 }
 
@@ -270,8 +272,9 @@ char *get_difficulty(int levelCode)
     case 3:
         return "difficile";
     default:
-        return "facile";
+        printf("\nVotre choix n'est pas disponible.\n");
     }
+    
 }
 
 int get_number_of_attempts(char *difficulty)
@@ -566,6 +569,11 @@ int choix_niveau()
     printf("\nEntrez votre choix :\t");
     choix = lire_int();
     printf("\n\n");
+    while (!(choix >= 1 && choix <= 3))
+    {
+        printf("\nChoix non disponible veuillez reessayer:\t");
+        choix = lire_int();
+    }
     return choix;
 }
 
@@ -583,11 +591,12 @@ int menu()
     printf("\nEntrer votre choix :\t");
     choix = lire_int();
     printf("\n\n");
-    if (choix >= 1 && choix <= 5)
+    while (!(choix >= 1 && choix <= 4))
     {
-        return choix;
+        printf("\nChoix non disponible veuillez reessayer:\t");
+        choix = lire_int();
     }
-    return -1;
+    return choix;
 }
 
 /*
@@ -595,8 +604,8 @@ int menu()
 */
 int demande_aide()
 {
-    printf("\nToute aide est equivalent a un manu de 1/6 de votre reccompense avant la demande d'aide.\n");
-    printf("\n1-Avoir de l'aide.\n");
+    printf("\nToute aide vous coutera 0.166 points.\n");
+    printf("\n1-Avez-vous besoin d'aide.\n");
     printf("\nEntrer votre choix:\t");
     int choix;
     choix = lire_int();
@@ -619,11 +628,12 @@ int sujet()
     int choix;
     printf("\nEntrer votre choix:\t");
     choix = lire_int();
-    if (choix >= 1 || choix <= 3)
+    while (!(choix >= 1 && choix <= 3))
     {
-        return choix;
+        printf("\nChoix non disponible veuillez reessayer:\t");
+        choix = lire_int();
     }
-    return 0;
+    return choix;
 }
 
 /*
@@ -725,4 +735,14 @@ void statistique()
         fclose(f);
     }
     return;
+}
+
+
+char *upper_case(char *str){
+    for (int i = 0; str[i]!='\0'; i++) {
+      if(str[i] >= 'a' && str[i] <= 'z') {
+         str[i] = str[i] -32;
+      }
+   }
+   return str;
 }

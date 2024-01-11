@@ -26,11 +26,13 @@ int main(int argv, char *argc[])
             r = 0;
             break;
         default:
-            nouvelle_partie(&cw);
+            // nouvelle_partie(&cw);
+            printf("\nVotre choix n'est pas disponible.\n");
             break;
         }
     }
     printf("\n\n********************************************************************** Good Bye ****************************************************************************\n\n");
     free_memory(&cw);
+
     return EXIT_SUCCESS;
 }

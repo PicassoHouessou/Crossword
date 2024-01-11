@@ -229,4 +229,6 @@ float display_hint_and_get_manus(Dictionnaire *entry, Crossword *c);
 /// @param choice
 void update_grid_with_answer(Grille *grid,Dictionnaire dic, char *response, int choice);
 
+char * upper_case(char*);
+
 #endif // ___CROSSWORD___
