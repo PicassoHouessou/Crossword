@@ -604,16 +604,23 @@ int menu()
 */
 int demande_aide()
 {
+    char choix[4];
     printf("\nToute aide vous coutera 0.166 points.\n");
-    printf("\n1-Avez-vous besoin d'aide.\n");
+    printf("\nAvez-vous besoin d'aide [oui|non] || [OUI|NON].\n");
     printf("\nEntrer votre choix:\t");
-    int choix;
-    choix = lire_int();
-    if (choix == 1)
+    scanf("%s",choix);
+    while (!(strcmp(choix,"oui")==0 || strcmp(choix,"non")==0 || strcmp(choix,"OUI")==0 || strcmp(choix,"NON")==0))
     {
-        return 1;
+        printf("\nVeuillez reessayer:\t");
+        scanf("%s",choix);
     }
-    return -1;
+    // int choix;
+    // choix = lire_int();
+    // if (choix == 1)
+    // {
+    //     return 1;
+    // }
+    return strcmp(choix,"oui")==0 || strcmp(choix,"OUI")==0 ?1:-1;
 }
 
 /*
