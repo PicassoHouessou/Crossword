@@ -587,11 +587,12 @@ int menu()
     printf("\n2-Reprendre une partie.\n");
     printf("\n3-Statistique.\n");
     printf("\n4-Quitter une partie.\n");
+    printf("\n5-About.\n");
     int choix;
     printf("\nEntrer votre choix :\t");
     choix = lire_int();
     printf("\n\n");
-    while (!(choix >= 1 && choix <= 4))
+    while (!(choix >= 1 && choix <= 5))
     {
         printf("\nChoix non disponible veuillez reessayer:\t");
         choix = lire_int();
@@ -747,4 +748,12 @@ char *upper_case(char *str){
       }
    }
    return str;
+}
+
+void about()
+{
+    printf("\nNotre jeu est baser sur trois sujets precises:\n");
+    printf("\n1-Divers qui met en vigueur votre culture sportive et celle sur les noms des pays.\n");
+    printf("\n2-Education qui met en vigueur votre culture informatique.\n");
+    printf("\n3-medecine qui met en vigueur votre culture dans le domaine de la medecine.\n");
 }

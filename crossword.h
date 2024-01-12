@@ -231,4 +231,6 @@ void update_grid_with_answer(Grille *grid,Dictionnaire dic, char *response, int 
 
 char * upper_case(char*);
 
+void about();
+
 #endif // ___CROSSWORD___

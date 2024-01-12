@@ -11,8 +11,6 @@ int main(int argv, char *argc[])
     {
         switch (menu())
         {
-        case -1:
-            break;
         case 1:
             nouvelle_partie(&cw);
             break;
@@ -25,8 +23,10 @@ int main(int argv, char *argc[])
         case 4:
             r = 0;
             break;
+        case 5:
+            about();
+            break;
         default:
-            // nouvelle_partie(&cw);
             printf("\nVotre choix n'est pas disponible.\n");
             break;
         }
