@@ -497,7 +497,7 @@ void free_memory(Crossword **cw)
         free((*cw)->g);
         free(*cw);
     }
-    free(cw);
+    //free(cw);
     return;
 }
 
@@ -760,9 +760,9 @@ char *upper_case(char *str){
    return str;
 }
 
-void about()
+void appropos()
 {
-    printf("\nNotre jeu est baser sur trois sujets precises:\n");
+    printf("\nNotre jeu est base sur trois sujets precises:\n");
     printf("\n1-Divers qui met en vigueur votre culture sportive et celle sur les noms des pays.\n");
     printf("\n2-Education qui met en vigueur votre culture informatique.\n");
     printf("\n3-medecine qui met en vigueur votre culture dans le domaine de la medecine.\n");
