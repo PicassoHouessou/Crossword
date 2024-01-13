@@ -358,31 +358,41 @@ void sauvegarder_partie(Crossword *cw)
 Grille *load_grille(char *filename)
 {
     Grille *g = (Grille *)malloc(sizeof(Grille));
-    FILE *f = fopen(filename, "r");
+    FILE *f = NULL;
 
-    fscanf(f, "%d %d", &g->nombre_ligne, &g->nombre_colonne);
-    int size = g->nombre_ligne * g->nombre_colonne + 1;
-    Cellule *vec = (Cellule *)malloc(sizeof(Cellule) * size);
-    int k = 0;
-    while (fscanf(f, "%d %c", &vec[k].id, &vec[k].caractere) != EOF)
+    f = fopen(filename, "r");
+    if (f==NULL)
     {
-        k++;
+        printf("\nSauvegarde non disponible.\n");
+        return NULL;
     }
-    k = 0;
-    Cellule **grille = malloc(sizeof(Cellule) * g->nombre_ligne);
-    for (int i = 0; i < g->nombre_ligne; i++)
+    else
     {
-        grille[i] = malloc(sizeof(Cellule) * g->nombre_colonne);
-        for (int j = 0; j < g->nombre_colonne; j++)
+        fscanf(f, "%d %d", &g->nombre_ligne, &g->nombre_colonne);
+        int size = g->nombre_ligne * g->nombre_colonne + 1;
+        Cellule *vec = (Cellule *)malloc(sizeof(Cellule) * size);
+        int k = 0;
+        while (fscanf(f, "%d %c", &vec[k].id, &vec[k].caractere) != EOF)
         {
-            grille[i][j].id = vec[k].id;
-
-            grille[i][j].caractere = vec[k].caractere == '?' ? ' ' : vec[k].caractere;
             k++;
         }
+        k = 0;
+        Cellule **grille = malloc(sizeof(Cellule) * g->nombre_ligne);
+        for (int i = 0; i < g->nombre_ligne; i++)
+        {
+            grille[i] = malloc(sizeof(Cellule) * g->nombre_colonne);
+            for (int j = 0; j < g->nombre_colonne; j++)
+            {
+                grille[i][j].id = vec[k].id;
+
+                grille[i][j].caractere = vec[k].caractere == '?' ? ' ' : vec[k].caractere;
+                k++;
+            }
+        }
+        g->grille = grille;
+        fclose(f);
     }
-    g->grille = grille;
-    fclose(f);
+
     return g;
 }
 
@@ -397,7 +407,7 @@ Dictionnaire *load_dictionnaire(char *filename)
     f = fopen(filename, "r");
     if (f == NULL)
     {
-        printf("\nOuverture impossible\n");
+        printf("\nSauvegarde non disponible.\n");
         return NULL;
     }
     else
