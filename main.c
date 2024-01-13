@@ -32,9 +32,7 @@ int main(int argv, char *argc[])
         }
     }
     printf("\n\n********************************************************************** Good Bye ****************************************************************************\n\n");
-    if (cw != NULL)
-    {
-        free_memory(&cw);
-    }
+    free_memory(&cw);
+
     return EXIT_SUCCESS;
 }

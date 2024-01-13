@@ -60,3 +60,5 @@ users/
 
 #ignore the binary
 main
+#remove tmp folders.
+tmp/

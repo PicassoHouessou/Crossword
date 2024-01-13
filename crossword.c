@@ -11,7 +11,7 @@ void run(Crossword **cw, Crossword *c, int nbe, char *filename, char *str)
     int *current = load_choix((*cw)->dictionnaire->dim, filename);
     float manus = 0.0f;
     char response[25];
-    while (current[k]!=0)
+    while (current[k] != 0)
     {
         k++;
     }
@@ -30,7 +30,7 @@ void run(Crossword **cw, Crossword *c, int nbe, char *filename, char *str)
             return;
         }
 
-        printf("\nEntrer votre reponse :\t");
+        printf("\nEntrez votre reponse : ");
         // Taille de la réponse est la même que la taille de l'utilisateur
         lire(response, USERNAME_SIZE);
 
@@ -39,15 +39,15 @@ void run(Crossword **cw, Crossword *c, int nbe, char *filename, char *str)
         {
             i++;
             manus += display_hint_and_get_manus(&(*cw)->dictionnaire[choix - 1], c);
-            printf("\nIl vous reste %d essais possible\n", (nbe - i)+1);
-            printf("\nVeillez re-essayer une nouvelle reponse:\t");
+            printf("\nIl vous reste %d essais possible\n", (nbe - i) + 1);
+            printf("\nVeillez re-essayer une nouvelle reponse: ");
             lire(response, USERNAME_SIZE);
         }
 
         if (is_correct_answer(upper_case(response), (*cw)->dictionnaire[choix - 1], c))
         {
             s++;
-            update_grid_with_answer((*cw)->g,(*cw)->dictionnaire[choix-1], upper_case(response), choix);
+            update_grid_with_answer((*cw)->g, (*cw)->dictionnaire[choix - 1], upper_case(response), choix);
         }
         current[k] = current[k] == 0 ? choix : current[k];
         k++;
@@ -60,18 +60,18 @@ int get_choice(int turn, int maxChoices, int *currentChoices)
 {
     int choice;
 
-    printf("\nEntrez votre choix (le numéro doit être compris entre [0-%d]):\t", maxChoices);
+    printf("\nEntrez votre choix (le numéro doit être compris entre [0-%d]): ", maxChoices);
     choice = lire_int();
 
-    int r=1;
+    int r = 1;
     while (r)
     {
-        if (choice<=maxChoices && !isIn(currentChoices, maxChoices, choice) || choice==0)
+        if (choice <= maxChoices && !isIn(currentChoices, maxChoices, choice) || choice == 0)
         {
-           r=0;
-           return choice;
+            r = 0;
+            return choice;
         }
-        printf("\nChoix non disponible ou choix deja fait veuillez reessayer:\t");
+        printf("\nChoix indisponible ou choix deja effectue, veuillez reessayer: ");
         choice = lire_int();
     }
     return choice;
@@ -113,7 +113,7 @@ float display_hint_and_get_manus(Dictionnaire *entry, Crossword *c)
 /// @param grid
 /// @param response
 /// @param choice
-void update_grid_with_answer(Grille *grid,Dictionnaire dic, char *response, int choice)
+void update_grid_with_answer(Grille *grid, Dictionnaire dic, char *response, int choice)
 {
     int t, z;
     for (int i = 0; i < grid->nombre_ligne; i++)
@@ -130,21 +130,20 @@ void update_grid_with_answer(Grille *grid,Dictionnaire dic, char *response, int 
     }
     if (grid->grille[t][z].id == choice)
     {
-        if (strcmp(dic.indice_horizontal,"-")!=0)
+        if (strcmp(dic.indice_horizontal, "-") != 0)
         {
-            for (int i = z; i < z+strlen(response); i++)
+            for (int i = z; i < z + strlen(response); i++)
             {
-                grid->grille[t][i].caractere = response[i-z];
+                grid->grille[t][i].caractere = response[i - z];
             }
         }
         else
         {
-            for (int i = t; i < t+strlen(response); i++)
+            for (int i = t; i < t + strlen(response); i++)
             {
-                grid->grille[i][z].caractere = response[i-t];
+                grid->grille[i][z].caractere = response[i - t];
             }
         }
-        
     }
 }
 
@@ -182,7 +181,7 @@ void nouvelle_partie(Crossword **cw)
 
     nbe = 4 - niveauChoisi;
 
-    printf("\nEntrer votre nom:\t");
+    printf("\nEntrez votre pseudo : ");
     (*cw)->u = malloc(sizeof(User));
     // scanf("%s", (*cw)->u->username);
     lire((*cw)->u->username, USERNAME_SIZE);
@@ -208,7 +207,7 @@ void reprendre_partie(Crossword **cw)
     time(&secondes);
     (*cw)->stat = NULL;
     char name[15];
-    printf("\nEntrer votre nom :\t");
+    printf("\nEntrez votre pseudo : ");
     lire(name, 15);
     int nbe;
     Crossword *c = malloc(sizeof(Crossword));
@@ -223,10 +222,10 @@ void reprendre_partie(Crossword **cw)
     strcpy((*cw)->stat->niveau, difficulty);
 
     // Setup file paths
-    sprintf(filename_dictionnaire, "users/%s/sauvegardes/%s/dictionnaires/%s.txt",name, subject, difficulty);
-    sprintf(filename_grille, "users/%s/sauvegardes/%s/grilles/%s.txt",name, subject, difficulty);
+    sprintf(filename_dictionnaire, "users/%s/sauvegardes/%s/dictionnaires/%s.txt", name, subject, difficulty);
+    sprintf(filename_grille, "users/%s/sauvegardes/%s/grilles/%s.txt", name, subject, difficulty);
     sprintf(file, "grilles/%s.txt", subject);
-    sprintf(filename, "users/%s/sauvegardes/%s/choix/%s.txt",name, subject, difficulty);
+    sprintf(filename, "users/%s/sauvegardes/%s/choix/%s.txt", name, subject, difficulty);
 
     // Set subject and number of attempts
     strcpy((*cw)->sujet, subject);
@@ -274,7 +273,6 @@ char *get_difficulty(int levelCode)
     default:
         printf("\nVotre choix n'est pas disponible.\n");
     }
-    
 }
 
 int get_number_of_attempts(char *difficulty)
@@ -302,7 +300,7 @@ void sauvegarder_partie(Crossword *cw)
 
     char str[100];
 
-    sprintf(str,"%s\t%s","./script.sh",cw->u->username);
+    sprintf(str, "%s\t%s", "./script.sh", cw->u->username);
     // Construct file paths based on 'sujet' and 'niveau'
     sprintf(filename_dictionnaire, "tmp/sauvegardes/%s/dictionnaires/%s.txt", cw->sujet, cw->stat->niveau);
     sprintf(filename_grille, "tmp/sauvegardes/%s/grilles/%s.txt", cw->sujet, cw->stat->niveau);
@@ -311,7 +309,7 @@ void sauvegarder_partie(Crossword *cw)
     FILE *f1 = fopen(filename_grille, "w");
     FILE *f2 = fopen(stat_file, "a+");
 
-    cw->dictionnaire=remplacer_espace_mots_dictionnaire(cw->dictionnaire);
+    cw->dictionnaire = remplacer_espace_mots_dictionnaire(cw->dictionnaire);
     if (f && f1 && f2)
     {
         // Save Dictionary
@@ -361,7 +359,7 @@ Grille *load_grille(char *filename)
     FILE *f = NULL;
 
     f = fopen(filename, "r");
-    if (f==NULL)
+    if (f == NULL)
     {
         printf("\nSauvegarde non disponible.\n");
         return NULL;
@@ -497,7 +495,7 @@ void free_memory(Crossword **cw)
         free((*cw)->g);
         free(*cw);
     }
-    //free(cw);
+    // free(cw);
     return;
 }
 
@@ -576,12 +574,12 @@ int choix_niveau()
     printf("\n2-Niveau intermediaire.\n");
     printf("\n3-Niveau difficile.\n");
     int choix;
-    printf("\nEntrez votre choix :\t");
+    printf("\nEntrez votre choix : ");
     choix = lire_int();
     printf("\n\n");
     while (!(choix >= 1 && choix <= 3))
     {
-        printf("\nChoix non disponible veuillez reessayer:\t");
+        printf("\nChoix indisponible, veuillez entrer soit 1, 2 ou 3 : ");
         choix = lire_int();
     }
     return choix;
@@ -597,14 +595,14 @@ int menu()
     printf("\n2-Reprendre une partie.\n");
     printf("\n3-Statistique.\n");
     printf("\n4-Quitter une partie.\n");
-    printf("\n5-About.\n");
+    printf("\n5-A Propos.\n");
     int choix;
-    printf("\nEntrer votre choix :\t");
+    printf("\nEntrez votre choix : ");
     choix = lire_int();
     printf("\n\n");
     while (!(choix >= 1 && choix <= 5))
     {
-        printf("\nChoix non disponible veuillez reessayer:\t");
+        printf("\nChoix indisponible, veuillez entrer soit 1, 2, 3, 4 ou 5 : ");
         choix = lire_int();
     }
     return choix;
@@ -618,13 +616,13 @@ int demande_aide()
     int choix;
     printf("\nToute aide vous coutera 0.166 points.\n");
     printf("\nAvez-vous besoin d'aide [1|*].\n");
-    printf("\nEntrer votre choix:\t");
+    printf("\nEntrez votre choix: ");
     // scanf("%s",choix);
-    choix=lire_int();
-    while (!(choix>=0 && choix<=1))
+    choix = lire_int();
+    while (!(choix >= 0 && choix <= 1))
     {
-        printf("\nVeuillez reessayer:\t");
-        choix=lire_int();
+        printf("\nVeuillez reessayer: ");
+        choix = lire_int();
     }
     return choix;
 }
@@ -639,11 +637,11 @@ int sujet()
     printf("\n2-Education.\n");
     printf("\n3-Medecine.\n");
     int choix;
-    printf("\nEntrer votre choix:\t");
+    printf("\nEntrez votre choix.: ");
     choix = lire_int();
     while (!(choix >= 1 && choix <= 3))
     {
-        printf("\nChoix non disponible veuillez reessayer:\t");
+        printf("\nChoix indisponible, entrez soit 1, 2 ou 3 : ");
         choix = lire_int();
     }
     return choix;
@@ -731,7 +729,7 @@ void statistique()
         char name[USERNAME_SIZE];
         char username[USERNAME_SIZE];
         char sub[50];
-        printf("\nEntrer votre nom d'utilisateur:\t");
+        printf("\nEntrez votre pseudo : ");
         lire(name, USERNAME_SIZE);
         float score;
         printf("------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
@@ -750,22 +748,29 @@ void statistique()
     return;
 }
 
-
-char *upper_case(char *str){
-    for (int i = 0; str[i]!='\0'; i++) {
-      if(str[i] >= 'a' && str[i] <= 'z') {
-         str[i] = str[i] -32;
-      }
-   }
-   return str;
+char *upper_case(char *str)
+{
+    for (int i = 0; str[i] != '\0'; i++)
+    {
+        if (str[i] >= 'a' && str[i] <= 'z')
+        {
+            str[i] = str[i] - 32;
+        }
+    }
+    return str;
 }
 
 void appropos()
 {
-    
-    printf("\nNotre jeu est base sur trois sujets precises:\n");
-    printf("\n1-Divers qui met en vigueur votre culture sportive et celle sur les noms des pays.\n");
-    printf("\n2-Education qui met en vigueur votre culture informatique.\n");
-    printf("\n3-medecine qui met en vigueur votre culture dans le domaine de la medecine.\n");
-    char c=getchar();
+
+    // printf("\nNotre jeu est base sur trois sujets precis:\n");
+    // printf("\n1-Divers qui met en vigueur votre culture sportive et celle sur les noms des pays.\n");
+    // printf("\n2-Education qui met en vigueur votre culture informatique.\n");
+    // printf("\n3-medecine qui met en vigueur votre culture dans le domaine de la medecine.\n");
+    printf("\nNotre jeu de mots croisés repose sur trois thèmes spécifiques :\n");
+    printf("\n1. Divers : testez vos connaissances en culture sportive et sur les noms des pays.\n");
+    printf("\n2. Éducation : mettez à l'épreuve votre culture informatique.\n");
+    printf("\n3. Médecine : démontrez votre savoir dans le domaine médical.\n");
+
+    char c = getchar();
 }
