@@ -57,3 +57,6 @@ dkms.conf
 
 #others directory
 users/
+
+#ignore the binary
+main
