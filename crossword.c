@@ -54,7 +54,7 @@ void run(Crossword **cw, Crossword *c, int nbe, char *filename, char *str)
     }
     (*cw)->stat->score += (float)(((float)s / (float)(*cw)->dictionnaire->dim) - manus);
     print_grille((*cw)->g);
-    char c=getchar();
+    char ch=getchar();
 }
 
 int get_choice(int turn, int maxChoices, int *currentChoices)
@@ -487,18 +487,13 @@ void print_dictionnaire(Dictionnaire *dic)
 void free_memory(Crossword **cw)
 {
 
-    if ((*cw) != NULL)
+    if (cw!=NULL && (*cw) != NULL)
     {
-        for (int i = 0; i < (*cw)->g->nombre_ligne; i++)
-        {
-            free((*cw)->g->grille[i]);
-        }
         free((*cw)->dictionnaire);
         free((*cw)->stat);
         free((*cw)->g);
         free(*cw);
     }
-    free(cw);
     return;
 }
 
