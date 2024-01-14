@@ -54,6 +54,7 @@ void run(Crossword **cw, Crossword *c, int nbe, char *filename, char *str)
     }
     (*cw)->stat->score += (float)(((float)s / (float)(*cw)->dictionnaire->dim) - manus);
     print_grille((*cw)->g);
+    char c=getchar();
 }
 
 int get_choice(int turn, int maxChoices, int *currentChoices)
@@ -497,7 +498,7 @@ void free_memory(Crossword **cw)
         free((*cw)->g);
         free(*cw);
     }
-    //free(cw);
+    free(cw);
     return;
 }
 
@@ -619,7 +620,7 @@ int demande_aide()
     printf("\nToute aide vous coutera 0.166 points.\n");
     printf("\nAvez-vous besoin d'aide [1|*].\n");
     printf("\nEntrer votre choix:\t");
-    // scanf("%s",choix);
+    
     choix=lire_int();
     while (!(choix>=0 && choix<=1))
     {
@@ -747,6 +748,7 @@ void statistique()
         }
         fclose(f);
     }
+    printf("\nAucune statistique disponible.\n");
     return;
 }
 
