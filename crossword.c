@@ -54,6 +54,7 @@ void run(Crossword **cw, Crossword *c, int nbe, char *filename, char *str)
     }
     (*cw)->stat->score += (float)(((float)s / (float)(*cw)->dictionnaire->dim) - manus);
     print_grille((*cw)->g);
+    char ch = getchar();
 }
 
 int get_choice(int turn, int maxChoices, int *currentChoices)
@@ -484,18 +485,13 @@ void print_dictionnaire(Dictionnaire *dic)
 void free_memory(Crossword **cw)
 {
 
-    if ((*cw) != NULL)
+    if (cw != NULL && (*cw) != NULL)
     {
-        for (int i = 0; i < (*cw)->g->nombre_ligne; i++)
-        {
-            free((*cw)->g->grille[i]);
-        }
         free((*cw)->dictionnaire);
         free((*cw)->stat);
         free((*cw)->g);
         free(*cw);
     }
-    // free(cw);
     return;
 }
 
@@ -733,18 +729,22 @@ void statistique()
         lire(name, USERNAME_SIZE);
         float score;
         printf("------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
-        printf("Sujet\t\t|\t\tNiveau\t\t|\t\tScore\t\t|\tDate\t\t|\tHeure de D%cbut\t\t|\tHeure de Fin\n", 130);
+        // printf("Sujet\t\t|\t\tNiveau\t\t|\t\tScore\t\t|\tDate\t\t|\tHeure de D%cbut\t\t|\tHeure de Fin\n", 130);
+        printf("Sujet\t\t\t\t|Niveau\t\t\t|\t\t\t\tScore\t\t\t|\t\t\t\tDuree(min)\n");
         printf("------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
         while (fscanf(f, "%s %s %s %f %d %d %d %d %d %d %d %d", sub, username, niveau, &score, &d, &m, &h1, &m1, &s1, &h2, &m2, &s2) != EOF)
         {
             if (strcmp(username, name) == 0)
             {
-                printf("\n%s\t\t|%s\t|\t\t%.4f\t\t|\t%d/%d\t\t|\t%d:%d:%d\t\t\t|\t%d:%d:%d\n", sub, niveau, (score * FILE_PATH_SIZE), d, m, h1, m1, s1, h2, m2, s2);
+                // printf("\n%s\t\t|%s\t|\t\t%.4f\t\t|\t%d/%d\t\t|\t%d:%d:%d\t\t\t|\t%d:%d:%d\n", sub, niveau, (score * FILE_PATH_SIZE), d, m, h1, m1, s1, h2, m2, s2);
+                printf("\n%s\t\t\t\t|%s\t|\t\t\t\t%.4f\t\t\t\t|\t\t\t\t%.4f\n", sub, niveau, (score * FILE_PATH_SIZE), duration(h2, m2, s2, h1, m1, s1));
                 printf("------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
             }
         }
         fclose(f);
+        return;
     }
+    printf("\nAucune statistique disponible.\n");
     return;
 }
 
@@ -773,4 +773,16 @@ void appropos()
     printf("\n3. Médecine : démontrez votre savoir dans le domaine médical.\n");
 
     char c = getchar();
+}
+
+float duration(int h1, int m1, int s1, int h2, int m2, int s2)
+{
+    float tim = ((float)(h1 * 60) + (float)m1 + ((float)(s1) / (float)60)) - ((float)(h2 * 60) + (float)m2 + ((float)(s2) / (float)60));
+    return tim;
+}
+
+float duration(int h1, int m1, int s1, int h2, int m2, int s2)
+{
+    float tim = ((float)(h1 * 60) + (float)m1 + ((float)(s1) / (float)60)) - ((float)(h2 * 60) + (float)m2 + ((float)(s2) / (float)60));
+    return tim;
 }

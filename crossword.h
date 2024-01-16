@@ -233,4 +233,6 @@ char * upper_case(char*);
 
 void appropos();
 
+float duration(int,int,int,int,int,int);
+
 #endif // ___CROSSWORD___
