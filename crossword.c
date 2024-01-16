@@ -52,7 +52,8 @@ void run(Crossword **cw, Crossword *c, int nbe, char *filename, char *str)
         current[k] = current[k] == 0 ? choix : current[k];
         k++;
     }
-    (*cw)->stat->score += (float)(((float)s / (float)(*cw)->dictionnaire->dim) - manus);
+    // (*cw)->stat->score += (float)(((float)s*SCORE / (float)(*cw)->dictionnaire->dim) - manus);
+    (*cw)->stat->score += (float)((float)s*SCORE - manus); // / (float)(*cw)->dictionnaire->dim)
     print_grille((*cw)->g);
     char ch=getchar();
 }
@@ -105,7 +106,7 @@ float display_hint_and_get_manus(Dictionnaire *entry, Crossword *c)
         char lastLetter = entry->indice_horizontal[0] != '-' ? c->dictionnaire[entry->id - 1].resultat_horizontal[strlen(c->dictionnaire[entry->id - 1].resultat_horizontal) - 1] : c->dictionnaire[entry->id - 1].resultat_vertical[strlen(c->dictionnaire[entry->id - 1].resultat_vertical) - 1];
         size_t length = entry->indice_horizontal[0] != '-' ? strlen(c->dictionnaire[entry->id - 1].resultat_horizontal) : strlen(c->dictionnaire[entry->id - 1].resultat_vertical);
         printf("\nLa réponse commence par %c et se termine par %c et contient %ld caractères.\n", firstLetter, lastLetter, length);
-        return 1.0f / ((float)(*entry).dim * 6);
+        return 2.0f ;/// ((float)(*entry).dim * 6)
     }
     return 0.0f;
 }
@@ -258,7 +259,6 @@ char *get_subject(int subjectCode)
         return "medecine";
     default:
         printf("\nVotre choix n'est pas disponible.\n");
-        // return "divers";
     }
 }
 
@@ -289,7 +289,7 @@ int get_number_of_attempts(char *difficulty)
         return 2;
     }
     else
-    { // "difficile"
+    {
         return 1;
     }
 }
@@ -612,7 +612,7 @@ int menu()
 int demande_aide()
 {
     int choix;
-    printf("\nToute aide vous coutera 0.166 points.\n");
+    printf("\nToute aide vous coutera 2 points.\n");
     printf("\nAvez-vous besoin d'aide [1|*].\n");
     printf("\nEntrer votre choix:\t");
     
@@ -739,7 +739,7 @@ void statistique()
             if (strcmp(username, name) == 0)
             {
                 // printf("\n%s\t\t|%s\t|\t\t%.4f\t\t|\t%d/%d\t\t|\t%d:%d:%d\t\t\t|\t%d:%d:%d\n", sub, niveau, (score * FILE_PATH_SIZE), d, m, h1, m1, s1, h2, m2, s2);
-                printf("\n%s\t\t\t\t|%s\t|\t\t\t\t%.4f\t\t\t\t|\t\t\t\t%.4f\n", sub, niveau, (score * FILE_PATH_SIZE), duration(h2,m2,s2,h1,m1,s1));
+                printf("\n%s\t\t\t\t|%s\t|\t\t\t\t%.4f\t\t\t\t|\t\t\t\t%.4f\n", sub, niveau, (score), duration(h2,m2,s2,h1,m1,s1));
                 printf("------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
             }
         }
