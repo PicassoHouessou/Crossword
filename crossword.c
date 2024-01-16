@@ -40,7 +40,7 @@ void run(Crossword **cw, Crossword *c, int nbe, char *filename, char *str)
             i++;
             manus += display_hint_and_get_manus(&(*cw)->dictionnaire[choix - 1], c);
             printf("\nIl vous reste %d essais possible\n", (nbe - i) + 1);
-            printf("\nVeillez re-essayer une nouvelle reponse: ");
+            printf("\nVeuillez re-éssayer car la réponse précédente est fausse : ");
             lire(response, USERNAME_SIZE);
         }
 
@@ -52,8 +52,8 @@ void run(Crossword **cw, Crossword *c, int nbe, char *filename, char *str)
         current[k] = current[k] == 0 ? choix : current[k];
         k++;
     }
-    // (*cw)->stat->score += (float)(((float)s*SCORE / (float)(*cw)->dictionnaire->dim) - manus);
-    (*cw)->stat->score += (float)((float)s*SCORE - manus); // / (float)(*cw)->dictionnaire->dim)
+    
+    (*cw)->stat->score += ((float)(s*SCORE) - manus);
     print_grille((*cw)->g);
     char ch = getchar();
 }
@@ -73,7 +73,7 @@ int get_choice(int turn, int maxChoices, int *currentChoices)
             r = 0;
             return choice;
         }
-        printf("\nChoix indisponible ou choix deja effectue, veuillez reessayer: ");
+        printf("\nChoix indisponible ou choix deja effectue, veuillez re-éssayer: ");
         choice = lire_int();
     }
     return choice;
@@ -84,7 +84,7 @@ void save_and_exit(Crossword **cw, int score, float manus, int *currentChoices, 
     time_t secondes;
     time(&secondes);
     (*cw)->stat->heure_fin = *localtime(&secondes);
-    (*cw)->stat->score += ((float)score / (float)(*cw)->dictionnaire->dim) - manus;
+    (*cw)->stat->score += ((float)(score*SCORE) - manus);/// (float)(*cw)->dictionnaire->dim)
     sauvegarder_choix(currentChoices, (*cw)->dictionnaire->dim, filename);
     sauvegarder_partie(*cw);
 }
@@ -613,7 +613,6 @@ int demande_aide()
     printf("\nToute aide vous coutera 2 points.\n");
     printf("\nAvez-vous besoin d'aide [1|*].\n");
     printf("\nEntrez votre choix: ");
-    // scanf("%s",choix);
     choix = lire_int();
     while (!(choix >= 0 && choix <= 1))
     {
@@ -631,7 +630,7 @@ int sujet()
     printf("\nChoix du sujet.\n");
     printf("\n1-Divers.\n");
     printf("\n2-Education.\n");
-    printf("\n3-Medecine.\n");
+    printf("\n3-Médecine.\n");
     int choix;
     printf("\nEntrez votre choix.: ");
     choix = lire_int();
@@ -729,14 +728,14 @@ void statistique()
         lire(name, USERNAME_SIZE);
         float score;
         printf("------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
-        // printf("Sujet\t\t|\t\tNiveau\t\t|\t\tScore\t\t|\tDate\t\t|\tHeure de D%cbut\t\t|\tHeure de Fin\n", 130);
+        
         printf("Sujet\t\t\t\t|Niveau\t\t\t|\t\t\t\tScore\t\t\t|\t\t\t\tDuree(min)\n");
         printf("------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
         while (fscanf(f, "%s %s %s %f %d %d %d %d %d %d %d %d", sub, username, niveau, &score, &d, &m, &h1, &m1, &s1, &h2, &m2, &s2) != EOF)
         {
             if (strcmp(username, name) == 0)
             {
-                // printf("\n%s\t\t|%s\t|\t\t%.4f\t\t|\t%d/%d\t\t|\t%d:%d:%d\t\t\t|\t%d:%d:%d\n", sub, niveau, (score * FILE_PATH_SIZE), d, m, h1, m1, s1, h2, m2, s2);
+                
                 printf("\n%s\t\t\t\t|%s\t|\t\t\t\t%.4f\t\t\t\t|\t\t\t\t%.4f\n", sub, niveau, (score * FILE_PATH_SIZE), duration(h2,m2,s2,h1,m1,s1));
                 printf("------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
             }
@@ -760,25 +759,15 @@ char *upper_case(char *str)
     return str;
 }
 
+
 void appropos()
 {
-
-    // printf("\nNotre jeu est base sur trois sujets precis:\n");
-    // printf("\n1-Divers qui met en vigueur votre culture sportive et celle sur les noms des pays.\n");
-    // printf("\n2-Education qui met en vigueur votre culture informatique.\n");
-    // printf("\n3-medecine qui met en vigueur votre culture dans le domaine de la medecine.\n");
     printf("\nNotre jeu de mots croisés repose sur trois thèmes spécifiques :\n");
     printf("\n1. Divers : testez vos connaissances en culture sportive et sur les noms des pays.\n");
     printf("\n2. Éducation : mettez à l'épreuve votre culture informatique.\n");
     printf("\n3. Médecine : démontrez votre savoir dans le domaine médical.\n");
 
     char c = getchar();
-}
-
-float duration(int h1, int m1, int s1, int h2, int m2, int s2)
-{
-    float tim = ((float)(h1 * 60) + (float)m1 + ((float)(s1) / (float)60)) - ((float)(h2 * 60) + (float)m2 + ((float)(s2) / (float)60));
-    return tim;
 }
 
 float duration(int h1, int m1, int s1, int h2, int m2, int s2)
