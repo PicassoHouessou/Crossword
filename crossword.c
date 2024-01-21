@@ -736,7 +736,7 @@ void statistique()
             if (strcmp(username, name) == 0)
             {
                 
-                printf("\n%s\t\t\t\t|%s\t|\t\t\t\t%.4f\t\t\t\t|\t\t\t\t%.4f\n", sub, niveau, (score * FILE_PATH_SIZE), duration(h2,m2,s2,h1,m1,s1));
+                printf("\n%s\t\t\t\t|%s\t|\t\t\t\t%.2f\t\t\t\t|\t\t\t\t%.4f\n", sub, niveau, score, duration(h2,m2,s2,h1,m1,s1));
                 printf("------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
             }
         }
