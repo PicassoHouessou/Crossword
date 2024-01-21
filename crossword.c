@@ -20,17 +20,17 @@ void run(Crossword **cw, Crossword *c, int nbe, char *filename, char *str)
         print_grille((*cw)->g);
         printf("\n\n");
         print_dictionnaire((*cw)->dictionnaire);
-        printf("\n0-sauvegarder la partie en cours.\n");
+        printf("\n\t\t%d-sauvegarder la partie en cours.\n",((*cw)->dictionnaire->dim+1));
 
         int choix = get_choice(k, (*cw)->dictionnaire->dim, current);
-        if (choix == 0)
+        if (choix == ((*cw)->dictionnaire->dim+1))
         {
             save_and_exit(cw, s, manus, current, filename);
             current[k] = current[k] == 0 ? choix : current[k];
             return;
         }
 
-        printf("\nEntrez votre reponse : ");
+        printf("\n\t\tEntrez votre reponse : ");
         // Taille de la réponse est la même que la taille de l'utilisateur
         lire(response, USERNAME_SIZE);
 
@@ -39,8 +39,8 @@ void run(Crossword **cw, Crossword *c, int nbe, char *filename, char *str)
         {
             i++;
             manus += display_hint_and_get_manus(&(*cw)->dictionnaire[choix - 1], c);
-            printf("\nIl vous reste %d essais possible\n", (nbe - i) + 1);
-            printf("\nVeuillez re-éssayer car la réponse précédente est fausse : ");
+            printf("\n\t\t\tIl vous reste %d essais possible\n", (nbe - i) + 1);
+            printf("\n\t\tVeuillez re-éssayer car la réponse précédente est fausse : ");
             lire(response, USERNAME_SIZE);
         }
 
@@ -62,18 +62,18 @@ int get_choice(int turn, int maxChoices, int *currentChoices)
 {
     int choice;
 
-    printf("\nEntrez votre choix (le numéro doit être compris entre [0-%d]): ", maxChoices);
+    printf("\n\t\tEntrez votre choix (le numéro doit être compris entre [1-%d]): ", maxChoices);
     choice = lire_int();
 
     int r = 1;
     while (r)
     {
-        if (choice <= maxChoices && !isIn(currentChoices, maxChoices, choice) || choice == 0)
+        if ((choice <= maxChoices && !isIn(currentChoices, maxChoices, choice)) || choice == (maxChoices+1))
         {
             r = 0;
             return choice;
         }
-        printf("\nChoix indisponible ou choix deja effectue, veuillez re-éssayer: ");
+        printf("\n\t\tChoix indisponible ou choix deja effectue, veuillez re-éssayer: ");
         choice = lire_int();
     }
     return choice;
@@ -105,7 +105,7 @@ float display_hint_and_get_manus(Dictionnaire *entry, Crossword *c)
         char firstLetter = entry->indice_horizontal[0] != '-' ? c->dictionnaire[entry->id - 1].resultat_horizontal[0] : c->dictionnaire[entry->id - 1].resultat_vertical[0];
         char lastLetter = entry->indice_horizontal[0] != '-' ? c->dictionnaire[entry->id - 1].resultat_horizontal[strlen(c->dictionnaire[entry->id - 1].resultat_horizontal) - 1] : c->dictionnaire[entry->id - 1].resultat_vertical[strlen(c->dictionnaire[entry->id - 1].resultat_vertical) - 1];
         size_t length = entry->indice_horizontal[0] != '-' ? strlen(c->dictionnaire[entry->id - 1].resultat_horizontal) : strlen(c->dictionnaire[entry->id - 1].resultat_vertical);
-        printf("\nLa réponse commence par %c et se termine par %c et contient %ld caractères.\n", firstLetter, lastLetter, length);
+        printf("\n\t\t\tLa réponse commence par %c et se termine par %c et contient %ld caractères.\n", firstLetter, lastLetter, length);
         return 2.0f ;/// ((float)(*entry).dim * 6)
     }
     return 0.0f;
@@ -183,7 +183,7 @@ void nouvelle_partie(Crossword **cw)
 
     nbe = 4 - niveauChoisi;
 
-    printf("\nEntrez votre pseudo : ");
+    printf("\n\t\tEntrez votre pseudo : ");
     (*cw)->u = malloc(sizeof(User));
     // scanf("%s", (*cw)->u->username);
     lire((*cw)->u->username, USERNAME_SIZE);
@@ -209,7 +209,7 @@ void reprendre_partie(Crossword **cw)
     time(&secondes);
     (*cw)->stat = NULL;
     char name[15];
-    printf("\nEntrez votre pseudo : ");
+    printf("\n\t\tEntrez votre pseudo : ");
     lire(name, 15);
     int nbe;
     Crossword *c = malloc(sizeof(Crossword));
@@ -257,7 +257,7 @@ char *get_subject(int subjectCode)
     case 3:
         return "medecine";
     default:
-        printf("\nVotre choix n'est pas disponible.\n");
+        printf("\n\t\tVotre choix n'est pas disponible.\n");
     }
 }
 
@@ -272,7 +272,7 @@ char *get_difficulty(int levelCode)
     case 3:
         return "difficile";
     default:
-        printf("\nVotre choix n'est pas disponible.\n");
+        printf("\n\t\tVotre choix n'est pas disponible.\n");
     }
 }
 
@@ -362,7 +362,7 @@ Grille *load_grille(char *filename)
     f = fopen(filename, "r");
     if (f == NULL)
     {
-        printf("\nSauvegarde non disponible.\n");
+        printf("\n\t\tSauvegarde non disponible.\n");
         return NULL;
     }
     else
@@ -406,7 +406,7 @@ Dictionnaire *load_dictionnaire(char *filename)
     f = fopen(filename, "r");
     if (f == NULL)
     {
-        printf("\nSauvegarde non disponible.\n");
+        printf("\n\t\tSauvegarde non disponible.\n");
         return NULL;
     }
     else
@@ -434,7 +434,7 @@ void print_grille(Grille *g)
     {
         for (int i = 0; i < g->nombre_ligne; i++)
         {
-            printf("\n");
+            printf("\n\t\t\t\t");
             for (int j = 0; j < g->nombre_colonne; j++)
             {
                 if (g->grille[i][j].id != 0)
@@ -459,7 +459,7 @@ void print_dictionnaire(Dictionnaire *dic)
 {
     if (dic != NULL)
     {
-        printf("\n\tHorizontal\t\t\t\t\t\t\t\t\t\t\t\t\tVertical\n");
+        printf("\n\t\tHorizontal\t\t\t\t\t\t\t\t\t\t\t\t\tVertical\n\n");
         for (int i = 0; i < dic->dim; i++)
         {
             if (dic[i].indice_horizontal[0] == '-' && dic[i].indice_vertical[0] != '-')
@@ -468,7 +468,7 @@ void print_dictionnaire(Dictionnaire *dic)
             }
             else if (dic[i].indice_horizontal[0] != '-' && dic[i].indice_vertical[0] == '-')
             {
-                printf("%d-%s.\n\n", dic[i].id, dic[i].indice_horizontal);
+                printf("\t\t%d-%s.\n\n", dic[i].id, dic[i].indice_horizontal);
             }
             else
             {
@@ -565,17 +565,17 @@ char *replace(char *ch, char c, char r)
 */
 int choix_niveau()
 {
-    printf("\n\n Choix du niveau de difficulte.\n\n");
-    printf("\n1-Niveau facile.\n");
-    printf("\n2-Niveau intermediaire.\n");
-    printf("\n3-Niveau difficile.\n");
+    printf("\n\n\t\t Choix du niveau de difficulte.\n\n");
+    printf("\n\t\t\t\t1-Niveau facile.\n");
+    printf("\n\t\t\t\t2-Niveau intermediaire.\n");
+    printf("\n\t\t\t\t3-Niveau difficile.\n");
     int choix;
-    printf("\nEntrez votre choix : ");
+    printf("\n\t\tEntrez votre choix : ");
     choix = lire_int();
     printf("\n\n");
     while (!(choix >= 1 && choix <= 3))
     {
-        printf("\nChoix indisponible, veuillez entrer soit 1, 2 ou 3 : ");
+        printf("\n\t\tChoix indisponible, veuillez entrer soit 1, 2 ou 3 : ");
         choix = lire_int();
     }
     return choix;
@@ -586,19 +586,19 @@ int choix_niveau()
 */
 int menu()
 {
-    printf("\n\n Menu du jeu.\n\n");
-    printf("\n1-Nouvelle partie.\n");
-    printf("\n2-Reprendre une partie.\n");
-    printf("\n3-Statistique.\n");
-    printf("\n4-Quitter une partie.\n");
-    printf("\n5-A Propos.\n");
+    printf("\n\n\t\t Menu du jeu.\n\n");
+    printf("\n\t\t\t\t1-Nouvelle partie.\n");
+    printf("\n\t\t\t\t2-Reprendre une partie.\n");
+    printf("\n\t\t\t\t3-Statistique.\n");
+    printf("\n\t\t\t\t4-Quitter une partie.\n");
+    printf("\n\t\t\t\t5-A Propos.\n");
     int choix;
-    printf("\nEntrez votre choix : ");
+    printf("\n\t\tEntrez votre choix : ");
     choix = lire_int();
     printf("\n\n");
     while (!(choix >= 1 && choix <= 5))
     {
-        printf("\nChoix indisponible, veuillez entrer soit 1, 2, 3, 4 ou 5 : ");
+        printf("\n\t\tChoix indisponible, veuillez entrer soit 1, 2, 3, 4 ou 5 : ");
         choix = lire_int();
     }
     return choix;
@@ -610,13 +610,13 @@ int menu()
 int demande_aide()
 {
     int choix;
-    printf("\nToute aide vous coutera 2 points.\n");
-    printf("\nAvez-vous besoin d'aide [1|*].\n");
-    printf("\nEntrez votre choix: ");
+    printf("\n\t\tToute aide vous coutera 2 points.\n");
+    printf("\n\t\tAvez-vous besoin d'aide [1|*].\n");
+    printf("\n\t\tEntrez votre choix: ");
     choix = lire_int();
     while (!(choix >= 0 && choix <= 1))
     {
-        printf("\nVeuillez reessayer: ");
+        printf("\n\t\tVeuillez re-éssayer: ");
         choix = lire_int();
     }
     return choix;
@@ -627,16 +627,16 @@ int demande_aide()
 */
 int sujet()
 {
-    printf("\nChoix du sujet.\n");
-    printf("\n1-Divers.\n");
-    printf("\n2-Education.\n");
-    printf("\n3-Médecine.\n");
+    printf("\n\t\tChoix du sujet.\n");
+    printf("\n\t\t\t\t1-Divers.\n");
+    printf("\n\t\t\t\t2-Education.\n");
+    printf("\n\t\t\t\t3-Médecine.\n");
     int choix;
-    printf("\nEntrez votre choix.: ");
+    printf("\n\t\tEntrez votre choix.: ");
     choix = lire_int();
     while (!(choix >= 1 && choix <= 3))
     {
-        printf("\nChoix indisponible, entrez soit 1, 2 ou 3 : ");
+        printf("\n\t\tChoix indisponible, entrez soit 1, 2 ou 3 : ");
         choix = lire_int();
     }
     return choix;
@@ -724,26 +724,26 @@ void statistique()
         char name[USERNAME_SIZE];
         char username[USERNAME_SIZE];
         char sub[50];
-        printf("\nEntrez votre pseudo : ");
+        printf("\n\t\tEntrez votre pseudo : ");
         lire(name, USERNAME_SIZE);
         float score;
-        printf("------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+        printf("\t\t--------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
         
-        printf("Sujet\t\t\t\t|Niveau\t\t\t|\t\t\t\tScore\t\t\t|\t\t\t\tDuree(min)\n");
-        printf("------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+        printf("\t\tSujet\t\t\t\t|\t\tNiveau\t\t\t|\t\t\t\tScore\t\t\t|\t\t\t\tDuree(min)\n");
+        printf("\t\t--------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
         while (fscanf(f, "%s %s %s %f %d %d %d %d %d %d %d %d", sub, username, niveau, &score, &d, &m, &h1, &m1, &s1, &h2, &m2, &s2) != EOF)
         {
             if (strcmp(username, name) == 0)
             {
                 
-                printf("\n%s\t\t\t\t|%s\t|\t\t\t\t%.2f\t\t\t\t|\t\t\t\t%.4f\n", sub, niveau, score, duration(h2,m2,s2,h1,m1,s1));
-                printf("------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+                printf("\n\t\t%s\t\t\t|\t\t\t%s\t\t\t|\t\t%.2f\t\t\t|\t\t\t%.4f\n", sub, niveau, score, duration(h2,m2,s2,h1,m1,s1));
+                printf("\t\t--------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
             }
         }
         fclose(f);
         return;
     }
-    printf("\nAucune statistique disponible.\n");
+    printf("\n\t\tAucune statistique disponible.\n");
     return;
 }
 
@@ -762,10 +762,10 @@ char *upper_case(char *str)
 
 void appropos()
 {
-    printf("\nNotre jeu de mots croisés repose sur trois thèmes spécifiques :\n");
-    printf("\n1. Divers : testez vos connaissances en culture sportive et sur les noms des pays.\n");
-    printf("\n2. Éducation : mettez à l'épreuve votre culture informatique.\n");
-    printf("\n3. Médecine : démontrez votre savoir dans le domaine médical.\n");
+    printf("\n\t\tNotre jeu de mots croisés repose sur trois thèmes spécifiques :\n");
+    printf("\n\t\t\t1. Divers : testez vos connaissances en culture sportive et sur les noms des pays.\n");
+    printf("\n\t\t\t2. Éducation : mettez à l'épreuve votre culture informatique.\n");
+    printf("\n\t\t\t3. Médecine : démontrez votre savoir dans le domaine médical.\n");
 
     char c = getchar();
 }
