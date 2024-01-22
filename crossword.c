@@ -434,7 +434,7 @@ void print_grille(Grille *g)
     {
         for (int i = 0; i < g->nombre_ligne; i++)
         {
-            printf("\n\t\t\t\t");
+            printf("\n\t\t\t");
             for (int j = 0; j < g->nombre_colonne; j++)
             {
                 if (g->grille[i][j].id != 0)

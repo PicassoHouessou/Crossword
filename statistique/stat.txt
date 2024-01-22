@@ -5,3 +5,5 @@ divers  remi  intermediaire  10.000000 21  0  20 41  16  20  42  40
 divers  remi  difficile  0.000000 21  0  20 43  35  20  44  30
 divers  rems  difficile  0.000000 21  0  20 46  53  20  47  3
 education  remi  facile  20.000000 21  0  20 53  30  20  54  29
+divers  remi  facile  0.000000 22  0  8 11  32  8  12  39
+divers  remi  facile  10.000000 22  0  8 14  26  8  15  14
