@@ -6,13 +6,11 @@ int main(int argv, char *argc[])
     system("./remove_save.sh");
     Crossword *cw = malloc(sizeof(Crossword));
     int r = 1;
-    printf("\n\n************************************************************ Welcome to Crossworld *************************************************************************\n\n");
+    printf("\n\n************************************************************ Welcome to Crossword *************************************************************************\n\n");
     while (r)
     {
         switch (menu())
         {
-        case -1:
-            break;
         case 1:
             nouvelle_partie(&cw);
             break;
@@ -25,12 +23,16 @@ int main(int argv, char *argc[])
         case 4:
             r = 0;
             break;
+        case 5:
+            appropos();
+            break;
         default:
-            nouvelle_partie(&cw);
+            printf("\nVotre choix n'est pas disponible.\n");
             break;
         }
     }
     printf("\n\n********************************************************************** Good Bye ****************************************************************************\n\n");
     free_memory(&cw);
+
     return EXIT_SUCCESS;
 }

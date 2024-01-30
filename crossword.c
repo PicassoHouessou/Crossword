@@ -11,7 +11,7 @@ void run(Crossword **cw, Crossword *c, int nbe, char *filename, char *str)
     int *current = load_choix((*cw)->dictionnaire->dim, filename);
     float manus = 0.0f;
     char response[25];
-    while (current[k]!=0)
+    while (current[k] != 0)
     {
         k++;
     }
@@ -20,58 +20,62 @@ void run(Crossword **cw, Crossword *c, int nbe, char *filename, char *str)
         print_grille((*cw)->g);
         printf("\n\n");
         print_dictionnaire((*cw)->dictionnaire);
-        printf("\n0-sauvegarder la partie en cours.\n");
+        printf("\n\t\t%d-sauvegarder la partie en cours.\n",((*cw)->dictionnaire->dim+1));
 
         int choix = get_choice(k, (*cw)->dictionnaire->dim, current);
-        if (choix == 0)
+        if (choix == ((*cw)->dictionnaire->dim+1))
         {
             save_and_exit(cw, s, manus, current, filename);
             current[k] = current[k] == 0 ? choix : current[k];
             return;
         }
 
-        printf("\nEntrer votre reponse forme des lettres en majuscules :\t");
+        printf("\n\t\tEntrez votre reponse : ");
         // Taille de la réponse est la même que la taille de l'utilisateur
         lire(response, USERNAME_SIZE);
 
         int i = 0;
-        while (!is_correct_answer(response, (*cw)->dictionnaire[choix - 1], c) && i < nbe)
+        while (!is_correct_answer(upper_case(response), (*cw)->dictionnaire[choix - 1], c) && i < nbe)
         {
             i++;
             manus += display_hint_and_get_manus(&(*cw)->dictionnaire[choix - 1], c);
-            printf("\nReponse incorrecte, votre reponse doit contenir uniquement des caracteres entre A et Z. Il vous reste %d essais possible\n", nbe - i);
-            printf("\nVeillez re-essayer une nouvelle reponse:\t");
+            printf("\n\t\t\tIl vous reste %d essais possible\n", (nbe - i) + 1);
+            printf("\n\t\tVeuillez re-éssayer car la réponse précédente est fausse : ");
             lire(response, USERNAME_SIZE);
         }
 
-        if (is_correct_answer(response, (*cw)->dictionnaire[choix - 1], c))
+        if (is_correct_answer(upper_case(response), (*cw)->dictionnaire[choix - 1], c))
         {
             s++;
-            update_grid_with_answer((*cw)->g,(*cw)->dictionnaire[choix-1], response, choix);
+            update_grid_with_answer((*cw)->g, (*cw)->dictionnaire[choix - 1], upper_case(response), choix);
         }
         current[k] = current[k] == 0 ? choix : current[k];
         k++;
     }
-    (*cw)->stat->score += (float)(((float)s / (float)(*cw)->dictionnaire->dim) - manus);
+    
+    (*cw)->stat->score += ((float)(s*SCORE) - manus);
     print_grille((*cw)->g);
+    char ch = getchar();
 }
 
 int get_choice(int turn, int maxChoices, int *currentChoices)
 {
     int choice;
-    do
-    {
-        printf("\nEntrez votre choix (le numéro doit être compris entre [0-%d]):\t", maxChoices);
-        choice = lire_int();
 
-        if (choice == 0 || !isIn(currentChoices, maxChoices, choice))
+    printf("\n\t\tEntrez votre choix (le numéro doit être compris entre [1-%d]): ", maxChoices);
+    choice = lire_int();
+
+    int r = 1;
+    while (r)
+    {
+        if ((choice <= maxChoices && !isIn(currentChoices, maxChoices, choice)) || choice == (maxChoices+1))
         {
+            r = 0;
             return choice;
         }
-
-        printf("\nVous avez déjà fait ce choix ou votre choix n'est pas disponible %d.\n", choice);
-    } while (isIn(currentChoices, maxChoices, choice));
-
+        printf("\n\t\tChoix indisponible ou choix deja effectue, veuillez re-éssayer: ");
+        choice = lire_int();
+    }
     return choice;
 }
 
@@ -80,7 +84,7 @@ void save_and_exit(Crossword **cw, int score, float manus, int *currentChoices, 
     time_t secondes;
     time(&secondes);
     (*cw)->stat->heure_fin = *localtime(&secondes);
-    (*cw)->stat->score += ((float)score / (float)(*cw)->dictionnaire->dim) - manus;
+    (*cw)->stat->score += ((float)(score*SCORE) - manus);/// (float)(*cw)->dictionnaire->dim)
     sauvegarder_choix(currentChoices, (*cw)->dictionnaire->dim, filename);
     sauvegarder_partie(*cw);
 }
@@ -101,9 +105,8 @@ float display_hint_and_get_manus(Dictionnaire *entry, Crossword *c)
         char firstLetter = entry->indice_horizontal[0] != '-' ? c->dictionnaire[entry->id - 1].resultat_horizontal[0] : c->dictionnaire[entry->id - 1].resultat_vertical[0];
         char lastLetter = entry->indice_horizontal[0] != '-' ? c->dictionnaire[entry->id - 1].resultat_horizontal[strlen(c->dictionnaire[entry->id - 1].resultat_horizontal) - 1] : c->dictionnaire[entry->id - 1].resultat_vertical[strlen(c->dictionnaire[entry->id - 1].resultat_vertical) - 1];
         size_t length = entry->indice_horizontal[0] != '-' ? strlen(c->dictionnaire[entry->id - 1].resultat_horizontal) : strlen(c->dictionnaire[entry->id - 1].resultat_vertical);
-
-        printf("\nLa réponse commence par %c et se termine par %c et contient %ld caractères majuscules.\n", firstLetter, lastLetter, length);
-        return 1.0f / ((float)(*entry).dim * 6);
+        printf("\n\t\t\tLa réponse commence par %c et se termine par %c et contient %ld caractères.\n", firstLetter, lastLetter, length);
+        return 2.0f ;/// ((float)(*entry).dim * 6)
     }
     return 0.0f;
 }
@@ -112,7 +115,7 @@ float display_hint_and_get_manus(Dictionnaire *entry, Crossword *c)
 /// @param grid
 /// @param response
 /// @param choice
-void update_grid_with_answer(Grille *grid,Dictionnaire dic, char *response, int choice)
+void update_grid_with_answer(Grille *grid, Dictionnaire dic, char *response, int choice)
 {
     int t, z;
     for (int i = 0; i < grid->nombre_ligne; i++)
@@ -129,21 +132,20 @@ void update_grid_with_answer(Grille *grid,Dictionnaire dic, char *response, int 
     }
     if (grid->grille[t][z].id == choice)
     {
-        if (strcmp(dic.indice_horizontal,"-")!=0)
+        if (strcmp(dic.indice_horizontal, "-") != 0)
         {
-            for (int i = z; i < z+strlen(response); i++)
+            for (int i = z; i < z + strlen(response); i++)
             {
-                grid->grille[t][i].caractere = response[i-z];
+                grid->grille[t][i].caractere = response[i - z];
             }
         }
         else
         {
-            for (int i = t; i < t+strlen(response); i++)
+            for (int i = t; i < t + strlen(response); i++)
             {
-                grid->grille[i][z].caractere = response[i-t];
+                grid->grille[i][z].caractere = response[i - t];
             }
         }
-        
     }
 }
 
@@ -181,7 +183,7 @@ void nouvelle_partie(Crossword **cw)
 
     nbe = 4 - niveauChoisi;
 
-    printf("\nEntrer votre nom:\t");
+    printf("\n\t\tEntrez votre pseudo : ");
     (*cw)->u = malloc(sizeof(User));
     // scanf("%s", (*cw)->u->username);
     lire((*cw)->u->username, USERNAME_SIZE);
@@ -207,7 +209,7 @@ void reprendre_partie(Crossword **cw)
     time(&secondes);
     (*cw)->stat = NULL;
     char name[15];
-    printf("\nEntrer votre nom :\t");
+    printf("\n\t\tEntrez votre pseudo : ");
     lire(name, 15);
     int nbe;
     Crossword *c = malloc(sizeof(Crossword));
@@ -222,10 +224,10 @@ void reprendre_partie(Crossword **cw)
     strcpy((*cw)->stat->niveau, difficulty);
 
     // Setup file paths
-    sprintf(filename_dictionnaire, "users/%s/sauvegardes/%s/dictionnaires/%s.txt",name, subject, difficulty);
-    sprintf(filename_grille, "users/%s/sauvegardes/%s/grilles/%s.txt",name, subject, difficulty);
+    sprintf(filename_dictionnaire, "users/%s/sauvegardes/%s/dictionnaires/%s.txt", name, subject, difficulty);
+    sprintf(filename_grille, "users/%s/sauvegardes/%s/grilles/%s.txt", name, subject, difficulty);
     sprintf(file, "grilles/%s.txt", subject);
-    sprintf(filename, "users/%s/sauvegardes/%s/choix/%s.txt",name, subject, difficulty);
+    sprintf(filename, "users/%s/sauvegardes/%s/choix/%s.txt", name, subject, difficulty);
 
     // Set subject and number of attempts
     strcpy((*cw)->sujet, subject);
@@ -255,7 +257,7 @@ char *get_subject(int subjectCode)
     case 3:
         return "medecine";
     default:
-        return "divers";
+        printf("\n\t\tVotre choix n'est pas disponible.\n");
     }
 }
 
@@ -270,7 +272,7 @@ char *get_difficulty(int levelCode)
     case 3:
         return "difficile";
     default:
-        return "facile";
+        printf("\n\t\tVotre choix n'est pas disponible.\n");
     }
 }
 
@@ -285,7 +287,7 @@ int get_number_of_attempts(char *difficulty)
         return 2;
     }
     else
-    { // "difficile"
+    {
         return 1;
     }
 }
@@ -299,7 +301,7 @@ void sauvegarder_partie(Crossword *cw)
 
     char str[100];
 
-    sprintf(str,"%s\t%s","./script.sh",cw->u->username);
+    sprintf(str, "%s\t%s", "./script.sh", cw->u->username);
     // Construct file paths based on 'sujet' and 'niveau'
     sprintf(filename_dictionnaire, "tmp/sauvegardes/%s/dictionnaires/%s.txt", cw->sujet, cw->stat->niveau);
     sprintf(filename_grille, "tmp/sauvegardes/%s/grilles/%s.txt", cw->sujet, cw->stat->niveau);
@@ -308,7 +310,7 @@ void sauvegarder_partie(Crossword *cw)
     FILE *f1 = fopen(filename_grille, "w");
     FILE *f2 = fopen(stat_file, "a+");
 
-    cw->dictionnaire=remplacer_espace_mots_dictionnaire(cw->dictionnaire);
+    cw->dictionnaire = remplacer_espace_mots_dictionnaire(cw->dictionnaire);
     if (f && f1 && f2)
     {
         // Save Dictionary
@@ -356,31 +358,41 @@ void sauvegarder_partie(Crossword *cw)
 Grille *load_grille(char *filename)
 {
     Grille *g = (Grille *)malloc(sizeof(Grille));
-    FILE *f = fopen(filename, "r");
+    FILE *f = NULL;
 
-    fscanf(f, "%d %d", &g->nombre_ligne, &g->nombre_colonne);
-    int size = g->nombre_ligne * g->nombre_colonne + 1;
-    Cellule *vec = (Cellule *)malloc(sizeof(Cellule) * size);
-    int k = 0;
-    while (fscanf(f, "%d %c", &vec[k].id, &vec[k].caractere) != EOF)
+    f = fopen(filename, "r");
+    if (f == NULL)
     {
-        k++;
+        printf("\n\t\tSauvegarde non disponible.\n");
+        return NULL;
     }
-    k = 0;
-    Cellule **grille = malloc(sizeof(Cellule) * g->nombre_ligne);
-    for (int i = 0; i < g->nombre_ligne; i++)
+    else
     {
-        grille[i] = malloc(sizeof(Cellule) * g->nombre_colonne);
-        for (int j = 0; j < g->nombre_colonne; j++)
+        fscanf(f, "%d %d", &g->nombre_ligne, &g->nombre_colonne);
+        int size = g->nombre_ligne * g->nombre_colonne + 1;
+        Cellule *vec = (Cellule *)malloc(sizeof(Cellule) * size);
+        int k = 0;
+        while (fscanf(f, "%d %c", &vec[k].id, &vec[k].caractere) != EOF)
         {
-            grille[i][j].id = vec[k].id;
-
-            grille[i][j].caractere = vec[k].caractere == '?' ? ' ' : vec[k].caractere;
             k++;
         }
+        k = 0;
+        Cellule **grille = malloc(sizeof(Cellule) * g->nombre_ligne);
+        for (int i = 0; i < g->nombre_ligne; i++)
+        {
+            grille[i] = malloc(sizeof(Cellule) * g->nombre_colonne);
+            for (int j = 0; j < g->nombre_colonne; j++)
+            {
+                grille[i][j].id = vec[k].id;
+
+                grille[i][j].caractere = vec[k].caractere == '?' ? ' ' : vec[k].caractere;
+                k++;
+            }
+        }
+        g->grille = grille;
+        fclose(f);
     }
-    g->grille = grille;
-    fclose(f);
+
     return g;
 }
 
@@ -395,7 +407,7 @@ Dictionnaire *load_dictionnaire(char *filename)
     f = fopen(filename, "r");
     if (f == NULL)
     {
-        printf("\nOuverture impossible\n");
+        printf("\n\t\tSauvegarde non disponible.\n");
         return NULL;
     }
     else
@@ -423,7 +435,7 @@ void print_grille(Grille *g)
     {
         for (int i = 0; i < g->nombre_ligne; i++)
         {
-            printf("\n");
+            printf("\n\t\t\t");
             for (int j = 0; j < g->nombre_colonne; j++)
             {
                 if (g->grille[i][j].id != 0)
@@ -448,7 +460,7 @@ void print_dictionnaire(Dictionnaire *dic)
 {
     if (dic != NULL)
     {
-        printf("\n\tHorizontal\t\t\t\t\t\t\t\t\t\t\t\t\tVertical\n");
+        printf("\n\t\tHorizontal\t\t\t\t\t\t\t\t\t\t\t\t\tVertical\n\n");
         for (int i = 0; i < dic->dim; i++)
         {
             if (dic[i].indice_horizontal[0] == '-' && dic[i].indice_vertical[0] != '-')
@@ -457,7 +469,7 @@ void print_dictionnaire(Dictionnaire *dic)
             }
             else if (dic[i].indice_horizontal[0] != '-' && dic[i].indice_vertical[0] == '-')
             {
-                printf("%d-%s.\n\n", dic[i].id, dic[i].indice_horizontal);
+                printf("\t\t%d-%s.\n\n", dic[i].id, dic[i].indice_horizontal);
             }
             else
             {
@@ -474,18 +486,13 @@ void print_dictionnaire(Dictionnaire *dic)
 void free_memory(Crossword **cw)
 {
 
-    if ((*cw) != NULL)
+    if (cw != NULL && (*cw) != NULL)
     {
-        for (int i = 0; i < (*cw)->g->nombre_ligne; i++)
-        {
-            free((*cw)->g->grille[i]);
-        }
         free((*cw)->dictionnaire);
         free((*cw)->stat);
         free((*cw)->g);
         free(*cw);
     }
-    free(cw);
     return;
 }
 
@@ -559,14 +566,19 @@ char *replace(char *ch, char c, char r)
 */
 int choix_niveau()
 {
-    printf("\n\n Choix du niveau de difficulte.\n\n");
-    printf("\n1-Niveau facile.\n");
-    printf("\n2-Niveau intermediaire.\n");
-    printf("\n3-Niveau difficile.\n");
+    printf("\n\n\t\t Choix du niveau de difficulte.\n\n");
+    printf("\n\t\t\t\t1-Niveau facile.\n");
+    printf("\n\t\t\t\t2-Niveau intermediaire.\n");
+    printf("\n\t\t\t\t3-Niveau difficile.\n");
     int choix;
-    printf("\nEntrez votre choix :\t");
+    printf("\n\t\tEntrez votre choix : ");
     choix = lire_int();
     printf("\n\n");
+    while (!(choix >= 1 && choix <= 3))
+    {
+        printf("\n\t\tChoix indisponible, veuillez entrer soit 1, 2 ou 3 : ");
+        choix = lire_int();
+    }
     return choix;
 }
 
@@ -575,20 +587,22 @@ int choix_niveau()
 */
 int menu()
 {
-    printf("\n\n Menu du jeu.\n\n");
-    printf("\n1-Nouvelle partie.\n");
-    printf("\n2-Reprendre une partie.\n");
-    printf("\n3-Statistique.\n");
-    printf("\n4-Quitter une partie.\n");
+    printf("\n\n\t\t Menu du jeu.\n\n");
+    printf("\n\t\t\t\t1-Nouvelle partie.\n");
+    printf("\n\t\t\t\t2-Reprendre une partie.\n");
+    printf("\n\t\t\t\t3-Statistique.\n");
+    printf("\n\t\t\t\t4-Quitter une partie.\n");
+    printf("\n\t\t\t\t5-A Propos.\n");
     int choix;
-    printf("\nEntrer votre choix :\t");
+    printf("\n\t\tEntrez votre choix : ");
     choix = lire_int();
     printf("\n\n");
-    if (choix >= 1 && choix <= 5)
+    while (!(choix >= 1 && choix <= 5))
     {
-        return choix;
+        printf("\n\t\tChoix indisponible, veuillez entrer soit 1, 2, 3, 4 ou 5 : ");
+        choix = lire_int();
     }
-    return -1;
+    return choix;
 }
 
 /*
@@ -596,16 +610,17 @@ int menu()
 */
 int demande_aide()
 {
-    printf("\nToute aide est equivalent a un manu de 1/6 de votre reccompense avant la demande d'aide.\n");
-    printf("\n1-Avoir de l'aide.\n");
-    printf("\nEntrer votre choix:\t");
     int choix;
+    printf("\n\t\tToute aide vous coutera 2 points.\n");
+    printf("\n\t\tAvez-vous besoin d'aide [1|*].\n");
+    printf("\n\t\tEntrez votre choix: ");
     choix = lire_int();
-    if (choix == 1)
+    while (!(choix >= 0 && choix <= 1))
     {
-        return 1;
+        printf("\n\t\tVeuillez re-éssayer: ");
+        choix = lire_int();
     }
-    return -1;
+    return choix;
 }
 
 /*
@@ -613,18 +628,19 @@ int demande_aide()
 */
 int sujet()
 {
-    printf("\nChoix du sujet.\n");
-    printf("\n1-Divers.\n");
-    printf("\n2-Education.\n");
-    printf("\n3-Medecine.\n");
+    printf("\n\t\tChoix du sujet.\n");
+    printf("\n\t\t\t\t1-Divers.\n");
+    printf("\n\t\t\t\t2-Education.\n");
+    printf("\n\t\t\t\t3-Médecine.\n");
     int choix;
-    printf("\nEntrer votre choix:\t");
+    printf("\n\t\tEntrez votre choix.: ");
     choix = lire_int();
-    if (choix >= 1 || choix <= 3)
+    while (!(choix >= 1 && choix <= 3))
     {
-        return choix;
+        printf("\n\t\tChoix indisponible, entrez soit 1, 2 ou 3 : ");
+        choix = lire_int();
     }
-    return 0;
+    return choix;
 }
 
 /*
@@ -709,21 +725,54 @@ void statistique()
         char name[USERNAME_SIZE];
         char username[USERNAME_SIZE];
         char sub[50];
-        printf("\nEntrer votre nom d'utilisateur:\t");
+        printf("\n\t\tEntrez votre pseudo : ");
         lire(name, USERNAME_SIZE);
         float score;
-        printf("------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
-        printf("Sujet\t\t|\t\tNiveau\t\t|\t\tScore\t\t|\tDate\t\t|\tHeure de D%cbut\t\t|\tHeure de Fin\n", 130);
-        printf("------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+        printf("\t\t--------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+        
+        printf("\t\tSujet\t\t\t\t|\t\tNiveau\t\t\t|\t\t\t\tScore\t\t\t|\t\t\t\tDuree(min)\n");
+        printf("\t\t--------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
         while (fscanf(f, "%s %s %s %f %d %d %d %d %d %d %d %d", sub, username, niveau, &score, &d, &m, &h1, &m1, &s1, &h2, &m2, &s2) != EOF)
         {
             if (strcmp(username, name) == 0)
             {
-                printf("\n%s\t\t|%s\t|\t\t%.4f\t\t|\t%d/%d\t\t|\t%d:%d:%d\t\t\t|\t%d:%d:%d\n", sub, niveau, (score * FILE_PATH_SIZE), d, m, h1, m1, s1, h2, m2, s2);
-                printf("------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+                
+                printf("\n\t\t%s\t\t\t|\t\t\t%s\t\t\t|\t\t%.2f\t\t\t|\t\t\t%.4f\n", sub, niveau, score, duration(h2,m2,s2,h1,m1,s1));
+                printf("\t\t--------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
             }
         }
         fclose(f);
+        return;
     }
+    printf("\n\t\tAucune statistique disponible.\n");
     return;
+}
+
+char *upper_case(char *str)
+{
+    for (int i = 0; str[i] != '\0'; i++)
+    {
+        if (str[i] >= 'a' && str[i] <= 'z')
+        {
+            str[i] = str[i] - 32;
+        }
+    }
+    return str;
+}
+
+
+void appropos()
+{
+    printf("\n\t\tNotre jeu de mots croisés repose sur trois thèmes spécifiques :\n");
+    printf("\n\t\t\t1. Divers : testez vos connaissances en culture sportive et sur les noms des pays.\n");
+    printf("\n\t\t\t2. Éducation : mettez à l'épreuve votre culture informatique.\n");
+    printf("\n\t\t\t3. Médecine : démontrez votre savoir dans le domaine médical.\n");
+
+    char c = getchar();
+}
+
+float duration(int h1, int m1, int s1, int h2, int m2, int s2)
+{
+    float tim = ((float)(h1 * 60) + (float)m1 + ((float)(s1) / (float)60)) - ((float)(h2 * 60) + (float)m2 + ((float)(s2) / (float)60));
+    return tim;
 }

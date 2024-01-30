@@ -16,6 +16,7 @@
 #define DICTIONARY_ENTRY_SIZE 255
 #define ANSWER_SIZE 50
 #define FILE_PATH_SIZE 150
+#define SCORE 5
 
 /*
     structure pour conserver le nom du joueur
@@ -228,5 +229,11 @@ float display_hint_and_get_manus(Dictionnaire *entry, Crossword *c);
 /// @param response
 /// @param choice
 void update_grid_with_answer(Grille *grid,Dictionnaire dic, char *response, int choice);
+
+char * upper_case(char*);
+
+void appropos();
+
+float duration(int,int,int,int,int,int);
 
 #endif // ___CROSSWORD___

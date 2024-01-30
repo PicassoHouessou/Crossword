@@ -1,4 +1,16 @@
+<<<<<<< HEAD
 divers  remi  facile  0.300000 5  0  15 23  54  15  24  46
 divers  remi  facile  0.200000 5  0  15 47  35  15  48  16
 divers  remi  facile  0.400000 5  0  15 48  23  15  49  19
 education  remi  intermediaire  -inf 6  0  11 51  58  11  55  27
+=======
+education  rems raoul  facile  5.000000 16  0  14 32  34  14  33  16
+education  remi  facile  10.000000 21  0  20 13  48  20  14  51
+divers  remi  facile  0.000000 21  0  20 24  13  20  31  24
+divers  remi  intermediaire  10.000000 21  0  20 41  16  20  42  40
+divers  remi  difficile  0.000000 21  0  20 43  35  20  44  30
+divers  rems  difficile  0.000000 21  0  20 46  53  20  47  3
+education  remi  facile  20.000000 21  0  20 53  30  20  54  29
+divers  remi  facile  0.000000 22  0  8 11  32  8  12  39
+divers  remi  facile  10.000000 22  0  8 14  26  8  15  14
+>>>>>>> ae72310bada2504e877a68a59884013d10ca6edf
