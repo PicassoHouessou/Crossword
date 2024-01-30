@@ -14,3 +14,4 @@ education  remi  facile  20.000000 21  0  20 53  30  20  54  29
 divers  remi  facile  0.000000 22  0  8 11  32  8  12  39
 divers  remi  facile  10.000000 22  0  8 14  26  8  15  14
 >>>>>>> ae72310bada2504e877a68a59884013d10ca6edf
+divers  rems  facile  0.000000 30  0  12 4  39  12  5  16
